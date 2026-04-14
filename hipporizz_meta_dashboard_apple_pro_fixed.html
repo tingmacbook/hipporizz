@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HIPPORIZZ Meta Ads Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f7;
+  --surface:#ffffff;
+  --surface-2:#fbfbfd;
+  --line:#e7e7ec;
+  --line-2:#d8d8de;
+  --text:#111111;
+  --muted:#6e6e73;
+  --muted-2:#8e8e93;
+  --blue:#2563eb;
+  --purple:#7c3aed;
+  --green:#15803d;
+  --red:#dc2626;
+  --amber:#b45309;
+  --shadow:0 6px 24px rgba(17,17,17,.05);
+  --radius:18px;
+  --radius-sm:12px;
+}
+html,body{background:linear-gradient(180deg,#fafafc 0%,#f5f5f7 100%);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.45}
+body{padding:28px}
+.dashboard{max-width:1440px;margin:0 auto}
+.header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:12px;box-shadow:var(--shadow);margin-bottom:10px}
+.badge:before{content:'';width:8px;height:8px;border-radius:50%;background:#111}
+h1{font-size:34px;letter-spacing:-1.1px;font-weight:700;margin-bottom:6px}
+.sub{color:var(--muted);font-size:14px}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card{background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8);box-shadow:var(--shadow);border-radius:24px}
+.toolbar{padding:16px;display:grid;gap:12px;margin-bottom:18px}
+.toolbar-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg-tabs,.preset-tabs{display:flex;gap:8px;flex-wrap:wrap}
+button,select,input{font:inherit}
+.tab,.preset,.btn,.autorefresh-chip{height:40px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--text);padding:0 16px;cursor:pointer;transition:.18s ease;display:inline-flex;align-items:center;gap:8px}
+.tab:hover,.preset:hover,.btn:hover,.autorefresh-chip:hover{border-color:var(--line-2);transform:translateY(-1px)}
+.tab.active{font-weight:600;color:#fff;border-color:transparent}
+.tab.website.active{background:var(--blue)}
+.tab.fundraising.active{background:var(--purple)}
+.tab.all.active{background:#111}
+.preset.active{background:#111;color:#fff;border-color:#111}
+.select, .input{height:40px;border-radius:999px;border:1px solid var(--line);background:#fff;padding:0 14px;color:var(--text)}
+.input[type="date"]{min-width:142px}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.search-wrap input{width:100%;height:44px;border-radius:14px;border:1px solid var(--line);padding:0 16px 0 42px;background:#fff}
+.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.status{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;padding:0 2px}
+.error{display:none;padding:14px 16px;border-radius:16px;background:#fff1f2;border:1px solid #fecdd3;color:#be123c}
+.summary-grid{display:grid;grid-template-columns:1.45fr .95fr;gap:16px;margin-bottom:16px}
+@media (max-width:1080px){.summary-grid{grid-template-columns:1fr}}
+.insight-box{padding:22px}
+.section-title{font-size:17px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px}
+.section-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+.insight-list{display:grid;gap:10px}
+.insight-item{padding:14px 16px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line)}
+.insight-item strong{display:block;margin-bottom:4px;font-size:13px}
+.insight-item p{color:var(--muted);font-size:13px}
+.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:780px){.mini-grid{grid-template-columns:1fr}}
+.mini-card{padding:18px}
+.mini-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.mini-value{font-size:28px;font-weight:700;letter-spacing:-.8px}
+.mini-note{font-size:12px;color:var(--muted);margin-top:4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:12px;margin-bottom:16px}
+@media (max-width:1250px){.kpi-grid{grid-template-columns:repeat(5,1fr)}}
+@media (max-width:760px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi{padding:18px;position:relative;overflow:hidden}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px}
+.kpi-value{font-size:24px;font-weight:700;letter-spacing:-.9px}
+.kpi-foot{font-size:12px;color:var(--muted);margin-top:6px}
+.kpi .bar{position:absolute;left:18px;right:18px;bottom:0;height:3px;border-radius:999px;background:linear-gradient(90deg,#111,#999)}
+.kpi .bar.website{background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+.kpi .bar.fundraising{background:linear-gradient(90deg,#6d28d9,#c084fc)}
+.kpi .bar.all{background:linear-gradient(90deg,#111,#666)}
+.good{color:var(--green)} .bad{color:var(--red)} .ok{color:var(--amber)}
+.chart-grid{display:grid;grid-template-columns:1.3fr 1.3fr .9fr;gap:16px;margin-bottom:16px}
+@media (max-width:1180px){.chart-grid{grid-template-columns:1fr}}
+.chart-card{padding:20px}
+.chart-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.chart-title{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.chart-note{font-size:12px;color:var(--muted)}
+.canvas-wrap{position:relative;height:280px}
+.canvas-wrap.tall{height:330px}
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media (max-width:980px){.split-grid{grid-template-columns:1fr}}
+.table-card{overflow:hidden}
+.table-top{padding:16px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.table-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.table-wrap{overflow:auto;max-height:720px}
+table{width:100%;border-collapse:separate;border-spacing:0}
+thead th{position:sticky;top:0;background:#fff;z-index:2;text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);white-space:nowrap;cursor:pointer}
+tbody td{padding:12px 14px;border-bottom:1px solid #f0f0f4;vertical-align:middle;white-space:nowrap}
+tbody tr:hover td{background:#fafafd}
+.name-cell{max-width:240px;white-space:normal;line-height:1.35}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.tag.website{background:#eff6ff;color:var(--blue)}
+.tag.fundraising{background:#f5f3ff;color:var(--purple)}
+.roas-high{color:var(--green);font-weight:700}
+.roas-low{color:var(--red);font-weight:700}
+.roas-mid{color:var(--amber);font-weight:700}
+.weak-row td{background:#fff8f8}
+.top-row td{background:#f8fff8}
+.no-data{padding:40px;text-align:center;color:var(--muted)}
+footer{padding:18px 4px 0;color:var(--muted);font-size:12px}
+@media (max-width:680px){body{padding:16px}h1{font-size:28px}.toolbar{padding:14px}.chart-card,.kpi,.insight-box,.mini-card{padding:16px}.table-wrap{max-height:none}}
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <div class="header">
+    <div>
+      <div class="badge">Meta Ads · Windsor.ai · Apple-style minimal</div>
+      <h1>HIPPORIZZ 廣告績效儀表板</h1>
+      <div class="sub" id="subtitle">帳戶：探索_TW_HIPPORIZZ(非SL)_hipporizz_electronics</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="refreshBtn" onclick="fetchData(true)">重新整理</button>
+      <button class="autorefresh-chip" id="autoRefreshBtn" onclick="toggleAutoRefresh()">自動刷新：關閉</button>
+    </div>
+  </div>
+
+  <div class="card toolbar">
+    <div class="toolbar-row">
+      <div class="seg-tabs">
+        <button class="tab website active" data-seg="website" onclick="setSegment('website',this)">官網廣告</button>
+        <button class="tab fundraising" data-seg="fundraising" onclick="setSegment('fundraising',this)">募資廣告</button>
+        <button class="tab all" data-seg="all" onclick="setSegment('all',this)">全部</button>
+      </div>
+      <div class="preset-tabs">
+        <button class="preset active" data-preset="month" onclick="applyPreset('month',this)">本月</button>
+        <button class="preset" data-preset="yesterday" onclick="applyPreset('yesterday',this)">昨日</button>
+        <button class="preset" data-preset="7days" onclick="applyPreset('7days',this)">近 7 天</button>
+        <button class="preset" data-preset="today" onclick="applyPreset('today',this)">今天</button>
+      </div>
+    </div>
+    <div class="toolbar-row">
+      <input class="input" type="date" id="dateFrom" onchange="onDateInputChange()" />
+      <span style="color:var(--muted)">→</span>
+      <input class="input" type="date" id="dateTo" onchange="onDateInputChange()" />
+      <select class="select" id="campaignFilter" onchange="applyFilters()"><option value="">所有活動</option></select>
+      <div class="search-wrap">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="9" r="6"></circle><path d="m14 14 4 4"></path></svg>
+        <input id="tableSearch" placeholder="搜尋廣告名稱 / 廣告組 / 素材 / 活動" oninput="renderTable()" />
+      </div>
+      <button class="btn" onclick="exportCSV()">匯出 CSV</button>
+      <button class="btn" onclick="exportExcel()">匯出 Excel</button>
+    </div>
+    <div class="status" id="statusBar">等待載入…</div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="card insight-box">
+      <div class="section-title">本期重點觀察</div>
+      <div class="section-sub">系統會依目前區間與篩選條件，自動抓出效率亮點與風險活動。</div>
+      <div class="insight-list" id="insightList">
+        <div class="insight-item"><strong>資料準備中</strong><p>抓到資料後會自動生成觀察重點。</p></div>
+      </div>
+    </div>
+    <div class="mini-grid">
+      <div class="card mini-card">
+        <div class="mini-label">最佳活動 ROAS</div>
+        <div class="mini-value" id="bestCampaignRoas">—</div>
+        <div class="mini-note" id="bestCampaignName">—</div>
+      </div>
+      <div class="card mini-card">
+        <div class="mini-label">最高花費活動</div>
+        <div class="mini-value" id="topSpendCampaign">—</div>
+        <div class="mini-note" id="topSpendCampaignNote">—</div>
+      </div>
+      <div class="card mini-card">
+        <div class="mini-label">低效風險活動</div>
+        <div class="mini-value" id="weakCampaign">—</div>
+        <div class="mini-note" id="weakCampaignNote">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="chart-grid">
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">每日花費 vs 業績</div>
+          <div class="chart-note" id="trendRange">—</div>
+        </div>
+      </div>
+      <div class="canvas-wrap"><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">每日 ROAS 趨勢</div>
+          <div class="chart-note">看哪幾天廣告效率最高</div>
+        </div>
+      </div>
+      <div class="canvas-wrap"><canvas id="roasChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">活動花費占比</div>
+          <div class="chart-note">依目前篩選條件計算</div>
+        </div>
+      </div>
+      <div class="canvas-wrap"><canvas id="campaignChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="split-grid">
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">官網廣告</div>
+          <div class="chart-note">每日花費與業績</div>
+        </div>
+      </div>
+      <div class="canvas-wrap tall"><canvas id="websiteChart"></canvas></div>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">募資廣告</div>
+          <div class="chart-note">每日花費與業績</div>
+        </div>
+      </div>
+      <div class="canvas-wrap tall"><canvas id="fundraisingChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card table-card">
+    <div class="table-top">
+      <div>
+        <div class="chart-title">廣告明細</div>
+        <div class="chart-note">已加入廣告組與素材欄位，可直接搜尋與排序；素材欄位目前使用 Meta 可用的 title 資料</div>
+      </div>
+      <div class="table-actions">
+        <span class="chart-note">高 ROAS 會標綠、低 ROAS 會標紅</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('ad_name')">廣告名稱 ↕</th>
+            <th onclick="sortTable('adset_name')">廣告組 ↕</th>
+            <th onclick="sortTable('title')">素材 ↕</th>
+            <th onclick="sortTable('campaign')">活動 ↕</th>
+            <th onclick="sortTable('spend')">花費 ↕</th>
+            <th onclick="sortTable('impressions')">曝光 ↕</th>
+            <th onclick="sortTable('reach')">觸及 ↕</th>
+            <th onclick="sortTable('ctr')">CTR ↕</th>
+            <th onclick="sortTable('cpm')">CPM ↕</th>
+            <th onclick="sortTable('cpc')">CPC ↕</th>
+            <th onclick="sortTable('purchases')">購買 ↕</th>
+            <th onclick="sortTable('revenue')">業績 ↕</th>
+            <th onclick="sortTable('roas')">ROAS ↕</th>
+            <th onclick="sortTable('cpa')">CPA ↕</th>
+            <th onclick="sortTable('aov')">平均客單 ↕</th>
+          </tr>
+        </thead>
+        <tbody id="adTableBody"><tr><td colspan="15" class="no-data">載入中…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>資料來源：Windsor.ai / Meta Ads。預設為本月，若開啟自動刷新，會每 5 分鐘重新抓一次。</footer>
+</div>
+
+<script>
+const API_KEY='991e3783ac050dde54f3b397f0f7b5ac4c6b';
+const ACCOUNT_ID='2211975622597710';
+const FIELDS='date,ad_name,adset_name,title,campaign,spend,impressions,reach,clicks,ctr,cpm,cpc,actions_offsite_conversion_fb_pixel_purchase,action_values_offsite_conversion_fb_pixel_purchase,website_purchase_roas_offsite_conversion_fb_pixel_purchase,cost_per_action_type_offsite_conversion_fb_pixel_purchase';
+
+let rawData=[];
+let filteredData=[];
+let currentSegment='website';
+let sortKey='spend';
+let sortAsc=false;
+let autoRefreshTimer=null;
+let charts={};
+
+function pad(n){return String(n).padStart(2,'0')}
+function localYMD(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function money(n,dec=0){if(n==null||isNaN(n))return '—'; return 'NT$'+Number(n).toLocaleString('zh-TW',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function num(n,dec=0){if(n==null||isNaN(n))return '—'; return Number(n).toLocaleString('zh-TW',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function shortNum(n){if(n==null||isNaN(n))return '—'; n=Number(n); if(n>=1000000)return (n/1000000).toFixed(1)+'M'; if(n>=1000)return (n/1000).toFixed(0)+'k'; return num(n)}
+function pct(n,dec=2){if(n==null||isNaN(n))return '—'; return (Number(n)*100).toFixed(dec)+'%'}
+function val(d,k){return parseFloat(d[k])||0}
+function isFundraising(item){return (item.campaign||'').includes('募資')}
+function getSegmentClass(){return currentSegment==='fundraising'?'fundraising':currentSegment==='website'?'website':'all'}
+function getToday(){return new Date()}
+
+function applyPreset(type,btn){
+  document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const now=getToday();
+  const today=localYMD(now);
+  let from=today,to=today;
+  if(type==='month'){
+    from=`${now.getFullYear()}-${pad(now.getMonth()+1)}-01`;
+    to=today;
+  }else if(type==='yesterday'){
+    const d=new Date(now); d.setDate(d.getDate()-1); from=to=localYMD(d);
+  }else if(type==='7days'){
+    const d=new Date(now); d.setDate(d.getDate()-6); from=localYMD(d); to=today;
+  }else if(type==='today'){
+    from=to=today;
+  }
+  document.getElementById('dateFrom').value=from;
+  document.getElementById('dateTo').value=to;
+  fetchData();
+}
+
+function onDateInputChange(){
+  document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active'));
+  const from=document.getElementById('dateFrom').value;
+  const to=document.getElementById('dateTo').value;
+  if(from&&to&&from<=to) fetchData();
+}
+
+function setSegment(seg,btn){
+  currentSegment=seg;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function toggleAutoRefresh(){
+  const btn=document.getElementById('autoRefreshBtn');
+  if(autoRefreshTimer){
+    clearInterval(autoRefreshTimer); autoRefreshTimer=null;
+    btn.textContent='自動刷新：關閉';
+  }else{
+    autoRefreshTimer=setInterval(()=>fetchData(),5*60*1000);
+    btn.textContent='自動刷新：每 5 分鐘';
+  }
+}
+
+function getApiUrl(){
+  const from=document.getElementById('dateFrom').value;
+  const to=document.getElementById('dateTo').value;
+  return `https://connectors.windsor.ai/facebook?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${ACCOUNT_ID}&fields=${FIELDS}`;
+}
+
+async function fetchData(manual=false){
+  const btn=document.getElementById('refreshBtn');
+  const err=document.getElementById('errorMsg');
+  err.style.display='none';
+  btn.disabled=true;
+  btn.textContent='更新中…';
+  document.getElementById('statusBar').textContent='資料更新中，請稍候…';
+  try{
+    const resp=await fetch(getApiUrl());
+    if(!resp.ok){
+      const txt=await resp.text();
+      throw new Error(`HTTP ${resp.status}: ${txt.slice(0,180)}`);
+    }
+    const json=await resp.json();
+    rawData=Array.isArray(json)?json:(Array.isArray(json.data)?json.data:[]);
+    populateCampaignFilter();
+    applyFilters();
+    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · 共 ${rawData.length} 筆原始資料`;
+  }catch(e){
+    err.textContent='資料載入失敗：'+e.message;
+    err.style.display='block';
+    document.getElementById('statusBar').textContent='載入失敗';
+  }finally{
+    btn.disabled=false;
+    btn.textContent='重新整理';
+  }
+}
+
+function segFilter(data){
+  if(currentSegment==='website') return data.filter(x=>!isFundraising(x));
+  if(currentSegment==='fundraising') return data.filter(x=>isFundraising(x));
+  return data;
+}
+
+function populateCampaignFilter(){
+  const sel=document.getElementById('campaignFilter');
+  const current=sel.value;
+  const camps=[...new Set(segFilter(rawData).map(x=>x.campaign).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">所有活動</option>'+camps.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  if(camps.includes(current)) sel.value=current;
+}
+
+function applyFilters(){
+  populateCampaignFilter();
+  const camp=document.getElementById('campaignFilter').value;
+  filteredData=segFilter(rawData).filter(x=>!camp || x.campaign===camp);
+  updateSubtitle();
+  renderKPIs();
+  renderInsights();
+  renderCharts();
+  renderSplitCharts();
+  renderTable();
+}
+
+function updateSubtitle(){
+  const dates=filteredData.map(x=>x.date).filter(Boolean).sort();
+  const segName=currentSegment==='website'?'官網':currentSegment==='fundraising'?'募資':'全部';
+  if(dates.length){
+    document.getElementById('subtitle').textContent=`帳戶：探索_TW_HIPPORIZZ · ${segName} · ${dates[0]} ~ ${dates[dates.length-1]}`;
+    document.getElementById('trendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
+  }else{
+    document.getElementById('subtitle').textContent=`帳戶：探索_TW_HIPPORIZZ · ${segName} · 無資料`;
+    document.getElementById('trendRange').textContent='無資料';
+  }
+}
+
+function aggregateOverview(data){
+  const spend=data.reduce((s,r)=>s+val(r,'spend'),0);
+  const impressions=data.reduce((s,r)=>s+val(r,'impressions'),0);
+  const reach=data.reduce((s,r)=>s+val(r,'reach'),0);
+  const clicks=data.reduce((s,r)=>s+val(r,'clicks'),0);
+  const purchases=data.reduce((s,r)=>s+val(r,'actions_offsite_conversion_fb_pixel_purchase'),0);
+  const revenue=data.reduce((s,r)=>s+val(r,'action_values_offsite_conversion_fb_pixel_purchase'),0);
+  const ctr=impressions?clicks/impressions:0;
+  const cpc=clicks?spend/clicks:0;
+  const cpm=impressions?(spend/impressions)*1000:0;
+  const roas=spend?revenue/spend:0;
+  const cpa=purchases?spend/purchases:0;
+  const aov=purchases?revenue/purchases:0;
+  return {spend,impressions,reach,clicks,purchases,revenue,ctr,cpc,cpm,roas,cpa,aov};
+}
+
+function renderKPIs(){
+  const kpiGrid=document.getElementById('kpiGrid');
+  const o=aggregateOverview(filteredData);
+  const barCls=getSegmentClass();
+  const roasClass=o.roas>=3?'good':o.roas>=1?'ok':'bad';
+  const cpaClass=o.cpa>0 && o.cpa<=400?'good':o.cpa>0 && o.cpa<=800?'ok':'bad';
+  const cards=[
+    ['花費', money(o.spend), '整體廣告支出'],
+    ['購買業績', money(o.revenue), '以 purchase value 累計'],
+    ['ROAS', `<span class="${roasClass}">${o.roas.toFixed(2)}x</span>`, '業績 / 花費'],
+    ['購買次數', num(o.purchases), 'purchase 事件'],
+    ['CPA', o.cpa?`<span class="${cpaClass}">${money(o.cpa)}</span>`:'—', '每筆購買成本'],
+    ['平均客單', o.aov?money(o.aov):'—', '業績 / 購買次數'],
+    ['CPC', o.cpc?money(o.cpc,1):'—', '每次點擊成本'],
+    ['CPM', o.cpm?money(o.cpm,1):'—', '千次曝光成本'],
+    ['CTR', pct(o.ctr), '點擊率'],
+    ['曝光 / 觸及', `${shortNum(o.impressions)} / ${shortNum(o.reach)}`, '曝光與觸及']
+  ];
+  kpiGrid.innerHTML=cards.map(([label,value,foot])=>`
+    <div class="card kpi">
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-value">${value}</div>
+      <div class="kpi-foot">${foot}</div>
+      <div class="bar ${barCls}"></div>
+    </div>`).join('');
+}
+
+function campaignRollup(data){
+  const m={};
+  for(const r of data){
+    const key=r.campaign||'未命名活動';
+    if(!m[key]) m[key]={campaign:key,spend:0,revenue:0,purchases:0,clicks:0,impressions:0};
+    m[key].spend+=val(r,'spend');
+    m[key].revenue+=val(r,'action_values_offsite_conversion_fb_pixel_purchase');
+    m[key].purchases+=val(r,'actions_offsite_conversion_fb_pixel_purchase');
+    m[key].clicks+=val(r,'clicks');
+    m[key].impressions+=val(r,'impressions');
+  }
+  return Object.values(m).map(x=>({...x, roas:x.spend?x.revenue/x.spend:0, cpa:x.purchases?x.spend/x.purchases:0, ctr:x.impressions?x.clicks/x.impressions:0}));
+}
+
+function renderInsights(){
+  const list=document.getElementById('insightList');
+  const campaigns=campaignRollup(filteredData).sort((a,b)=>b.spend-a.spend);
+  if(!campaigns.length){
+    list.innerHTML='<div class="insight-item"><strong>目前沒有資料</strong><p>請先選擇有效日期區間或確認 API 是否正常。</p></div>';
+    document.getElementById('bestCampaignRoas').textContent='—';
+    document.getElementById('bestCampaignName').textContent='—';
+    document.getElementById('topSpendCampaign').textContent='—';
+    document.getElementById('topSpendCampaignNote').textContent='—';
+    document.getElementById('weakCampaign').textContent='—';
+    document.getElementById('weakCampaignNote').textContent='—';
+    return;
+  }
+  const bestRoas=[...campaigns].filter(x=>x.spend>0).sort((a,b)=>b.roas-a.roas)[0];
+  const topSpend=campaigns[0];
+  const weak=[...campaigns].filter(x=>x.spend>0).sort((a,b)=>{
+    const as=(a.roas<1?1000:0)+(a.spend*0.01)-a.roas*50;
+    const bs=(b.roas<1?1000:0)+(b.spend*0.01)-b.roas*50;
+    return bs-as;
+  })[0];
+  const profitableCount=campaigns.filter(x=>x.roas>=2).length;
+  const riskyCount=campaigns.filter(x=>x.spend>=1000 && x.roas<1).length;
+  const spendShare=topSpend&&aggregateOverview(filteredData).spend? (topSpend.spend/aggregateOverview(filteredData).spend):0;
+
+  const insights=[];
+  if(bestRoas) insights.push({title:'效率最佳活動',text:`${bestRoas.campaign} 的 ROAS 為 ${bestRoas.roas.toFixed(2)}x，若量體還小，可以優先放大或複製受眾 / 素材測試。`});
+  if(topSpend) insights.push({title:'預算集中度',text:`最高花費活動是 ${topSpend.campaign}，吃掉 ${pct(spendShare,1)} 的預算。${topSpend.roas<1?'目前轉換效率偏弱，建議先檢查素材與受眾。':'目前仍維持可接受效率。'}`});
+  if(weak) insights.push({title:'需要優先檢查',text:`${weak.campaign} 花費 ${money(weak.spend)}，ROAS ${weak.roas.toFixed(2)}x。這類活動容易吃預算但不回收，建議先降預算或換素材。`});
+  insights.push({title:'整體結構判讀',text:`目前高於 2x ROAS 的活動有 ${profitableCount} 個；花費超過 NT$1,000 且 ROAS 低於 1 的風險活動有 ${riskyCount} 個。`});
+
+  list.innerHTML=insights.map(x=>`<div class="insight-item"><strong>${x.title}</strong><p>${x.text}</p></div>`).join('');
+  document.getElementById('bestCampaignRoas').textContent=bestRoas?bestRoas.roas.toFixed(2)+'x':'—';
+  document.getElementById('bestCampaignName').textContent=bestRoas?bestRoas.campaign:'—';
+  document.getElementById('topSpendCampaign').textContent=topSpend?money(topSpend.spend):'—';
+  document.getElementById('topSpendCampaignNote').textContent=topSpend?topSpend.campaign:'—';
+  document.getElementById('weakCampaign').textContent=weak?weak.roas.toFixed(2)+'x':'—';
+  document.getElementById('weakCampaignNote').textContent=weak?weak.campaign:'—';
+}
+
+function dailyRollup(data){
+  const m={};
+  for(const r of data){
+    const date=r.date; if(!date) continue;
+    if(!m[date]) m[date]={date,spend:0,revenue:0};
+    m[date].spend+=val(r,'spend');
+    m[date].revenue+=val(r,'action_values_offsite_conversion_fb_pixel_purchase');
+  }
+  return Object.values(m).sort((a,b)=>a.date.localeCompare(b.date)).map(x=>({...x,roas:x.spend?x.revenue/x.spend:0}));
+}
+
+function destroyChart(id){ if(charts[id]) charts[id].destroy(); }
+
+function renderCharts(){
+  const daily=dailyRollup(filteredData);
+  const labels=daily.map(x=>x.date.slice(5));
+  destroyChart('trendChart');
+  charts.trendChart=new Chart(document.getElementById('trendChart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {type:'bar',label:'花費',data:daily.map(x=>Math.round(x.spend)),backgroundColor:currentSegment==='fundraising'?'rgba(124,58,237,.72)':currentSegment==='website'?'rgba(37,99,235,.72)':'rgba(17,17,17,.75)',borderRadius:8,maxBarThickness:30},
+      {type:'line',label:'購買業績',data:daily.map(x=>Math.round(x.revenue)),borderColor:'#111',backgroundColor:'rgba(17,17,17,.08)',pointRadius:3,tension:.32,borderWidth:2,fill:false}
+    ]},
+    options:baseChartOptions('NT$')
+  });
+
+  destroyChart('roasChart');
+  charts.roasChart=new Chart(document.getElementById('roasChart'),{
+    type:'line',
+    data:{labels,datasets:[{label:'ROAS',data:daily.map(x=>Number(x.roas.toFixed(2))),borderColor:currentSegment==='fundraising'?'#7c3aed':currentSegment==='website'?'#2563eb':'#111',backgroundColor:'rgba(17,17,17,.04)',pointRadius:3,tension:.32,borderWidth:2,fill:true}]},
+    options:baseChartOptions('', true)
+  });
+
+  const campaigns=campaignRollup(filteredData).sort((a,b)=>b.spend-a.spend).slice(0,7);
+  destroyChart('campaignChart');
+  charts.campaignChart=new Chart(document.getElementById('campaignChart'),{
+    type:'doughnut',
+    data:{labels:campaigns.map(x=>x.campaign),datasets:[{data:campaigns.map(x=>Math.round(x.spend)),backgroundColor:['#111','#2563eb','#60a5fa','#7c3aed','#c084fc','#9ca3af','#d1d5db'],borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,color:'#6e6e73',font:{family:'Inter',size:11}}},tooltip:{callbacks:{label:c=>`${c.label}: ${money(c.parsed)}`}}}}
+  });
+}
+
+function renderSplitCharts(){
+  drawSegmentSplit('websiteChart', rawData.filter(x=>!isFundraising(x)), '#2563eb', 'rgba(37,99,235,.18)');
+  drawSegmentSplit('fundraisingChart', rawData.filter(x=>isFundraising(x)), '#7c3aed', 'rgba(124,58,237,.18)');
+}
+
+function drawSegmentSplit(canvasId,data,color,fill){
+  const d=dailyRollup(data);
+  destroyChart(canvasId);
+  charts[canvasId]=new Chart(document.getElementById(canvasId),{
+    type:'bar',
+    data:{labels:d.map(x=>x.date.slice(5)),datasets:[
+      {type:'bar',label:'花費',data:d.map(x=>Math.round(x.spend)),backgroundColor:fill,borderColor:color,borderWidth:1,borderRadius:8,maxBarThickness:26},
+      {type:'line',label:'業績',data:d.map(x=>Math.round(x.revenue)),borderColor:color,pointRadius:2,tension:.3,borderWidth:2,fill:false}
+    ]},
+    options:baseChartOptions('NT$')
+  });
+}
+
+function baseChartOptions(prefix='', rawNumber=false){
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:true,labels:{color:'#6e6e73',font:{family:'Inter',size:11}}}},
+    scales:{
+      x:{ticks:{color:'#8e8e93',font:{family:'JetBrains Mono',size:11}},grid:{display:false}},
+      y:{ticks:{color:'#8e8e93',font:{family:'JetBrains Mono',size:11},callback:v=> rawNumber? v : prefix+(v>=1000?(Math.round(v/100)/10)+'k':v)},grid:{color:'rgba(17,17,17,.06)'}}
+    }
+  }
+}
+
+function rollupByAd(){
+  const m={};
+  for(const r of filteredData){
+    const key=[r.ad_name||'', r.adset_name||'', r.title||'', r.campaign||''].join('|');
+    if(!m[key]) m[key]={ad_name:r.ad_name||'—',adset_name:r.adset_name||'—',title:r.title||'—',campaign:r.campaign||'—',spend:0,impressions:0,reach:0,clicks:0,purchases:0,revenue:0};
+    m[key].spend+=val(r,'spend');
+    m[key].impressions+=val(r,'impressions');
+    m[key].reach+=val(r,'reach');
+    m[key].clicks+=val(r,'clicks');
+    m[key].purchases+=val(r,'actions_offsite_conversion_fb_pixel_purchase');
+    m[key].revenue+=val(r,'action_values_offsite_conversion_fb_pixel_purchase');
+  }
+  return Object.values(m).map(x=>({...x,
+    ctr:x.impressions?x.clicks/x.impressions:0,
+    cpm:x.impressions?(x.spend/x.impressions)*1000:0,
+    cpc:x.clicks?x.spend/x.clicks:0,
+    roas:x.spend?x.revenue/x.spend:0,
+    cpa:x.purchases?x.spend/x.purchases:0,
+    aov:x.purchases?x.revenue/x.purchases:0
+  }));
+}
+
+function sortTable(key){ if(sortKey===key) sortAsc=!sortAsc; else {sortKey=key; sortAsc=false;} renderTable(); }
+
+function renderTable(){
+  const tbody=document.getElementById('adTableBody');
+  let rows=rollupByAd();
+  const q=document.getElementById('tableSearch').value.trim().toLowerCase();
+  if(q){
+    rows=rows.filter(r=>[r.ad_name,r.adset_name,r.title,r.campaign].join(' ').toLowerCase().includes(q));
+  }
+  rows.sort((a,b)=>{
+    const av=a[sortKey], bv=b[sortKey];
+    const na=typeof av==='number', nb=typeof bv==='number';
+    if(na&&nb) return sortAsc?av-bv:bv-av;
+    return sortAsc?String(av).localeCompare(String(bv),'zh-Hant'):String(bv).localeCompare(String(av),'zh-Hant');
+  });
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="15" class="no-data">此條件下沒有資料</td></tr>'; return;}
+  tbody.innerHTML=rows.map(r=>{
+    const tagClass=isFundraising(r)?'fundraising':'website';
+    const roasClass=r.roas>=3?'roas-high':r.roas>=1?'roas-mid':'roas-low';
+    const rowClass=r.roas>=3?'top-row':(r.spend>=1000&&r.roas<1?'weak-row':'');
+    return `<tr class="${rowClass}">
+      <td class="name-cell">${escapeHtml(r.ad_name)}</td>
+      <td class="name-cell">${escapeHtml(r.adset_name)}</td>
+      <td class="name-cell">${escapeHtml(r.title)}</td>
+      <td><span class="tag ${tagClass}">${escapeHtml(r.campaign)}</span></td>
+      <td>${money(r.spend)}</td>
+      <td>${shortNum(r.impressions)}</td>
+      <td>${shortNum(r.reach)}</td>
+      <td>${pct(r.ctr)}</td>
+      <td>${r.cpm?money(r.cpm,1):'—'}</td>
+      <td>${r.cpc?money(r.cpc,1):'—'}</td>
+      <td>${r.purchases?num(r.purchases):'—'}</td>
+      <td>${r.revenue?money(r.revenue):'—'}</td>
+      <td class="${roasClass}">${r.roas?r.roas.toFixed(2)+'x':'—'}</td>
+      <td>${r.cpa?money(r.cpa):'—'}</td>
+      <td>${r.aov?money(r.aov):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function exportRows(){
+  return rollupByAd().map(r=>({
+    廣告名稱:r.ad_name,
+    廣告組:r.adset_name,
+    素材:r.title,
+    活動:r.campaign,
+    花費:Math.round(r.spend),
+    曝光:Math.round(r.impressions),
+    觸及:Math.round(r.reach),
+    CTR:Number((r.ctr*100).toFixed(2))+'%',
+    CPM:Number(r.cpm.toFixed(2)),
+    CPC:Number(r.cpc.toFixed(2)),
+    購買:Math.round(r.purchases),
+    業績:Math.round(r.revenue),
+    ROAS:Number(r.roas.toFixed(2)),
+    CPA:Number(r.cpa.toFixed(2)),
+    平均客單:Number(r.aov.toFixed(2))
+  }));
+}
+
+function exportCSV(){
+  const rows=exportRows();
+  if(!rows.length) return alert('目前沒有可匯出的資料');
+  const headers=Object.keys(rows[0]);
+  const csv=[headers.join(','),...rows.map(r=>headers.map(h=>`"${String(r[h]).replaceAll('"','""')}"`).join(','))].join('\n');
+  downloadBlob('\ufeff'+csv,'text/csv;charset=utf-8;','hipporizz_meta_dashboard.csv');
+}
+
+function exportExcel(){
+  const rows=exportRows();
+  if(!rows.length) return alert('目前沒有可匯出的資料');
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb, ws, 'Meta Dashboard');
+  XLSX.writeFile(wb, 'hipporizz_meta_dashboard.xlsx');
+}
+
+function downloadBlob(content,type,filename){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+}
+
+function escapeHtml(str){
+  return String(str??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
+
+(function init(){
+  const today=localYMD(new Date());
+  document.getElementById('dateTo').max=today;
+  applyPreset('month', document.querySelector('.preset[data-preset="month"]'));
+})();
+</script>
+</body>
+</html>
