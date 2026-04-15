@@ -3,57 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HIPPORIZZ Meta 廣告報表</title>
+<title>廣告績效報表</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f7f7f5;--surface:#ffffff;--surface2:#f3f3f1;--border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.14);
-  --text:#111111;--text2:#5f5f5a;--text3:#9a9a93;--accent:#1a4fd6;--accent-bg:#eef2fd;
+  --bg:#f7f7f5;--surface:#fff;--surface2:#f3f3f1;--border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.14);
+  --text:#111;--text2:#5f5f5a;--text3:#9a9a93;
+  --accent:#1a4fd6;--accent-bg:#eef2fd;
   --green:#1f7a4d;--red:#c0392b;--red-bg:#fdf0ee;--amber:#8a5c00;
   --purple:#6b21a8;--purple-bg:#f3e8ff;
+  --maclove:#c0392b;--maclove-bg:#fff0ee;
+  --google:#1a73e8;--google-bg:#e8f0fe;
   --radius:10px;--radius-lg:16px;
   --shadow:0 8px 24px rgba(0,0,0,.04);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 24px 48px;font-size:14px;line-height:1.5}
-.dashboard{max-width:1280px;margin:0 auto}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 24px 60px;font-size:14px;line-height:1.5}
+.dashboard{max-width:1320px;margin:0 auto}
 
-.header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px}
-.header-left h1{font-size:22px;font-weight:600;letter-spacing:-.3px}
-.header-left p{font-size:13px;color:var(--text2);margin-top:3px}
-.meta-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;background:#e7f0ff;color:#1a4fd6;border-radius:20px;padding:3px 10px;margin-bottom:6px}
-.meta-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:#1a4fd6}
-.header-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* ── Top bar (brand + platform + title + controls all in one compact area) ── */
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;box-shadow:var(--shadow)}
+.topbar-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
+.topbar-divider{width:1px;height:22px;background:var(--border2);flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.2px;white-space:nowrap}
+.topbar-sub{font-size:11px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace}
 
-/* Segment tabs: 官網 first */
-.seg-tabs{display:flex;background:var(--surface2);border-radius:var(--radius-lg);padding:3px;gap:2px;margin-bottom:20px}
-.seg-tab{flex:1;text-align:center;font-size:14px;font-weight:500;padding:10px 24px;border-radius:11px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap}
+/* Brand tabs (compact pill) */
+.brand-tabs{display:flex;gap:4px}
+.brand-tab{font-size:13px;font-weight:600;padding:6px 18px;border-radius:999px;border:1.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.brand-tab:hover{color:var(--text);border-color:var(--text)}
+.brand-tab.maclove.active{background:var(--maclove);color:#fff;border-color:var(--maclove);box-shadow:0 2px 8px rgba(192,57,43,.2)}
+.brand-tab.hipporizz.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(26,79,214,.2)}
+
+/* Platform tabs (compact pill) */
+.platform-tabs{display:flex;gap:3px;background:var(--surface2);border-radius:8px;padding:2px}
+.platform-tab{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.platform-tab:hover{color:var(--text)}
+.platform-tab.active{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.08);color:var(--text)}
+.platform-tab.meta.active{color:#1877f2}
+.platform-tab.google.active{color:var(--google)}
+.p-icon{width:14px;height:14px;border-radius:3px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+.p-icon-meta{background:#1877f2}
+.p-icon-google{background:linear-gradient(135deg,#4285f4 0%,#4285f4 50%,#34a853 50%)}
+
+/* platform badge (hidden - info shown inline in topbar) */
+.platform-badge{display:none}
+.badge-meta-mac{}.badge-meta-hip{}.badge-google{}
+/* keep header for subtitle updates but hide visually */
+.header{display:none}
+.header-left h1{}.header-left p{}.header-right{}
+
+/* Segment tabs */
+.seg-tabs{display:flex;background:var(--surface2);border-radius:var(--radius-lg);padding:3px;gap:2px;margin-bottom:12px}
+.seg-tab{flex:1;text-align:center;font-size:14px;font-weight:500;padding:9px 20px;border-radius:11px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap}
 .seg-tab:hover{color:var(--text)}
 .seg-tab.active{background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.seg-tab.website.active{color:var(--accent)}
-.seg-tab.fundraising.active{color:var(--purple)}
-.seg-tab.all.active{color:var(--text)}
+.seg-tab.website.active{color:var(--accent)}.seg-tab.fundraising.active{color:var(--purple)}.seg-tab.all.active{color:var(--text)}
+
+/* Filter row */
+.filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.filter-label{font-size:12px;font-weight:500;color:var(--text3);white-space:nowrap}
+.filter-sep{width:1px;height:20px;background:var(--border2)}
+select{font-family:'DM Sans',sans-serif;font-size:13px;padding:7px 28px 7px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface) url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b6b65' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--text);cursor:pointer;outline:none;appearance:none}
+select:hover{border-color:var(--accent)}
 
 /* Date row */
-.date-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.date-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .month-scroll{display:flex;gap:4px;flex-wrap:wrap;flex:1}
 .month-btn{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;padding:6px 10px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .month-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
 .month-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.quick-range{display:flex;gap:4px;flex-wrap:wrap}
-.quick-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 10px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
-.quick-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.quick-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.quick-btn:hover{border-color:var(--text);color:var(--text)}
 .quick-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
 .divider{width:1px;height:24px;background:var(--border2);margin:0 4px;flex-shrink:0}
-.date-range{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:6px 12px;transition:border-color .15s;flex-shrink:0}
+.date-range{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:6px 12px;flex-shrink:0}
 .date-range:focus-within{border-color:var(--accent)}
 .date-range-sep{font-size:12px;color:var(--text3)}
 input[type=date]{font-family:'DM Mono',monospace;font-size:12px;border:none;outline:none;background:transparent;color:var(--text);cursor:pointer;padding:0;width:105px}
 input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;margin-left:2px}
 
-select{font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 28px 8px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface) url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b6b65' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--text);cursor:pointer;outline:none;appearance:none}
-select:hover{border-color:var(--accent)}
 .btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface);color:var(--text);cursor:pointer;transition:all .15s}
 .btn:hover{background:var(--surface2);border-color:var(--accent);color:var(--accent)}
 .btn:active{transform:scale(.98)}
@@ -62,41 +93,38 @@ select:hover{border-color:var(--accent)}
 .spinning{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-
-.quick-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
-.quick-btn:hover{border-color:var(--text);color:var(--text);background:var(--surface2)}
-.quick-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
-.table-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:999px;padding:8px 12px;min-width:240px}
-.search-box input{border:none;outline:none;background:transparent;font:inherit;color:var(--text);width:100%}
-.search-box svg{width:14px;height:14px;color:var(--text3);flex-shrink:0}
-@media(max-width:640px){.search-box{min-width:100%}}
-
-.status{font-size:12px;color:var(--text3);margin-bottom:20px;font-family:'DM Mono',monospace;min-height:18px}
+.status{font-size:12px;color:var(--text3);margin-bottom:16px;font-family:'DM Mono',monospace;min-height:18px}
 .error{background:var(--red-bg);color:var(--red);border-radius:var(--radius);padding:12px 16px;font-size:13px;margin-bottom:16px;border:1px solid rgba(192,57,43,.15);display:none}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;margin-bottom:20px}
-@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+/* KPI */
+.kpi-grid{display:grid;gap:10px;margin-bottom:16px}
+.kpi-grid.cols-9{grid-template-columns:repeat(9,1fr)}
+.kpi-grid.cols-8{grid-template-columns:repeat(8,1fr)}
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(4,1fr)!important}}
+@media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr)!important}}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .kpi-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 .kpi-value{font-size:20px;font-weight:600;color:var(--text);letter-spacing:-.5px}
 .kpi-value.good{color:var(--green)}.kpi-value.warn{color:var(--red)}.kpi-value.neutral{color:var(--amber)}
 .kpi-bar{position:absolute;bottom:0;left:0;right:0;height:3px}
-.bar-website{background:linear-gradient(90deg,#1a4fd6,#3b82f6)}
-.bar-fundraising{background:linear-gradient(90deg,#6b21a8,#9333ea)}
-.bar-all{background:linear-gradient(90deg,#1a1a18,#6b6b65)}
+.bar-mac{background:linear-gradient(90deg,#c0392b,#e74c3c)}
+.bar-hip-w{background:linear-gradient(90deg,#1a4fd6,#3b82f6)}
+.bar-hip-f{background:linear-gradient(90deg,#6b21a8,#9333ea)}
+.bar-hip-a{background:linear-gradient(90deg,#1a1a18,#6b6b65)}
+.bar-goo{background:linear-gradient(90deg,#4285f4,#34a853)}
 
+/* Charts */
 .charts-row{display:grid;grid-template-columns:1.5fr 1.5fr 1fr;gap:12px;margin-bottom:12px}
 @media(max-width:980px){.charts-row{grid-template-columns:1fr}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
-.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card-title span{font-size:11px;font-weight:400;color:var(--text3);font-family:'DM Mono',monospace}
 .legend{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
 .leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2)}
 .leg-line{width:16px;height:2px;border-radius:1px;flex-shrink:0}
 .leg-dash{width:16px;height:0;border-top:2px dashed;flex-shrink:0}
 
+/* Table */
 .table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)}
 .table-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .table-header .card-title{margin-bottom:0}
@@ -105,26 +133,60 @@ select:hover{border-color:var(--accent)}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;white-space:nowrap;background:var(--surface2);user-select:none}
 th:hover{color:var(--text)}
-td{padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+td{padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg)}
-.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 .tag-w{background:var(--accent-bg);color:var(--accent)}
 .tag-f{background:var(--purple-bg);color:var(--purple)}
+.tag-m{background:var(--maclove-bg);color:var(--maclove)}
+.obj-pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;background:#f0f0ee;color:var(--text2);white-space:nowrap}
+.ctype-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap}
+.ct-search{background:#e8f0fe;color:#1a73e8}
+.ct-shopping{background:#fce8e6;color:#d93025}
+.ct-pmax{background:#e6f4ea;color:#137333}
+.ct-display{background:#fef7e0;color:#b06000}
+.ct-video{background:#f3e8fd;color:#7b1fa2}
+.ct-other{background:var(--surface2);color:var(--text3)}
 .no-data{text-align:center;padding:40px;color:var(--text3);font-size:13px}
 .roas-good{color:var(--green);font-weight:600}.roas-ok{color:var(--amber);font-weight:600}.roas-bad{color:var(--red);font-weight:600}
+.tbl-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:999px;padding:8px 12px;min-width:220px}
+.search-box input{border:none;outline:none;background:transparent;font:inherit;color:var(--text);width:100%}
+.search-box svg{width:14px;height:14px;color:var(--text3);flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="dashboard">
 
-  <div class="header">
-    <div class="header-left">
-      <div class="meta-badge">Meta Ads · Windsor.ai</div>
-      <h1>HIPPORIZZ 廣告績效報表</h1>
-      <p id="subtitle">帳戶：探索_TW_HIPPORIZZ(非SL)_hipporizz_electronics</p>
+  <!-- ── Compact Top Bar ── -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <!-- Brand pills -->
+      <div class="brand-tabs">
+        <button class="brand-tab maclove active" onclick="setBrand('maclove',this)">MACLOVE</button>
+        <button class="brand-tab hipporizz" onclick="setBrand('hipporizz',this)">HIPPORIZZ</button>
+      </div>
+      <div class="topbar-divider"></div>
+      <!-- Platform pills -->
+      <div class="platform-tabs">
+        <button class="platform-tab meta active" onclick="setPlatform('meta',this)">
+          <span class="p-icon p-icon-meta">f</span>Meta
+        </button>
+        <button class="platform-tab google" onclick="setPlatform('google',this)">
+          <span class="p-icon p-icon-google">G</span>Google
+        </button>
+      </div>
+      <div class="topbar-divider"></div>
+      <!-- Title + subtitle -->
+      <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
+        <span class="topbar-title" id="pageTitle">MACLOVE · Meta Ads</span>
+        <span class="topbar-sub" id="subtitle">帳戶：探索_TW_Maclove_service</span>
+      </div>
     </div>
-    <div class="header-right">
+    <div class="topbar-right">
+      <!-- invisible badge kept for JS compat -->
+      <div id="platformBadge" style="display:none">Meta Ads · Windsor.ai</div>
       <select id="campaignFilter" onchange="applyFilters()"><option value="">所有活動</option></select>
       <button class="btn" onclick="fetchData()" id="refreshBtn">
         <svg id="refreshIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -133,118 +195,173 @@ tr:hover td{background:var(--bg)}
       </button>
     </div>
   </div>
+  <!-- hidden header for JS compat -->
+  <div class="header" style="display:none">
+    <div class="header-left"><div class="platform-badge badge-meta-mac" id="_badge"></div><h1></h1><p></p></div>
+    <div class="header-right"></div>
+  </div>
 
-  <!-- Segment: 官網 first -->
-  <div class="seg-tabs">
+  <!-- Segment (HIPPORIZZ Meta only) -->
+  <div class="seg-tabs" id="segTabs" style="display:none">
     <button class="seg-tab website active" onclick="setSegment('website',this)">官網廣告</button>
     <button class="seg-tab fundraising" onclick="setSegment('fundraising',this)">募資廣告</button>
     <button class="seg-tab all" onclick="setSegment('all',this)">全部</button>
   </div>
 
+  <!-- Filter bar -->
+  <div class="filter-row">
+    <!-- Meta: Objective filter -->
+    <span class="filter-label" id="objLabel">廣告目標</span>
+    <select id="objectiveFilter" onchange="applyFilters()"><option value="">所有目標</option></select>
+    <!-- Google: Campaign type filter -->
+    <span class="filter-label" id="ctypeLabel" style="display:none">活動類型</span>
+    <select id="campaignTypeFilter" style="display:none" onchange="applyFilters()"><option value="">所有類型</option></select>
+  </div>
+
   <!-- Date row -->
   <div class="date-row">
     <div class="month-scroll" id="monthPills"></div>
-    <div class="quick-range" id="quickRangeBtns">
-      <button class="quick-btn" onclick="setQuickRange('today', this)">今天</button>
-      <button class="quick-btn" onclick="setQuickRange('yesterday', this)">昨天</button>
+    <div style="display:flex;gap:4px">
+      <button class="quick-btn" onclick="setQuickRange('today',this)">今天</button>
+      <button class="quick-btn" onclick="setQuickRange('yesterday',this)">昨天</button>
     </div>
     <div class="divider"></div>
     <div class="date-range">
-      <input type="date" id="dateFrom" onchange="onDateChange()" />
+      <input type="date" id="dateFrom" onchange="onDateChange()"/>
       <span class="date-range-sep">→</span>
-      <input type="date" id="dateTo" onchange="onDateChange()" />
+      <input type="date" id="dateTo" onchange="onDateChange()"/>
     </div>
   </div>
 
   <div id="statusBar" class="status">載入中...</div>
   <div id="errorMsg" class="error"></div>
 
-  <div class="kpi-grid" id="kpiGrid">
+  <div class="kpi-grid cols-9" id="kpiGrid">
     <div class="kpi"><div class="kpi-label">花費</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">曝光</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">觸及</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">點擊率 CTR</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">購買次數</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">購買業績</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">ROAS</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">CPA</div><div class="kpi-value">—</div></div>
-    <div class="kpi"><div class="kpi-label">CPC</div><div class="kpi-value">—</div></div>
   </div>
 
   <div class="charts-row">
     <div class="card">
-      <div class="card-title">每日花費 vs 購買業績 <span id="trendRange"></span></div>
+      <div class="card-title">每日花費 vs 業績 <span id="trendRange"></span></div>
       <div class="legend">
-        <div class="leg"><div class="leg-line" id="legSpend" style="background:#1a4fd6"></div>花費</div>
-        <div class="leg"><div class="leg-dash" id="legRev" style="border-color:#1a7a52"></div>購買業績</div>
+        <div class="leg"><div class="leg-line" id="legSpend" style="background:#c0392b"></div>花費</div>
+        <div class="leg"><div class="leg-dash" id="legRev" style="border-color:#1a7a52"></div>業績</div>
       </div>
-      <div style="position:relative;height:220px"><canvas id="trendChart" role="img" aria-label="每日花費與購買業績趨勢圖">每日花費與購買業績趨勢。</canvas></div>
+      <div style="position:relative;height:220px"><canvas id="trendChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">每日 ROAS 趨勢</div>
-      <div style="position:relative;height:220px"><canvas id="roasChart" role="img" aria-label="每日 ROAS 趨勢圖">每日 ROAS 趨勢。</canvas></div>
+      <div style="position:relative;height:220px"><canvas id="roasChart"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">各活動花費佔比</div>
-      <div style="position:relative;height:240px"><canvas id="campaignChart" role="img" aria-label="各活動花費佔比圓餅圖">各活動花費佔比。</canvas></div>
+      <div style="position:relative;height:240px"><canvas id="campaignChart"></canvas></div>
     </div>
   </div>
 
   <div class="table-card">
     <div class="table-header">
       <div class="card-title" id="tableTitle">廣告明細</div>
-      <div class="table-tools">
+      <div class="tbl-tools">
         <label class="search-box">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
-          <input id="tableSearch" type="text" placeholder="搜尋廣告名稱 / 活動" oninput="renderTable()">
+          <input id="tableSearch" type="text" placeholder="搜尋廣告 / 活動名稱" oninput="renderTable()">
         </label>
         <div class="table-hint">點擊欄位標題排序</div>
       </div>
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr>
-          <th onclick="sortTable('ad_name')" style="width:170px">廣告名稱 ↕</th>
-          <th onclick="sortTable('campaign')" style="width:140px">活動 ↕</th>
-          <th onclick="sortTable('spend')">花費 ↕</th>
-          <th onclick="sortTable('impressions')">曝光 ↕</th>
-          <th onclick="sortTable('reach')">觸及 ↕</th>
-          <th onclick="sortTable('ctr')">CTR ↕</th>
-          <th onclick="sortTable('cpm')">CPM ↕</th>
-          <th onclick="sortTable('cpc')">CPC ↕</th>
-          <th onclick="sortTable('purchases')">購買 ↕</th>
-          <th onclick="sortTable('revenue')">業績 ↕</th>
-          <th onclick="sortTable('roas')">ROAS ↕</th>
-          <th onclick="sortTable('cpa')">CPA ↕</th>
-        </tr></thead>
-        <tbody id="adTableBody"><tr><td colspan="12" class="no-data">載入中...</td></tr></tbody>
+        <thead id="tableHead"></thead>
+        <tbody id="adTableBody"><tr><td colspan="13" class="no-data">載入中...</td></tr></tbody>
       </table>
     </div>
   </div>
 
 </div>
 <script>
-const API_KEY='991e3783ac050dde54f3b397f0f7b5ac4c6b';
-const ACCOUNT_ID='2211975622597710';
-const FIELDS='date,ad_name,adset_name,campaign,spend,impressions,reach,clicks,ctr,cpm,cpc,actions_offsite_conversion_fb_pixel_purchase,action_values_offsite_conversion_fb_pixel_purchase,website_purchase_roas_offsite_conversion_fb_pixel_purchase,cost_per_action_type_offsite_conversion_fb_pixel_purchase';
+// ═══════════════════════ CONFIG ═══════════════════════════════════
+const API_KEY = '991e3783ac050dde54f3b397f0f7b5ac4c6b';
 
-let rawData=[],filteredData=[],sortKey='spend',sortAsc=false,trendInst=null,roasInst=null,campInst=null;
-let currentSegment='website';
+const META_FIELDS = [
+  'date','account_id','objective','ad_name','adset_name','campaign',
+  'spend','impressions','reach','clicks','ctr','cpm','cpc',
+  'actions_offsite_conversion_fb_pixel_purchase',
+  'action_values_offsite_conversion_fb_pixel_purchase',
+  'website_purchase_roas_offsite_conversion_fb_pixel_purchase',
+  'cost_per_action_type_offsite_conversion_fb_pixel_purchase'
+].join(',');
 
-const SEG={
-  website:     {spendC:'#1a4fd6',revC:'#1a7a52',barCls:'bar-website',    titleSuffix:'官網廣告明細'},
-  fundraising: {spendC:'#6b21a8',revC:'#9333ea',barCls:'bar-fundraising',titleSuffix:'募資廣告明細'},
-  all:         {spendC:'#1a4fd6',revC:'#1a7a52',barCls:'bar-all',        titleSuffix:'全部廣告明細'},
+const GOOGLE_FIELDS = [
+  'date','account_id','campaign','campaign_type','ad_name',
+  'spend','impressions','clicks','ctr','cpc',
+  'conversions','conversion_value','cost_per_conversion'
+].join(',');
+
+// 廣告目標中文對照（自動對應 Windsor/Meta 回傳的 objective 值）
+const OBJ_LABEL = {
+  OUTCOME_SALES:'銷售量',OUTCOME_ENGAGEMENT:'互動',OUTCOME_AWARENESS:'品牌認知',
+  OUTCOME_TRAFFIC:'流量',OUTCOME_LEADS:'開發潛在顧客',OUTCOME_APP_PROMOTION:'應用程式推廣',
+  PAGE_LIKES:'粉絲專頁的讚',POST_ENGAGEMENT:'貼文互動',REACH:'觸及人數',
+  VIDEO_VIEWS:'影片觀看',LINK_CLICKS:'連結點擊',CONVERSIONS:'轉換',
+  PRODUCT_CATALOG_SALES:'產品目錄銷售',BRAND_AWARENESS:'品牌知名度',
+  MESSAGES:'傳送訊息',EVENT_RESPONSES:'活動回應',STORE_VISITS:'商店流量',
 };
 
-function isFR(d){return (d.campaign||'').includes('募資')}
+// Google 活動類型
+const CTYPE_LABEL = {
+  SEARCH:'Search 搜尋',SHOPPING:'Shopping 購物',PERFORMANCE_MAX:'PMax 最大成效',
+  DISPLAY:'Display 多媒體',VIDEO:'Video 影片',SMART:'Smart 智慧',DISCOVERY:'Discovery 探索',
+};
+const CTYPE_CLS = {
+  SEARCH:'ct-search',SHOPPING:'ct-shopping',PERFORMANCE_MAX:'ct-pmax',
+  DISPLAY:'ct-display',VIDEO:'ct-video',
+};
 
-function segFilter(data){
-  if(currentSegment==='website')     return data.filter(d=>!isFR(d));
-  if(currentSegment==='fundraising') return data.filter(d=>isFR(d));
-  return data;
+const BRANDS = {
+  maclove:{
+    metaId:'2919454488223604',
+    googleId:'1639977647',       // 麥克愛愛合作投放
+    name:'MACLOVE',
+    hasSegments:false,
+    spendC:'#c0392b',revC:'#e74c3c',barMeta:'bar-mac',
+    donut:['#c0392b','#e74c3c','#e67e22','#f39c12','#d35400','#922b21','#6b6b65'],
+  },
+  hipporizz:{
+    metaId:'2211975622597710',
+    googleId:'1634719552',       // HIPPORIZZ
+    name:'HIPPORIZZ',
+    hasSegments:true,
+    spendC:'#1a4fd6',revC:'#1a7a52',barMeta:'bar-hip-w',
+    donut:['#1a4fd6','#1a7a52','#c0392b','#8a5c00','#534ab7','#b5451b','#6b6b65'],
+  },
+};
+const SEG={
+  website:    {sc:'#1a4fd6',rc:'#1a7a52',bar:'bar-hip-w',title:'官網廣告明細'},
+  fundraising:{sc:'#6b21a8',rc:'#9333ea',bar:'bar-hip-f',title:'募資廣告明細'},
+  all:        {sc:'#1a4fd6',rc:'#1a7a52',bar:'bar-hip-a',title:'全部廣告明細'},
+};
+
+// ═══════════════════════ STATE ════════════════════════════════════
+let currentBrand='maclove', currentPlatform='meta', currentSegment='all';
+let rawData=[],filteredData=[],sortKey='spend',sortAsc=false;
+let trendInst=null,roasInst=null,campInst=null;
+
+// ═══════════════════════ LAYER SWITCHERS ══════════════════════════
+function setBrand(brand,btn){
+  currentBrand=brand;
+  document.querySelectorAll('.brand-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSegment=BRANDS[brand].hasSegments&&currentPlatform==='meta'?'website':'all';
+  syncUI(); rawData=[]; filteredData=[]; fetchData();
 }
-
+function setPlatform(p,btn){
+  currentPlatform=p;
+  document.querySelectorAll('.platform-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSegment=BRANDS[currentBrand].hasSegments&&p==='meta'?'website':'all';
+  syncUI(); rawData=[]; filteredData=[]; fetchData();
+}
 function setSegment(seg,btn){
   currentSegment=seg;
   document.querySelectorAll('.seg-tab').forEach(b=>b.classList.remove('active'));
@@ -252,254 +369,343 @@ function setSegment(seg,btn){
   applyFilters();
 }
 
-// ── Date helpers (NO toISOString to avoid UTC shift) ──
-function pad(n){return String(n).padStart(2,'0')}
-function localYMD(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
-function lastDayOfMonth(y,m){return new Date(y,m+1,0).getDate()}
+function syncUI(){
+  const cfg=BRANDS[currentBrand];
+  const isMeta=currentPlatform==='meta';
+  const isHip=currentBrand==='hipporizz';
 
+  // Header
+  document.getElementById('pageTitle').textContent=`${cfg.name} · ${isMeta?'Meta Ads':'Google Ads'}`;
+  const badge=document.getElementById('platformBadge');
+  badge.textContent=(isMeta?'Meta Ads':'Google Ads')+' · Windsor.ai';
+  badge.className='platform-badge '+(isMeta?(currentBrand==='maclove'?'badge-meta-mac':'badge-meta-hip'):'badge-google');
+
+  // Segment tabs
+  const st=document.getElementById('segTabs');
+  if(isMeta&&isHip){
+    st.style.display='flex';
+    document.querySelectorAll('.seg-tab').forEach(b=>b.classList.remove('active'));
+    const cls=currentSegment==='fundraising'?'fundraising':currentSegment==='all'?'all':'website';
+    document.querySelector('.seg-tab.'+cls).classList.add('active');
+  } else { st.style.display='none'; }
+
+  // Filter bar: objective (Meta) vs campaign type (Google)
+  document.getElementById('objLabel').style.display        = isMeta?'':'none';
+  document.getElementById('objectiveFilter').style.display = isMeta?'':'none';
+  document.getElementById('ctypeLabel').style.display        = !isMeta?'':'none';
+  document.getElementById('campaignTypeFilter').style.display = !isMeta?'':'none';
+
+  renderTableHead();
+}
+
+// ═══════════════════════ DATE ═════════════════════════════════════
+function pad(n){return String(n).padStart(2,'0')}
+function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function lastDOM(y,m){return new Date(y,m+1,0).getDate()}
 function buildMonthPills(){
-  const now=new Date();
-  const cy=now.getFullYear(), cm=now.getMonth();
-  const container=document.getElementById('monthPills');
-  container.innerHTML='';
+  const now=new Date(),cy=now.getFullYear(),cm=now.getMonth();
+  const cont=document.getElementById('monthPills');cont.innerHTML='';
   for(let i=11;i>=0;i--){
-    let m=cm-i, y=cy;
-    while(m<0){m+=12;y--}
-    const from=`${y}-${pad(m+1)}-01`;
-    const to=`${y}-${pad(m+1)}-${pad(lastDayOfMonth(y,m))}`;
-    const label=`${y}/${pad(m+1)}`;
-    const isCur=(y===cy&&m===cm);
+    let m=cm-i,y=cy;while(m<0){m+=12;y--}
+    const from=`${y}-${pad(m+1)}-01`,to=`${y}-${pad(m+1)}-${pad(lastDOM(y,m))}`;
+    const isCur=y===cy&&m===cm;
     const btn=document.createElement('button');
-    btn.className='month-btn'+(isCur?' active':'');
-    btn.textContent=label;
+    btn.className='month-btn'+(isCur?' active':'');btn.textContent=`${y}/${pad(m+1)}`;
     btn.onclick=()=>{
       document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
-      clearQuickButtons();
-      btn.classList.add('active');
-      document.getElementById('dateFrom').value=from;
-      document.getElementById('dateTo').value=to;
-      fetchData();
+      clearQ();btn.classList.add('active');
+      document.getElementById('dateFrom').value=from;document.getElementById('dateTo').value=to;fetchData();
     };
-    container.appendChild(btn);
+    cont.appendChild(btn);
   }
 }
-
 function initDates(){
-  const now=new Date();
-  const y=now.getFullYear(), m=now.getMonth();
+  const now=new Date(),y=now.getFullYear(),m=now.getMonth();
   document.getElementById('dateFrom').value=`${y}-${pad(m+1)}-01`;
-  document.getElementById('dateTo').value=localYMD(now);
-  document.getElementById('dateTo').max=localYMD(now);
+  document.getElementById('dateTo').value=ymd(now);document.getElementById('dateTo').max=ymd(now);
 }
-
-function clearQuickButtons(){
-  document.querySelectorAll('.quick-btn').forEach(b=>b.classList.remove('active'));
-}
-
-function setQuickRange(type, btn){
-  const now=new Date();
-  let fromDate,toDate;
-  if(type==='today'){
-    fromDate=localYMD(now);
-    toDate=localYMD(now);
-  }else if(type==='yesterday'){
-    const y=new Date(now);
-    y.setDate(y.getDate()-1);
-    fromDate=localYMD(y);
-    toDate=localYMD(y);
-  }else{return}
+function clearQ(){document.querySelectorAll('.quick-btn').forEach(b=>b.classList.remove('active'))}
+function setQuickRange(t,btn){
+  const now=new Date();let f,e;
+  if(t==='today'){f=e=ymd(now)}else{const d=new Date(now);d.setDate(d.getDate()-1);f=e=ymd(d)}
   document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
-  clearQuickButtons();
-  if(btn) btn.classList.add('active');
-  document.getElementById('dateFrom').value=fromDate;
-  document.getElementById('dateTo').value=toDate;
-  fetchData();
+  clearQ();if(btn)btn.classList.add('active');
+  document.getElementById('dateFrom').value=f;document.getElementById('dateTo').value=e;fetchData();
 }
-
 function onDateChange(){
-  document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
-  clearQuickButtons();
-  const from=document.getElementById('dateFrom').value;
-  const to=document.getElementById('dateTo').value;
-  if(from&&to&&from<=to) fetchData();
+  document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));clearQ();
+  const f=document.getElementById('dateFrom').value,t=document.getElementById('dateTo').value;
+  if(f&&t&&f<=t)fetchData();
 }
 
-// ── Fetch ──
+// ═══════════════════════ FETCH ════════════════════════════════════
 async function fetchData(){
-  const btn=document.getElementById('refreshBtn');
-  const icon=document.getElementById('refreshIcon');
+  const btn=document.getElementById('refreshBtn'),icon=document.getElementById('refreshIcon');
   btn.disabled=true;icon.classList.add('spinning');
   document.getElementById('errorMsg').style.display='none';
   document.getElementById('statusBar').textContent='資料更新中，請稍候...';
-  const from=document.getElementById('dateFrom').value;
-  const to=document.getElementById('dateTo').value;
+  const from=document.getElementById('dateFrom').value,to=document.getElementById('dateTo').value;
   if(!from||!to){showErr('請選擇日期');return}
-  const url=`https://connectors.windsor.ai/facebook?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${ACCOUNT_ID}&fields=${FIELDS}`;
+
+  const isMeta=currentPlatform==='meta';
+  const cfg=BRANDS[currentBrand];
+  const accountId=isMeta?cfg.metaId:cfg.googleId;
+  const fields=isMeta?META_FIELDS:GOOGLE_FIELDS;
+  const connector=isMeta?'facebook':'google_ads';
+
+  if(!accountId){
+    showErr(`尚未設定 ${cfg.name} 的 Google Ads 帳號 ID，請在程式碼 BRANDS 設定中填入 googleId`);
+    btn.disabled=false;icon.classList.remove('spinning');return;
+  }
+  const url=`https://connectors.windsor.ai/${connector}?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${accountId}&fields=${fields}`;
   try{
     const resp=await fetch(url);
     if(!resp.ok){const t=await resp.text();throw new Error(`HTTP ${resp.status}: ${t.slice(0,200)}`)}
     const json=await resp.json();
-    rawData=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
-    if(!rawData.length&&!Array.isArray(json))throw new Error('無法解析資料：'+JSON.stringify(json).slice(0,150));
-    populateCampaignFilter();
-    applyFilters();
-    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · 共 ${rawData.length} 筆資料`;
+    const all=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
+    if(!all.length&&!Array.isArray(json))throw new Error('無法解析資料：'+JSON.stringify(json).slice(0,150));
+    // 前端二次過濾
+    const tid=String(accountId).replace(/\D/g,'');
+    rawData=all.filter(d=>!d.account_id||String(d.account_id).replace(/\D/g,'')===tid);
+    populateFilters();applyFilters();
+    const note=all.length!==rawData.length?` · 已過濾 ${all.length-rawData.length} 筆其他帳號`:'';
+    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · 共 ${rawData.length} 筆${note}`;
   }catch(e){
-    let msg=e.message;
-    if(msg.includes('Failed to fetch')||msg.includes('NetworkError'))
-      msg='網路連線失敗。請確認網路正常、使用 Chrome/Firefox，並嘗試關閉廣告攔截器。';
-    showErr('資料載入失敗：'+msg);
+    let m=e.message;
+    if(m.includes('Failed to fetch')||m.includes('NetworkError'))m='網路連線失敗，請確認網路並關閉廣告攔截器後重試。';
+    showErr('資料載入失敗：'+m);
   }finally{btn.disabled=false;icon.classList.remove('spinning')}
 }
+function showErr(msg){document.getElementById('errorMsg').textContent=msg;document.getElementById('errorMsg').style.display='block';document.getElementById('statusBar').textContent='載入失敗'}
 
-function showErr(msg){
-  const el=document.getElementById('errorMsg');
-  el.textContent=msg;el.style.display='block';
-  document.getElementById('statusBar').textContent='載入失敗';
+// ═══════════════════════ FILTERS ═════════════════════════════════
+function isFR(d){return(d.campaign||'').includes('募資')}
+function segFilter(data){
+  if(currentPlatform!=='meta'||!BRANDS[currentBrand].hasSegments)return data;
+  if(currentSegment==='website')    return data.filter(d=>!isFR(d));
+  if(currentSegment==='fundraising')return data.filter(d=>isFR(d));
+  return data;
 }
-
-function populateCampaignFilter(){
-  const sel=document.getElementById('campaignFilter');const cur=sel.value;
+function populateFilters(){
+  // Campaign
+  const cs=document.getElementById('campaignFilter'),cc=cs.value;
   const camps=[...new Set(segFilter(rawData).map(d=>d.campaign).filter(Boolean))].sort();
-  sel.innerHTML='<option value="">所有活動</option>'+camps.map(c=>`<option value="${c}" ${c===cur?'selected':''}>${c}</option>`).join('');
+  cs.innerHTML='<option value="">所有活動</option>'+camps.map(c=>`<option value="${c}"${c===cc?' selected':''}>${c}</option>`).join('');
+  // Objective (Meta)
+  const os=document.getElementById('objectiveFilter'),oc=os.value;
+  const objs=[...new Set(rawData.map(d=>d.objective).filter(Boolean))].sort();
+  os.innerHTML='<option value="">所有目標</option>'+objs.map(o=>`<option value="${o}"${o===oc?' selected':''}>${OBJ_LABEL[o]||o}</option>`).join('');
+  // Campaign type (Google)
+  const ts=document.getElementById('campaignTypeFilter'),tc=ts.value;
+  const types=[...new Set(rawData.map(d=>d.campaign_type).filter(Boolean))].sort();
+  ts.innerHTML='<option value="">所有類型</option>'+types.map(t=>`<option value="${t}"${t===tc?' selected':''}>${CTYPE_LABEL[t]||t}</option>`).join('');
 }
-
 function applyFilters(){
-  populateCampaignFilter();
+  populateFilters();
   const camp=document.getElementById('campaignFilter').value;
-  filteredData=segFilter(rawData).filter(d=>!camp||d.campaign===camp);
-  document.getElementById('tableTitle').textContent=SEG[currentSegment].titleSuffix;
+  const obj =document.getElementById('objectiveFilter').value;
+  const ct  =document.getElementById('campaignTypeFilter').value;
+  filteredData=segFilter(rawData)
+    .filter(d=>!camp||d.campaign===camp)
+    .filter(d=>!obj ||d.objective===obj)
+    .filter(d=>!ct  ||d.campaign_type===ct);
+
+  const isMeta=currentPlatform==='meta';
+  const cfg=BRANDS[currentBrand];
+  document.getElementById('tableTitle').textContent=
+    isMeta&&cfg.hasSegments?SEG[currentSegment].title:`${cfg.name} ${isMeta?'Meta':'Google'} 廣告明細`;
+
   renderKPIs();renderTrend();renderRoasTrend();renderCampaignChart();renderTable();
+
   const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
   if(dates.length){
-    const sl={website:'官網',fundraising:'募資',all:'全部'}[currentSegment];
-    document.getElementById('subtitle').textContent=`帳戶：探索_TW_HIPPORIZZ · ${sl} · ${dates[0]} ~ ${dates[dates.length-1]}`;
-    document.getElementById('trendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
+    const dr=`${dates[0]} ~ ${dates[dates.length-1]}`;
+    document.getElementById('trendRange').textContent=dr;
+    document.getElementById('subtitle').textContent=`${isMeta?'Meta':'Google'} · ${dr}`;
   }
 }
 
+// ═══════════════════════ HELPERS ═════════════════════════════════
 function v(d,k){return parseFloat(d[k])||0}
-function fmt(n,dec=0){if(n==null||isNaN(n))return'—';return Number(n).toLocaleString('zh-TW',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function fmt(n,dec=0){return n==null||isNaN(n)?'—':Number(n).toLocaleString('zh-TW',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
 function fmtK(n){if(n==null||isNaN(n))return'—';n=Number(n);return n>=10000?(n/1000).toFixed(0)+'k':fmt(n)}
-
-function renderKPIs(){
-  const d=filteredData;
-  const spend=d.reduce((s,r)=>s+v(r,'spend'),0);
-  const imp=d.reduce((s,r)=>s+v(r,'impressions'),0);
-  const reach=d.reduce((s,r)=>s+v(r,'reach'),0);
-  const clicks=d.reduce((s,r)=>s+v(r,'clicks'),0);
-  const purchases=d.reduce((s,r)=>s+v(r,'actions_offsite_conversion_fb_pixel_purchase'),0);
-  const revenue=d.reduce((s,r)=>s+v(r,'action_values_offsite_conversion_fb_pixel_purchase'),0);
-  const ctr=imp>0?clicks/imp:0, roas=spend>0?revenue/spend:0, cpa=purchases>0?spend/purchases:0, cpc=clicks>0?spend/clicks:0;
-  const rc=roas>=3?'good':roas>=1?'neutral':'warn';
-  const bar=SEG[currentSegment].barCls;
-  document.getElementById('kpiGrid').innerHTML=`
-    <div class="kpi"><div class="kpi-label">花費</div><div class="kpi-value">NT$${fmt(spend)}</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">曝光</div><div class="kpi-value">${fmtK(imp)}</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">觸及</div><div class="kpi-value">${fmtK(reach)}</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">點擊率 CTR</div><div class="kpi-value">${(ctr*100).toFixed(2)}%</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">購買次數</div><div class="kpi-value">${fmt(purchases)}</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">購買業績</div><div class="kpi-value">NT$${fmt(revenue)}</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">ROAS</div><div class="kpi-value ${rc}">${roas.toFixed(2)}x</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">CPA</div><div class="kpi-value">${cpa>0?'NT$'+fmt(cpa):'—'}</div><div class="kpi-bar ${bar}"></div></div>
-    <div class="kpi"><div class="kpi-label">CPC</div><div class="kpi-value">${cpc>0?'NT$'+fmt(cpc,1):'—'}</div><div class="kpi-bar ${bar}"></div></div>`;
+function pct(n){return n?(n*100).toFixed(2)+'%':'—'}
+function getColors(){
+  if(currentPlatform==='google')return{sc:'#4285f4',rc:'#34a853',bar:'bar-goo'};
+  const cfg=BRANDS[currentBrand];
+  if(!cfg.hasSegments)return{sc:cfg.spendC,rc:cfg.revC,bar:cfg.barMeta};
+  return{sc:SEG[currentSegment].sc,rc:SEG[currentSegment].rc,bar:SEG[currentSegment].bar};
 }
 
+// ═══════════════════════ KPIs ════════════════════════════════════
+function renderKPIs(){
+  const d=filteredData,{bar}=getColors(),isMeta=currentPlatform==='meta';
+  if(isMeta){
+    const spend=d.reduce((s,r)=>s+v(r,'spend'),0);
+    const imp  =d.reduce((s,r)=>s+v(r,'impressions'),0);
+    const reach=d.reduce((s,r)=>s+v(r,'reach'),0);
+    const clks =d.reduce((s,r)=>s+v(r,'clicks'),0);
+    const buys =d.reduce((s,r)=>s+v(r,'actions_offsite_conversion_fb_pixel_purchase'),0);
+    const rev  =d.reduce((s,r)=>s+v(r,'action_values_offsite_conversion_fb_pixel_purchase'),0);
+    const ctr=imp>0?clks/imp:0,roas=spend>0?rev/spend:0,cpa=buys>0?spend/buys:0,cpc=clks>0?spend/clks:0;
+    const rc=roas>=3?'good':roas>=1?'neutral':'warn';
+    document.getElementById('kpiGrid').className='kpi-grid cols-9';
+    document.getElementById('kpiGrid').innerHTML=kpi('花費','NT$'+fmt(spend),'',bar)+kpi('曝光',fmtK(imp),'',bar)+kpi('觸及',fmtK(reach),'',bar)+kpi('點擊率 CTR',pct(ctr),'',bar)+kpi('購買次數',fmt(buys),'',bar)+kpi('購買業績','NT$'+fmt(rev),'',bar)+kpi('ROAS',roas.toFixed(2)+'x',rc,bar)+kpi('CPA',cpa>0?'NT$'+fmt(cpa):'—','',bar)+kpi('CPC',cpc>0?'NT$'+fmt(cpc,1):'—','',bar);
+  }else{
+    const spend=d.reduce((s,r)=>s+v(r,'spend'),0);
+    const imp  =d.reduce((s,r)=>s+v(r,'impressions'),0);
+    const clks =d.reduce((s,r)=>s+v(r,'clicks'),0);
+    const conv =d.reduce((s,r)=>s+v(r,'conversions'),0);
+    const rev  =d.reduce((s,r)=>s+v(r,'conversion_value'),0);
+    const ctr=imp>0?clks/imp:0,roas=spend>0?rev/spend:0,cpa=conv>0?spend/conv:0,cpc=clks>0?spend/clks:0,cpm=imp>0?(spend/imp)*1000:0;
+    const rc=roas>=3?'good':roas>=1?'neutral':'warn';
+    document.getElementById('kpiGrid').className='kpi-grid cols-8';
+    document.getElementById('kpiGrid').innerHTML=kpi('花費','NT$'+fmt(spend),'',bar)+kpi('曝光',fmtK(imp),'',bar)+kpi('點擊',fmtK(clks),'',bar)+kpi('點擊率 CTR',pct(ctr),'',bar)+kpi('轉換次數',fmt(conv,1),'',bar)+kpi('轉換業績','NT$'+fmt(rev),'',bar)+kpi('ROAS',roas.toFixed(2)+'x',rc,bar)+kpi('CPA / CPC',`NT$${fmt(cpa)} <small style="color:var(--text3);font-size:11px">/ NT$${fmt(cpc,1)}</small>`,'',bar);
+  }
+}
+function kpi(label,val,cls,bar){return`<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value ${cls}">${val}</div><div class="kpi-bar ${bar}"></div></div>`}
+
+// ═══════════════════════ CHARTS ══════════════════════════════════
+function getRevKey(){return currentPlatform==='meta'?'action_values_offsite_conversion_fb_pixel_purchase':'conversion_value'}
 function renderTrend(){
-  const m={};
-  for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={spend:0,revenue:0};m[d.date].spend+=v(d,'spend');m[d.date].revenue+=v(d,'action_values_offsite_conversion_fb_pixel_purchase')}
-  const dates=Object.keys(m).sort();
-  const sc=SEG[currentSegment].spendC, rc=SEG[currentSegment].revC;
-  document.getElementById('legSpend').style.background=sc;
-  document.getElementById('legRev').style.borderColor=rc;
-  const ctx=document.getElementById('trendChart').getContext('2d');
-  if(trendInst)trendInst.destroy();
+  const m={};const rk=getRevKey();
+  for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={s:0,r:0};m[d.date].s+=v(d,'spend');m[d.date].r+=v(d,rk)}
+  const dates=Object.keys(m).sort();const{sc,rc}=getColors();
+  document.getElementById('legSpend').style.background=sc;document.getElementById('legRev').style.borderColor=rc;
+  const ctx=document.getElementById('trendChart').getContext('2d');if(trendInst)trendInst.destroy();
   trendInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[
-    {label:'花費',data:dates.map(d=>Math.round(m[d].spend)),borderColor:sc,backgroundColor:sc+'18',tension:.3,pointRadius:2,fill:true,borderWidth:2},
-    {label:'購買業績',data:dates.map(d=>Math.round(m[d].revenue)),borderColor:rc,backgroundColor:rc+'18',tension:.3,pointRadius:2,fill:true,borderWidth:2,borderDash:[5,3]}
+    {label:'花費',data:dates.map(d=>Math.round(m[d].s)),borderColor:sc,backgroundColor:sc+'18',tension:.3,pointRadius:2,fill:true,borderWidth:2},
+    {label:'業績',data:dates.map(d=>Math.round(m[d].r)),borderColor:rc,backgroundColor:rc+'18',tension:.3,pointRadius:2,fill:true,borderWidth:2,borderDash:[5,3]}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
     x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
     y:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:v=>'NT$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:'rgba(0,0,0,.05)'}}
   }}});
 }
-
-
 function renderRoasTrend(){
-  const m={};
-  for(const d of filteredData){
-    if(!d.date) continue;
-    if(!m[d.date]) m[d.date]={spend:0,revenue:0};
-    m[d.date].spend+=v(d,'spend');
-    m[d.date].revenue+=v(d,'action_values_offsite_conversion_fb_pixel_purchase');
-  }
-  const dates=Object.keys(m).sort();
-  const color=currentSegment==='fundraising'?SEG.fundraising.revC:(currentSegment==='website'?SEG.website.spendC:'#111111');
-  const ctx=document.getElementById('roasChart').getContext('2d');
-  if(roasInst) roasInst.destroy();
+  const m={};const rk=getRevKey();
+  for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={s:0,r:0};m[d.date].s+=v(d,'spend');m[d.date].r+=v(d,rk)}
+  const dates=Object.keys(m).sort();const{sc}=getColors();
+  const ctx=document.getElementById('roasChart').getContext('2d');if(roasInst)roasInst.destroy();
   roasInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[{
-    label:'ROAS',
-    data:dates.map(d=>m[d].spend>0?(m[d].revenue/m[d].spend).toFixed(2):0),
-    borderColor:color,backgroundColor:color+'15',tension:.32,pointRadius:2,fill:true,borderWidth:2
+    label:'ROAS',data:dates.map(d=>m[d].s>0?(m[d].r/m[d].s).toFixed(2):0),
+    borderColor:sc,backgroundColor:sc+'15',tension:.32,pointRadius:2,fill:true,borderWidth:2
   }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
     x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
     y:{beginAtZero:true,ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:v=>v+'x'},grid:{color:'rgba(0,0,0,.05)'}}
-  }}})
+  }}});
 }
-
 function renderCampaignChart(){
   const m={};
   for(const d of filteredData){const c=d.campaign||'未知';m[c]=(m[c]||0)+v(d,'spend')}
   const entries=Object.entries(m).sort((a,b)=>b[1]-a[1]);
   const top=entries.slice(0,6);const other=entries.slice(6).reduce((s,e)=>s+e[1],0);
   if(other>0)top.push(['其他',other]);
-  const colors=currentSegment==='fundraising'
-    ?['#6b21a8','#9333ea','#a855f7','#c084fc','#d8b4fe','#e9d5ff','#9e9e96']
-    :['#1a4fd6','#1a7a52','#c0392b','#8a5c00','#534ab7','#b5451b','#6b6b65'];
-  const ctx=document.getElementById('campaignChart').getContext('2d');
-  if(campInst)campInst.destroy();
+  const colors=currentPlatform==='google'?['#4285f4','#34a853','#fbbc04','#ea4335','#1a73e8','#0d9488','#6b6b65']:BRANDS[currentBrand].donut;
+  const ctx=document.getElementById('campaignChart').getContext('2d');if(campInst)campInst.destroy();
   campInst=new Chart(ctx,{type:'doughnut',data:{labels:top.map(e=>e[0]),datasets:[{data:top.map(e=>Math.round(e[1])),backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:10}},
-    tooltip:{callbacks:{label:ctx=>' NT$'+Math.round(ctx.parsed).toLocaleString('zh-TW')}}}}});
+    tooltip:{callbacks:{label:c=>' NT$'+Math.round(c.parsed).toLocaleString('zh-TW')}}}}});
 }
 
-function rollupByAd(){
-  const m={};
+// ═══════════════════════ TABLE ════════════════════════════════════
+function renderTableHead(){
+  const isMeta=currentPlatform==='meta';
+  document.getElementById('tableHead').innerHTML=isMeta?`<tr>
+    <th onclick="sortTable('ad_name')" style="min-width:150px">廣告名稱 ↕</th>
+    <th onclick="sortTable('campaign')" style="min-width:130px">活動 ↕</th>
+    <th onclick="sortTable('objective')" style="min-width:90px">廣告目標 ↕</th>
+    <th onclick="sortTable('spend')">花費 ↕</th>
+    <th onclick="sortTable('impressions')">曝光 ↕</th>
+    <th onclick="sortTable('reach')">觸及 ↕</th>
+    <th onclick="sortTable('ctr')">CTR ↕</th>
+    <th onclick="sortTable('cpm')">CPM ↕</th>
+    <th onclick="sortTable('cpc')">CPC ↕</th>
+    <th onclick="sortTable('purchases')">購買 ↕</th>
+    <th onclick="sortTable('revenue')">業績 ↕</th>
+    <th onclick="sortTable('roas')">ROAS ↕</th>
+    <th onclick="sortTable('cpa')">CPA ↕</th>
+  </tr>`:`<tr>
+    <th onclick="sortTable('campaign')" style="min-width:150px">活動名稱 ↕</th>
+    <th onclick="sortTable('campaign_type')" style="min-width:110px">類型 ↕</th>
+    <th onclick="sortTable('ad_name')" style="min-width:150px">廣告素材 ↕</th>
+    <th onclick="sortTable('spend')">花費 ↕</th>
+    <th onclick="sortTable('impressions')">曝光 ↕</th>
+    <th onclick="sortTable('clicks')">點擊 ↕</th>
+    <th onclick="sortTable('ctr')">CTR ↕</th>
+    <th onclick="sortTable('cpc')">CPC ↕</th>
+    <th onclick="sortTable('cpm')">CPM ↕</th>
+    <th onclick="sortTable('conversions')">轉換 ↕</th>
+    <th onclick="sortTable('revenue')">轉換業績 ↕</th>
+    <th onclick="sortTable('roas')">ROAS ↕</th>
+    <th onclick="sortTable('cpa')">CPA ↕</th>
+  </tr>`;
+}
+
+function rollup(){
+  const isMeta=currentPlatform==='meta';const m={};
   for(const d of filteredData){
-    const k=(d.ad_name||'')+'|'+(d.campaign||'');
-    if(!m[k])m[k]={ad_name:d.ad_name,campaign:d.campaign,spend:0,impressions:0,reach:0,clicks:0,purchases:0,revenue:0};
-    m[k].spend+=v(d,'spend');m[k].impressions+=v(d,'impressions');m[k].reach+=v(d,'reach');m[k].clicks+=v(d,'clicks');
-    m[k].purchases+=v(d,'actions_offsite_conversion_fb_pixel_purchase');m[k].revenue+=v(d,'action_values_offsite_conversion_fb_pixel_purchase');
+    const k=isMeta
+      ?(d.ad_name||'')+'|'+(d.campaign||'')+'|'+(d.objective||'')
+      :(d.campaign||'')+'|'+(d.campaign_type||'')+'|'+(d.ad_name||'');
+    if(!m[k]){
+      m[k]=isMeta
+        ?{ad_name:d.ad_name,campaign:d.campaign,objective:d.objective||'',spend:0,impressions:0,reach:0,clicks:0,purchases:0,revenue:0}
+        :{campaign:d.campaign,campaign_type:d.campaign_type||'',ad_name:d.ad_name,spend:0,impressions:0,clicks:0,conversions:0,revenue:0};
+    }
+    m[k].spend+=v(d,'spend');m[k].impressions+=v(d,'impressions');m[k].clicks+=v(d,'clicks');
+    if(isMeta){m[k].reach+=v(d,'reach');m[k].purchases+=v(d,'actions_offsite_conversion_fb_pixel_purchase');m[k].revenue+=v(d,'action_values_offsite_conversion_fb_pixel_purchase')}
+    else{m[k].conversions+=v(d,'conversions');m[k].revenue+=v(d,'conversion_value')}
   }
   return Object.values(m).map(r=>({...r,
-    ctr:r.impressions>0?r.clicks/r.impressions:0,cpm:r.impressions>0?(r.spend/r.impressions)*1000:0,
-    cpc:r.clicks>0?r.spend/r.clicks:0,roas:r.spend>0?r.revenue/r.spend:0,cpa:r.purchases>0?r.spend/r.purchases:0}));
+    ctr:r.impressions>0?r.clicks/r.impressions:0,
+    cpm:r.impressions>0?(r.spend/r.impressions)*1000:0,
+    cpc:r.clicks>0?r.spend/r.clicks:0,
+    roas:r.spend>0?r.revenue/r.spend:0,
+    cpa:isMeta?(r.purchases>0?r.spend/r.purchases:0):(r.conversions>0?r.spend/r.conversions:0),
+  }));
 }
 
 function sortTable(key){if(sortKey===key)sortAsc=!sortAsc;else{sortKey=key;sortAsc=false;}renderTable()}
 
 function renderTable(){
-  const keyword=(document.getElementById('tableSearch')?.value||'').trim().toLowerCase();
-  const ads=rollupByAd().filter(r=>!keyword || (r.ad_name||'').toLowerCase().includes(keyword) || (r.campaign||'').toLowerCase().includes(keyword));
+  const isMeta=currentPlatform==='meta';
+  const kw=(document.getElementById('tableSearch')?.value||'').trim().toLowerCase();
+  const ads=rollup().filter(r=>!kw||(r.ad_name||'').toLowerCase().includes(kw)||(r.campaign||'').toLowerCase().includes(kw));
   ads.sort((a,b)=>{const av=a[sortKey]??-Infinity,bv=b[sortKey]??-Infinity;return sortAsc?av-bv:bv-av});
-  if(!ads.length){document.getElementById('adTableBody').innerHTML='<tr><td colspan="12" class="no-data">此條件下無資料</td></tr>';return}
+  if(!ads.length){document.getElementById('adTableBody').innerHTML='<tr><td colspan="13" class="no-data">此條件下無資料</td></tr>';return}
+  const isMac=currentBrand==='maclove';
   document.getElementById('adTableBody').innerHTML=ads.map(r=>{
     const rc=r.roas>=3?'roas-good':r.roas>=1?'roas-ok':r.roas>0?'roas-bad':'';
-    const tc=isFR(r)?'tag-f':'tag-w';
-    return`<tr>
-      <td title="${r.ad_name||''}">${r.ad_name||'—'}</td>
-      <td><span class="tag ${tc}" title="${r.campaign||''}">${r.campaign||'—'}</span></td>
-      <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.reach)}</td>
-      <td>${r.ctr?(r.ctr*100).toFixed(2)+'%':'—'}</td>
-      <td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td>
-      <td>${r.purchases>0?fmt(r.purchases):'—'}</td><td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
-      <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
-      <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
+    if(isMeta){
+      const tc=isMac?'tag-m':(isFR(r)?'tag-f':'tag-w');
+      const objL=OBJ_LABEL[r.objective]||r.objective||'—';
+      return`<tr>
+        <td title="${r.ad_name||''}">${r.ad_name||'—'}</td>
+        <td><span class="tag ${tc}" title="${r.campaign||''}">${r.campaign||'—'}</span></td>
+        <td><span class="obj-pill">${objL}</span></td>
+        <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.reach)}</td>
+        <td>${pct(r.ctr)}</td><td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td>
+        <td>${r.purchases>0?fmt(r.purchases):'—'}</td><td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
+        <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
+        <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
+    }else{
+      const tCls=CTYPE_CLS[r.campaign_type]||'ct-other';
+      const tLbl=CTYPE_LABEL[r.campaign_type]||r.campaign_type||'—';
+      return`<tr>
+        <td title="${r.campaign||''}">${r.campaign||'—'}</td>
+        <td><span class="ctype-badge ${tCls}">${tLbl}</span></td>
+        <td title="${r.ad_name||''}">${r.ad_name||'—'}</td>
+        <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.clicks)}</td>
+        <td>${pct(r.ctr)}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td><td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td>
+        <td>${r.conversions>0?fmt(r.conversions,1):'—'}</td><td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
+        <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
+        <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
+    }
   }).join('');
 }
 
-buildMonthPills();
-initDates();
-fetchData();
+// ═══════════════════════ INIT ═════════════════════════════════════
+buildMonthPills();initDates();syncUI();fetchData();
 </script>
 </body>
 </html>
