@@ -1474,23 +1474,19 @@ async function updateBudgetBar(){
         const rows=Array.isArray(json)?json:(json.data||[]);
         const tid=String(accountId).replace(/\D/g,'');
         const filtered=rows.filter(d=>!d.account_id||String(d.account_id).replace(/\D/g,'')===tid);
-        // HIPPORIZZ Meta: exclude fundraising campaigns from budget calculation
-        const forBudget = (currentBrand==='hipporizz'&&isMeta)
-          ? filtered.filter(d=>!(d.campaign||'').includes('募資'))
-          : filtered;
-        spent=forBudget.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+        // Budget = total spend including fundraising (shared budget)
+        spent=filtered.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
       }
     }catch(e){
       // fallback to rawData
       spent=rawData.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
     }
   } else {
-    // No start date - use current rawData as fallback
-    const filterFR = d => !(currentBrand==='hipporizz' && isMeta && (d.campaign||'').includes('募資'));
-    spent=rawData.filter(filterFR).reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+    // No start date - use current rawData as fallback (all campaigns including fundraising)
+    spent=rawData.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
     if(!spent){
       const cached=isMeta?adCache[currentBrand].meta:adCache[currentBrand].google;
-      if(cached) spent=cached.filter(filterFR).reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+      if(cached) spent=cached.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
     }
   }
 
