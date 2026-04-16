@@ -300,11 +300,8 @@ tr:hover td{background:var(--bg)}
           <span class="p-icon p-icon-ga4">GA</span>GA
         </button>
       </div>
-      <div class="topbar-divider"></div>
-      <div class="topbar-title-wrap">
-        <span class="topbar-title" id="pageTitle">MACLOVE · Meta Ads</span>
-        <span class="topbar-sub" id="subtitle">Windsor.ai</span>
-      </div>
+      <div id="pageTitle" style="display:none"></div>
+      <div id="subtitle" style="display:none"></div>
       <!-- spacer -->
       <div style="flex:1"></div>
       <!-- Budget bar -->
@@ -320,7 +317,7 @@ tr:hover td{background:var(--bg)}
       <div id="platformBadge" style="display:none"></div>
       <button class="budget-btn" onclick="openBudgetModal()">⚙ 預算</button>
       <select id="campaignFilter" onchange="applyFilters()"><option value="">所有活動</option></select>
-      <button class="btn" onclick="fetchData()" id="refreshBtn">
+      <button class="btn" onclick="currentPlatform==='ga4'?fetchGA4Data():fetchData()" id="refreshBtn">
         <svg id="refreshIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M13.5 8A5.5 5.5 0 1 1 8 2.5c1.8 0 3.4.87 4.4 2.2"/><polyline points="13.5,1 13.5,4.7 9.8,4.7"/>
         </svg>重新整理
@@ -475,11 +472,8 @@ tr:hover td{background:var(--bg)}
     <!-- GA4 Charts -->
     <div class="charts-row">
       <div class="card">
-        <div class="card-title">每日 Sessions 趨勢 <span id="ga4TrendRange"></span></div>
-        <div class="legend">
-          <div class="leg"><div class="leg-line" id="legSessions" style="background:#e37400"></div>Sessions</div>
-          <div class="leg"><div class="leg-line" style="background:#3b82f6"></div>使用者</div>
-        </div>
+        <div class="card-title">每日 Sessions & 新訪客比例 <span id="ga4TrendRange"></span></div>
+
         <div style="position:relative;height:220px"><canvas id="ga4TrendChart"></canvas></div>
       </div>
       <div class="card">
@@ -572,7 +566,7 @@ const GOOGLE_FIELDS = 'date,account_id,campaign,campaign_type,ad_name,spend,impr
 // GA4+Shopify 網站業績欄位（9個以內）
 const WEB_FIELDS    = 'date,account_name,datasource,order_gross_sales,order_count';
 // GA4 欄位：流量 + 轉換漏斗 + 頁面
-const GA_FIELDS = 'date,account_name,datasource,sessions,users,bounce_rate,source,add_to_carts,checkouts,transactions,transactionrevenue';
+const GA_FIELDS = 'date,account_name,datasource,sessions,users,new_users,bounce_rate,source,add_to_carts,checkouts,transactions,transactionrevenue';
 
 const OBJ_LABEL = {
   OUTCOME_SALES:'銷售量',OUTCOME_ENGAGEMENT:'互動',OUTCOME_AWARENESS:'品牌認知',
@@ -645,7 +639,7 @@ function setPlatform(p,btn){
   document.querySelectorAll('.platform-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   currentSegment=BRANDS[currentBrand].hasSegments&&p==='meta'?'website':'all';
-  syncUI(); rawData=[]; filteredData=[];
+  syncUI(); rawData=[]; filteredData=[]; ga4RawData=[]; ga4FilteredData=[];
   if(p==='ga4') fetchGA4Data();
   else fetchData();
 }
@@ -722,7 +716,8 @@ function buildMonthPills(){
       document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
       clearQ();btn.classList.add('active');
       document.getElementById('dateFrom').value=from;
-      document.getElementById('dateTo').value=to;fetchData();
+      document.getElementById('dateTo').value=to;
+      if(currentPlatform==='ga4') fetchGA4Data(); else fetchData();
     };cont.appendChild(btn);
   }
 }
@@ -738,12 +733,13 @@ function setQuickRange(t,btn){
   if(t==='today'){f=e=ymd(now)}else{const d=new Date(now);d.setDate(d.getDate()-1);f=e=ymd(d)}
   document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
   clearQ();if(btn)btn.classList.add('active');
-  document.getElementById('dateFrom').value=f;document.getElementById('dateTo').value=e;fetchData();
+  document.getElementById('dateFrom').value=f;document.getElementById('dateTo').value=e;
+  if(currentPlatform==='ga4') fetchGA4Data(); else fetchData();
 }
 function onDateChange(){
   document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));clearQ();
   const f=document.getElementById('dateFrom').value,t=document.getElementById('dateTo').value;
-  if(f&&t&&f<=t)fetchData();
+  if(f&&t&&f<=t){ if(currentPlatform==='ga4') fetchGA4Data(); else fetchData(); }
 }
 
 // ═══════════════════════ FETCH ════════════════════════════════════
@@ -1120,8 +1116,8 @@ function rollup(){
     const m={};
     for(const d of ga4FilteredData){
       const k=(d.date||'')+'|'+(d.source||'')+'|'+(d.page_path||'');
-      if(!m[k])m[k]={date:d.date,source:d.source||'(other)',sessions:0,users:0,add_to_carts:0,checkouts:0,purchases:0,revenue:0,b_sum:0,b_cnt:0};
-      m[k].sessions+=v(d,'sessions');m[k].users+=v(d,'users');
+      if(!m[k])m[k]={date:d.date,source:d.source||'(other)',sessions:0,users:0,new_users:0,add_to_carts:0,checkouts:0,purchases:0,revenue:0,b_sum:0,b_cnt:0};
+      m[k].sessions+=v(d,'sessions');m[k].users+=v(d,'users');m[k].new_users+=v(d,'new_users');
       m[k].add_to_carts+=v(d,'add_to_carts');m[k].checkouts+=v(d,'checkouts');
       m[k].purchases+=v(d,'transactions');m[k].revenue+=v(d,'transactionrevenue');
       const b=v(d,'bounce_rate');if(b>0){m[k].b_sum+=b;m[k].b_cnt++;}
@@ -1272,6 +1268,8 @@ function renderGA4(){
 function renderGA4KPIs(d){
   const sessions  =d.reduce((s,r)=>s+v(r,'sessions'),0);
   const users     =d.reduce((s,r)=>s+v(r,'users'),0);
+  const newUsers  =d.reduce((s,r)=>s+v(r,'new_users'),0);
+  const newUserPct= users>0 ? newUsers/users*100 : 0;
   const bounceSum =d.filter(r=>v(r,'bounce_rate')>0);
   const bounceRate=bounceSum.length>0?bounceSum.reduce((s,r)=>s+v(r,'bounce_rate'),0)/bounceSum.length:0;
   const bar='bar-ga4';
@@ -1292,8 +1290,8 @@ function renderGA4KPIs(d){
   const revenueDisplay=realRev>0?'NT$'+fmt(realRev):(ga4Rev>0?'NT$'+fmt(ga4Rev):'—');
   document.getElementById('ga4KpiGrid').className='kpi-grid cols-7';
   document.getElementById('ga4KpiGrid').innerHTML=
-    kpi('使用者',fmtK(users),'',bar)+
     kpi('Sessions',fmtK(sessions),'',bar)+
+    kpi('新訪客比例',newUserPct>0?newUserPct.toFixed(1)+'%':'—',newUserPct>60?'good':newUserPct>40?'neutral':'',bar)+
     kpi('跳出率',bounceRate>0?(bounceRate*100).toFixed(1)+'%':'—',bounceRate>0.7?'warn':bounceRate>0.5?'neutral':'good',bar)+
     kpi('完成購買',purchases>0?fmt(purchases):'—','',bar)+
     kpi('購買業績',revenueDisplay,'',bar)+
@@ -1325,18 +1323,23 @@ function renderGA4Trend(d){
   const m={};
   for(const r of d){
     if(!r.date)continue;
-    if(!m[r.date])m[r.date]={s:0,u:0};
-    m[r.date].s+=v(r,'sessions'); m[r.date].u+=v(r,'users');
+    if(!m[r.date])m[r.date]={s:0,nu:0};
+    m[r.date].s+=v(r,'sessions');
+    m[r.date].nu+=v(r,'new_users');
   }
   const dates=Object.keys(m).sort();
   const ctx=document.getElementById('ga4TrendChart').getContext('2d');
   if(ga4TrendInst)ga4TrendInst.destroy();
   ga4TrendInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[
-    {label:'Sessions',data:dates.map(d=>Math.round(m[d].s)),borderColor:'#e37400',backgroundColor:'#e3740018',tension:.3,pointRadius:2,fill:true,borderWidth:2},
-    {label:'使用者',data:dates.map(d=>Math.round(m[d].u)),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2,fill:false,borderWidth:2,borderDash:[4,3]}
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    {label:'Sessions',data:dates.map(d=>Math.round(m[d].s)),borderColor:'#e37400',backgroundColor:'#e3740018',tension:.3,pointRadius:2,fill:true,borderWidth:2,yAxisID:'y'},
+    {label:'新訪客比例',data:dates.map(d=>m[d].s>0?+(m[d].nu/m[d].s*100).toFixed(1):0),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2,fill:false,borderWidth:2,borderDash:[4,3],yAxisID:'y2'}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{
+    legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:8}},
+    tooltip:{callbacks:{label:c=>c.dataset.label==='Sessions'?` ${c.parsed.y.toLocaleString()} sessions`:` ${c.parsed.y}% 新訪客`}}
+  },scales:{
     x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
-    y:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96'},grid:{color:'rgba(0,0,0,.05)'}}
+    y:{position:'left',ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96'},grid:{color:'rgba(0,0,0,.05)'}},
+    y2:{position:'right',min:0,max:100,ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>n+'%'},grid:{display:false}}
   }}});
 }
 
