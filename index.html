@@ -12,52 +12,49 @@
   --bg:#f7f7f5;--surface:#fff;--surface2:#f3f3f1;--border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.14);
   --text:#111;--text2:#5f5f5a;--text3:#9a9a93;
   --accent:#1a4fd6;--accent-bg:#eef2fd;
-  --green:#1f7a4d;--red:#c0392b;--red-bg:#fdf0ee;--amber:#8a5c00;
+  --green:#1f7a4d;--green-bg:#edf7f2;--red:#c0392b;--red-bg:#fdf0ee;--amber:#8a5c00;--amber-bg:#fdf6e3;
   --purple:#6b21a8;--purple-bg:#f3e8ff;
   --maclove:#c0392b;--maclove-bg:#fff0ee;
   --google:#1a73e8;--google-bg:#e8f0fe;
+  --web:#0d9488;--web-bg:#f0fdfa;
   --radius:10px;--radius-lg:16px;
   --shadow:0 8px 24px rgba(0,0,0,.04);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 24px 60px;font-size:14px;line-height:1.5}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px 24px 60px;font-size:14px;line-height:1.5}
 .dashboard{max-width:1320px;margin:0 auto}
 
-/* ── Top bar (brand + platform + title + controls all in one compact area) ── */
-.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;box-shadow:var(--shadow)}
+/* ── Top bar ── */
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;box-shadow:var(--shadow);position:relative;z-index:10}
 .topbar-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
 .topbar-divider{width:1px;height:22px;background:var(--border2);flex-shrink:0}
 .topbar-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.2px;white-space:nowrap}
 .topbar-sub{font-size:11px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace}
 
-/* Brand tabs (compact pill) */
+/* Brand pills */
 .brand-tabs{display:flex;gap:4px}
 .brand-tab{font-size:13px;font-weight:600;padding:6px 18px;border-radius:999px;border:1.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .brand-tab:hover{color:var(--text);border-color:var(--text)}
+.brand-tab,.platform-tab,.seg-tab,.quick-btn,.month-btn,.btn{position:relative;z-index:1}
 .brand-tab.maclove.active{background:var(--maclove);color:#fff;border-color:var(--maclove);box-shadow:0 2px 8px rgba(192,57,43,.2)}
 .brand-tab.hipporizz.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(26,79,214,.2)}
 
-/* Platform tabs (compact pill) */
+/* Platform pills */
 .platform-tabs{display:flex;gap:3px;background:var(--surface2);border-radius:8px;padding:2px}
-.platform-tab{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:5px 14px;border-radius:6px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.platform-tab{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:5px 13px;border-radius:6px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .platform-tab:hover{color:var(--text)}
-.platform-tab.active{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.08);color:var(--text)}
+.platform-tab.active{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .platform-tab.meta.active{color:#1877f2}
 .platform-tab.google.active{color:var(--google)}
+.platform-tab.website.active{color:var(--web)}
 .p-icon{width:14px;height:14px;border-radius:3px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
 .p-icon-meta{background:#1877f2}
-.p-icon-google{background:linear-gradient(135deg,#4285f4 0%,#4285f4 50%,#34a853 50%)}
-
-/* platform badge (hidden - info shown inline in topbar) */
-.platform-badge{display:none}
-.badge-meta-mac{}.badge-meta-hip{}.badge-google{}
-/* keep header for subtitle updates but hide visually */
-.header{display:none}
-.header-left h1{}.header-left p{}.header-right{}
+.p-icon-google{background:linear-gradient(135deg,#4285f4 50%,#34a853 50%)}
+.p-icon-web{background:var(--web)}
 
 /* Segment tabs */
 .seg-tabs{display:flex;background:var(--surface2);border-radius:var(--radius-lg);padding:3px;gap:2px;margin-bottom:12px}
-.seg-tab{flex:1;text-align:center;font-size:14px;font-weight:500;padding:9px 20px;border-radius:11px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap}
+.seg-tab{flex:1;text-align:center;font-size:13px;font-weight:500;padding:8px 16px;border-radius:11px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap}
 .seg-tab:hover{color:var(--text)}
 .seg-tab.active{background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .seg-tab.website.active{color:var(--accent)}.seg-tab.fundraising.active{color:var(--purple)}.seg-tab.all.active{color:var(--text)}
@@ -65,17 +62,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 /* Filter row */
 .filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .filter-label{font-size:12px;font-weight:500;color:var(--text3);white-space:nowrap}
-.filter-sep{width:1px;height:20px;background:var(--border2)}
 select{font-family:'DM Sans',sans-serif;font-size:13px;padding:7px 28px 7px 12px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface) url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236b6b65' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--text);cursor:pointer;outline:none;appearance:none}
 select:hover{border-color:var(--accent)}
 
 /* Date row */
-.date-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.month-scroll{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.date-row{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.date-row-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.month-scroll{display:flex;gap:4px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.month-scroll::-webkit-scrollbar{display:none}
+.month-scroll .month-btn{flex-shrink:0}
 .month-btn{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;padding:6px 10px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .month-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
 .month-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.quick-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.quick-btn{font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .quick-btn:hover{border-color:var(--text);color:var(--text)}
 .quick-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
 .divider{width:1px;height:24px;background:var(--border2);margin:0 4px;flex-shrink:0}
@@ -83,7 +82,7 @@ select:hover{border-color:var(--accent)}
 .date-range:focus-within{border-color:var(--accent)}
 .date-range-sep{font-size:12px;color:var(--text3)}
 input[type=date]{font-family:'DM Mono',monospace;font-size:12px;border:none;outline:none;background:transparent;color:var(--text);cursor:pointer;padding:0;width:105px}
-input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;margin-left:2px}
+input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5}
 
 .btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface);color:var(--text);cursor:pointer;transition:all .15s}
 .btn:hover{background:var(--surface2);border-color:var(--accent);color:var(--accent)}
@@ -96,15 +95,17 @@ input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;ma
 .status{font-size:12px;color:var(--text3);margin-bottom:16px;font-family:'DM Mono',monospace;min-height:18px}
 .error{background:var(--red-bg);color:var(--red);border-radius:var(--radius);padding:12px 16px;font-size:13px;margin-bottom:16px;border:1px solid rgba(192,57,43,.15);display:none}
 
-/* KPI */
+/* KPI grid */
 .kpi-grid{display:grid;gap:10px;margin-bottom:16px}
 .kpi-grid.cols-9{grid-template-columns:repeat(9,1fr)}
 .kpi-grid.cols-8{grid-template-columns:repeat(8,1fr)}
+.kpi-grid.cols-7{grid-template-columns:repeat(7,1fr)}
 @media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(4,1fr)!important}}
 @media(max-width:700px){.kpi-grid{grid-template-columns:repeat(2,1fr)!important}}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .kpi-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 .kpi-value{font-size:20px;font-weight:600;color:var(--text);letter-spacing:-.5px}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace}
 .kpi-value.good{color:var(--green)}.kpi-value.warn{color:var(--red)}.kpi-value.neutral{color:var(--amber)}
 .kpi-bar{position:absolute;bottom:0;left:0;right:0;height:3px}
 .bar-mac{background:linear-gradient(90deg,#c0392b,#e74c3c)}
@@ -112,15 +113,32 @@ input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;ma
 .bar-hip-f{background:linear-gradient(90deg,#6b21a8,#9333ea)}
 .bar-hip-a{background:linear-gradient(90deg,#1a1a18,#6b6b65)}
 .bar-goo{background:linear-gradient(90deg,#4285f4,#34a853)}
+.bar-web{background:linear-gradient(90deg,#0d9488,#10b981)}
+
+/* ── 網站業績 特有：對比卡片 ── */
+.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+.compare-card-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.compare-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--border)}
+.compare-row:last-child{border-bottom:none}
+.compare-row-label{font-size:12px;color:var(--text2)}
+.compare-row-val{font-size:14px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace}
+.compare-row-val.pos{color:var(--green)}.compare-row-val.neg{color:var(--red)}.compare-row-val.neu{color:var(--amber)}
+.gap-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;margin-left:6px}
+.gap-over{background:var(--red-bg);color:var(--red)}
+.gap-under{background:var(--green-bg);color:var(--green)}
 
 /* Charts */
 .charts-row{display:grid;grid-template-columns:1.5fr 1.5fr 1fr;gap:12px;margin-bottom:12px}
-@media(max-width:980px){.charts-row{grid-template-columns:1fr}}
+.charts-row-2{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:980px){.charts-row,.charts-row-2{grid-template-columns:1fr}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
 .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card-title span{font-size:11px;font-weight:400;color:var(--text3);font-family:'DM Mono',monospace}
 .legend{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
 .leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2)}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .leg-line{width:16px;height:2px;border-radius:1px;flex-shrink:0}
 .leg-dash{width:16px;height:0;border-top:2px dashed;flex-shrink:0}
 
@@ -133,42 +151,144 @@ input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;ma
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;white-space:nowrap;background:var(--surface2);user-select:none}
 th:hover{color:var(--text)}
-td{padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+td{padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg)}
 .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 .tag-w{background:var(--accent-bg);color:var(--accent)}
 .tag-f{background:var(--purple-bg);color:var(--purple)}
 .tag-m{background:var(--maclove-bg);color:var(--maclove)}
+.tag-web{background:var(--web-bg);color:var(--web)}
 .obj-pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;background:#f0f0ee;color:var(--text2);white-space:nowrap}
 .ctype-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap}
-.ct-search{background:#e8f0fe;color:#1a73e8}
-.ct-shopping{background:#fce8e6;color:#d93025}
-.ct-pmax{background:#e6f4ea;color:#137333}
-.ct-display{background:#fef7e0;color:#b06000}
-.ct-video{background:#f3e8fd;color:#7b1fa2}
-.ct-other{background:var(--surface2);color:var(--text3)}
+.ct-search{background:#e8f0fe;color:#1a73e8}.ct-shopping{background:#fce8e6;color:#d93025}
+.ct-pmax{background:#e6f4ea;color:#137333}.ct-display{background:#fef7e0;color:#b06000}
+.ct-video{background:#f3e8fd;color:#7b1fa2}.ct-other{background:var(--surface2);color:var(--text3)}
+.src-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;background:var(--surface2);color:var(--text2);white-space:nowrap}
 .no-data{text-align:center;padding:40px;color:var(--text3);font-size:13px}
 .roas-good{color:var(--green);font-weight:600}.roas-ok{color:var(--amber);font-weight:600}.roas-bad{color:var(--red);font-weight:600}
 .tbl-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:999px;padding:8px 12px;min-width:220px}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:999px;padding:8px 12px;min-width:200px}
 .search-box input{border:none;outline:none;background:transparent;font:inherit;color:var(--text);width:100%}
 .search-box svg{width:14px;height:14px;color:var(--text3);flex-shrink:0}
+.info-note{font-size:12px;color:var(--text3);background:var(--surface2);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* Budget settings */
+.budget-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:5px 12px;border-radius:999px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.budget-btn:hover{border-color:var(--accent);color:var(--accent)}
+.budget-bar-wrap{display:flex;flex-direction:column;gap:3px;min-width:140px}
+.budget-bar-label{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;display:flex;justify-content:space-between}
+.budget-bar-track{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden}
+.budget-bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.budget-bar-fill.ok{background:linear-gradient(90deg,var(--green),#34d399)}
+.budget-bar-fill.warn{background:linear-gradient(90deg,var(--amber),#fbbf24)}
+.budget-bar-fill.danger{background:linear-gradient(90deg,var(--red),#f87171)}
+
+/* Budget modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:28px;min-width:340px;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,.18)}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:20px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.modal-field input{width:100%;font-family:'DM Mono',monospace;font-size:14px;padding:9px 12px;border-radius:var(--radius);border:1.5px solid var(--border2);outline:none;transition:border-color .15s}
+.modal-field input:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.modal-actions .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);padding:8px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:none}
+.modal-actions .btn-primary:hover{opacity:.9}
+.modal-actions .btn-cancel{background:transparent;color:var(--text2);border:1px solid var(--border2);padding:8px 16px;border-radius:var(--radius);font-size:13px;cursor:pointer}
+.modal-actions .btn-cancel:hover{border-color:var(--text);color:var(--text)}
+
+/* Balance badge in topbar */
+.balance-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--green-bg);color:var(--green);border:1px solid rgba(31,122,77,.15);cursor:default;white-space:nowrap}
+.balance-badge.warn{background:var(--amber-bg);color:var(--amber);border-color:rgba(138,92,0,.15)}
+.balance-badge.danger{background:var(--red-bg);color:var(--red);border-color:rgba(192,57,43,.15)}
+.balance-badge::before{content:'💳';font-size:11px}
+
+/* GA4 tab */
+.platform-tab.ga4.active{color:#e37400}
+.p-icon-ga4{background:linear-gradient(135deg,#e37400 50%,#f9ab00 50%);font-size:7px;font-weight:800}
+.bar-ga4{background:linear-gradient(90deg,#e37400,#f9ab00)}
+
+/* GA4 漏斗 */
+.funnel-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.funnel-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.funnel-row{grid-template-columns:1fr 1fr}}
+.funnel-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;position:relative;overflow:hidden;box-shadow:var(--shadow);text-align:center}
+.funnel-step-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.funnel-step-val{font-size:22px;font-weight:600;letter-spacing:-.5px;color:var(--text)}
+.funnel-step-rate{font-size:12px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace}
+.funnel-step-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e37400,#f9ab00)}
+.funnel-arrow{display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:18px;padding-top:20px}
+
+/* GA4 source table */
+.src-table{width:100%;border-collapse:collapse;font-size:12.5px}
+
+/* ── 手機版 RWD ── */
+@media(max-width:768px){
+  body{padding:12px 12px 60px}
+  /* Topbar 手機版：兩行 */
+  .topbar{flex-direction:column;align-items:flex-start;gap:8px;padding:10px 12px}
+  .topbar-left{flex-wrap:wrap;gap:6px;width:100%}
+  .topbar-right{width:100%;justify-content:flex-end}
+  .topbar-divider{display:none}
+  .topbar-title{font-size:14px}
+  .topbar-sub{font-size:10px}
+  /* Brand pills 加大點擊區域 */
+  .brand-tab{padding:8px 16px;font-size:13px}
+  /* Platform tabs */
+  .platform-tabs{flex:1}
+  .platform-tab{flex:1;justify-content:center;padding:7px 8px;font-size:11px}
+  /* Topbar right selects full width */
+  .topbar-right select{flex:1;min-width:0}
+  /* Seg tabs */
+  .seg-tab{padding:8px 10px;font-size:12px}
+  /* Filter row */
+  .filter-row{gap:8px}
+  .filter-row select{flex:1;min-width:0}
+  /* Date row */
+  .date-row{gap:6px}
+  .month-scroll{gap:3px}
+  .month-btn{padding:6px 8px;font-size:11px}
+  .quick-btn{padding:6px 10px;font-size:11px}
+  .date-range{flex:1;min-width:0}
+  input[type=date]{width:90px;font-size:11px}
+  /* KPI grid */
+  .kpi-grid.cols-9,.kpi-grid.cols-8,.kpi-grid.cols-7{grid-template-columns:repeat(2,1fr)!important}
+  .kpi{padding:12px}
+  .kpi-value{font-size:17px}
+  /* Compare grid */
+  .compare-grid{grid-template-columns:1fr!important}
+  /* Charts */
+  .charts-row{grid-template-columns:1fr!important}
+  .charts-row-2{grid-template-columns:1fr!important}
+  /* Table */
+  td,th{padding:8px 10px;font-size:11.5px}
+  .search-box{min-width:0;flex:1}
+  .tbl-tools{width:100%}
+  .table-header{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .brand-tab{padding:7px 12px;font-size:12px}
+  .platform-tab{font-size:10px;gap:3px}
+  .p-icon{width:12px;height:12px;font-size:8px}
+  .topbar-title{font-size:13px}
+  .kpi-value{font-size:15px}
+  .kpi-label{font-size:10px}
+}
 </style>
 </head>
 <body>
 <div class="dashboard">
 
-  <!-- ── Compact Top Bar ── -->
+  <!-- ── Top Bar ── -->
   <div class="topbar">
     <div class="topbar-left">
-      <!-- Brand pills -->
       <div class="brand-tabs">
         <button class="brand-tab maclove active" onclick="setBrand('maclove',this)">MACLOVE</button>
         <button class="brand-tab hipporizz" onclick="setBrand('hipporizz',this)">HIPPORIZZ</button>
       </div>
       <div class="topbar-divider"></div>
-      <!-- Platform pills -->
       <div class="platform-tabs">
         <button class="platform-tab meta active" onclick="setPlatform('meta',this)">
           <span class="p-icon p-icon-meta">f</span>Meta
@@ -176,17 +296,33 @@ tr:hover td{background:var(--bg)}
         <button class="platform-tab google" onclick="setPlatform('google',this)">
           <span class="p-icon p-icon-google">G</span>Google
         </button>
+        <button class="platform-tab website" onclick="setPlatform('website',this)">
+          <span class="p-icon p-icon-web">W</span>網站業績
+        </button>
+        <button class="platform-tab ga4" onclick="setPlatform('ga4',this)">
+          <span class="p-icon p-icon-ga4">GA</span>GA 分析
+        </button>
       </div>
       <div class="topbar-divider"></div>
-      <!-- Title + subtitle -->
       <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
         <span class="topbar-title" id="pageTitle">MACLOVE · Meta Ads</span>
-        <span class="topbar-sub" id="subtitle">帳戶：探索_TW_Maclove_service</span>
+        <span class="topbar-sub" id="subtitle">Windsor.ai</span>
       </div>
     </div>
     <div class="topbar-right">
-      <!-- invisible badge kept for JS compat -->
-      <div id="platformBadge" style="display:none">Meta Ads · Windsor.ai</div>
+      <div id="platformBadge" style="display:none"></div>
+      <div id="budgetDisplay" style="display:none">
+        <div class="budget-bar-wrap">
+          <div class="budget-bar-label">
+            <span id="budgetLabel">剩餘 —</span>
+            <span id="budgetPct">—</span>
+          </div>
+          <div class="budget-bar-track">
+            <div class="budget-bar-fill ok" id="budgetBarFill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <button class="budget-btn" id="budgetSettingBtn" onclick="openBudgetModal()" title="設定廣告預算上限">⚙ 預算設定</button>
       <select id="campaignFilter" onchange="applyFilters()"><option value="">所有活動</option></select>
       <button class="btn" onclick="fetchData()" id="refreshBtn">
         <svg id="refreshIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -195,54 +331,83 @@ tr:hover td{background:var(--bg)}
       </button>
     </div>
   </div>
-  <!-- hidden header for JS compat -->
-  <div class="header" style="display:none">
-    <div class="header-left"><div class="platform-badge badge-meta-mac" id="_badge"></div><h1></h1><p></p></div>
-    <div class="header-right"></div>
-  </div>
 
-  <!-- Segment (HIPPORIZZ Meta only) -->
+  <!-- Segment tabs (HIPPORIZZ Meta only) -->
   <div class="seg-tabs" id="segTabs" style="display:none">
     <button class="seg-tab website active" onclick="setSegment('website',this)">官網廣告</button>
     <button class="seg-tab fundraising" onclick="setSegment('fundraising',this)">募資廣告</button>
     <button class="seg-tab all" onclick="setSegment('all',this)">全部</button>
   </div>
 
-  <!-- Filter bar -->
-  <div class="filter-row">
-    <!-- Meta: Objective filter -->
+  <!-- Filter row (廣告目標 / 活動類型 / 來源) -->
+  <div class="filter-row" id="filterRow">
     <span class="filter-label" id="objLabel">廣告目標</span>
     <select id="objectiveFilter" onchange="applyFilters()"><option value="">所有目標</option></select>
-    <!-- Google: Campaign type filter -->
     <span class="filter-label" id="ctypeLabel" style="display:none">活動類型</span>
     <select id="campaignTypeFilter" style="display:none" onchange="applyFilters()"><option value="">所有類型</option></select>
+    <span class="filter-label" id="srcLabel" style="display:none">流量來源</span>
+    <select id="sourceFilter" style="display:none" onchange="applyFilters()"><option value="">所有來源</option></select>
   </div>
 
   <!-- Date row -->
   <div class="date-row">
     <div class="month-scroll" id="monthPills"></div>
-    <div style="display:flex;gap:4px">
+    <div class="date-row-controls">
       <button class="quick-btn" onclick="setQuickRange('today',this)">今天</button>
       <button class="quick-btn" onclick="setQuickRange('yesterday',this)">昨天</button>
-    </div>
-    <div class="divider"></div>
-    <div class="date-range">
-      <input type="date" id="dateFrom" onchange="onDateChange()"/>
-      <span class="date-range-sep">→</span>
-      <input type="date" id="dateTo" onchange="onDateChange()"/>
+      <div class="divider"></div>
+      <div class="date-range">
+        <input type="date" id="dateFrom" onchange="onDateChange()"/>
+        <span class="date-range-sep">→</span>
+        <input type="date" id="dateTo" onchange="onDateChange()"/>
+      </div>
     </div>
   </div>
 
   <div id="statusBar" class="status">載入中...</div>
   <div id="errorMsg" class="error"></div>
 
-  <div class="kpi-grid cols-9" id="kpiGrid">
+  <!-- ── 廣告 KPI ── -->
+  <div class="kpi-grid cols-9" id="kpiGrid" style="display:grid">
     <div class="kpi"><div class="kpi-label">花費</div><div class="kpi-value">—</div></div>
   </div>
 
-  <div class="charts-row">
+  <!-- ── 網站業績：對比卡片 ── -->
+  <div id="compareSection" style="display:none">
+    <div class="compare-grid">
+      <!-- 網站實際業績 -->
+      <div class="compare-card">
+        <div class="compare-card-title">🛒 網站實際業績</div>
+        <div class="compare-row"><span class="compare-row-label">總業績</span><span class="compare-row-val" id="ws-revenue">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">訂單數</span><span class="compare-row-val" id="ws-orders">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">平均客單價 AOV</span><span class="compare-row-val" id="ws-aov">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">退款金額</span><span class="compare-row-val" id="ws-refund" style="color:var(--text3);font-size:12px">暫不支援</span></div>
+      </div>
+      <!-- 廣告花費 vs 歸因 -->
+      <div class="compare-card">
+        <div class="compare-card-title">📢 廣告投入</div>
+        <div class="compare-row"><span class="compare-row-label">廣告總花費</span><span class="compare-row-val" id="ad-spend">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">Meta 花費</span><span class="compare-row-val" id="ad-meta-spend">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">Google 花費</span><span class="compare-row-val" id="ad-google-spend">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">廣告歸因業績</span><span class="compare-row-val" id="ad-attributed">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">廣告歸因 ROAS</span><span class="compare-row-val" id="ad-roas">—</span></div>
+      </div>
+      <!-- 歸因落差 -->
+      <div class="compare-card">
+        <div class="compare-card-title">⚖️ 實際 vs 歸因落差</div>
+        <div class="compare-row"><span class="compare-row-label">實際 ROAS</span><span class="compare-row-val good" id="real-roas">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">歸因 ROAS</span><span class="compare-row-val neutral" id="attr-roas">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">ROAS 落差</span><span class="compare-row-val" id="roas-gap">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">業績落差</span><span class="compare-row-val" id="rev-gap">—</span></div>
+        <div class="compare-row"><span class="compare-row-label">廣告佔業績比</span><span class="compare-row-val" id="ad-pct">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-row" id="chartsRow">
     <div class="card">
-      <div class="card-title">每日花費 vs 業績 <span id="trendRange"></span></div>
+      <div class="card-title" id="chart1Title">每日花費 vs 業績 <span id="trendRange"></span></div>
       <div class="legend">
         <div class="leg"><div class="leg-line" id="legSpend" style="background:#c0392b"></div>花費</div>
         <div class="leg"><div class="leg-dash" id="legRev" style="border-color:#1a7a52"></div>業績</div>
@@ -250,22 +415,96 @@ tr:hover td{background:var(--bg)}
       <div style="position:relative;height:220px"><canvas id="trendChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">每日 ROAS 趨勢</div>
+      <div class="card-title" id="chart2Title">每日 ROAS 趨勢</div>
       <div style="position:relative;height:220px"><canvas id="roasChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">各活動花費佔比</div>
+      <div class="card-title" id="chart3Title">各活動花費佔比</div>
       <div style="position:relative;height:240px"><canvas id="campaignChart"></canvas></div>
     </div>
   </div>
 
+  <!-- 網站業績 專用圖表 -->
+  <div class="charts-row-2" id="webChartsRow" style="display:none">
+    <div class="card">
+      <div class="card-title">每日業績 vs 廣告花費
+        <span id="webTrendRange"></span>
+      </div>
+      <div class="legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--web)"></div>網站實際業績</div>
+        <div class="leg"><div class="leg-dot" style="background:#9a9a93"></div>廣告總花費</div>
+        <div class="leg"><div class="leg-dash" style="border-color:#c0392b"></div>廣告歸因業績</div>
+      </div>
+      <div style="position:relative;height:240px"><canvas id="webTrendChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">每日訂單業績 &amp; 訂單數</div>
+      <div style="position:relative;height:240px"><canvas id="srcChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── GA4 分析專用區塊 ── -->
+  <div id="ga4Section" style="display:none">
+    <!-- GA4 KPI -->
+    <div class="kpi-grid cols-7" id="ga4KpiGrid" style="margin-bottom:16px">
+      <div class="kpi"><div class="kpi-label">使用者</div><div class="kpi-value">—</div></div>
+    </div>
+    <!-- 轉換漏斗 -->
+    <div class="funnel-row" id="funnelRow">
+      <div class="funnel-step">
+        <div class="funnel-step-label">Sessions</div>
+        <div class="funnel-step-val" id="fn-sessions">—</div>
+        <div class="funnel-step-rate" id="fn-sessions-rate">100%</div>
+        <div class="funnel-step-bar"></div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">加入購物車</div>
+        <div class="funnel-step-val" id="fn-cart">—</div>
+        <div class="funnel-step-rate" id="fn-cart-rate">—</div>
+        <div class="funnel-step-bar"></div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">進入結帳</div>
+        <div class="funnel-step-val" id="fn-checkout">—</div>
+        <div class="funnel-step-rate" id="fn-checkout-rate">—</div>
+        <div class="funnel-step-bar"></div>
+      </div>
+      <div class="funnel-step">
+        <div class="funnel-step-label">完成購買</div>
+        <div class="funnel-step-val" id="fn-purchase">—</div>
+        <div class="funnel-step-rate" id="fn-purchase-rate">—</div>
+        <div class="funnel-step-bar"></div>
+      </div>
+    </div>
+    <!-- GA4 Charts -->
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-title">每日 Sessions 趨勢 <span id="ga4TrendRange"></span></div>
+        <div class="legend">
+          <div class="leg"><div class="leg-line" id="legSessions" style="background:#e37400"></div>Sessions</div>
+          <div class="leg"><div class="leg-line" style="background:#3b82f6"></div>使用者</div>
+        </div>
+        <div style="position:relative;height:220px"><canvas id="ga4TrendChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">流量來源 Sessions 佔比</div>
+        <div style="position:relative;height:220px"><canvas id="ga4SrcChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">每日購買轉換率 & 加購率</div>
+        <div style="position:relative;height:220px"><canvas id="ga4PageChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
   <div class="table-card">
     <div class="table-header">
       <div class="card-title" id="tableTitle">廣告明細</div>
       <div class="tbl-tools">
         <label class="search-box">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
-          <input id="tableSearch" type="text" placeholder="搜尋廣告 / 活動名稱" oninput="renderTable()">
+          <input id="tableSearch" type="text" placeholder="搜尋" oninput="renderTable()">
         </label>
         <div class="table-hint">點擊欄位標題排序</div>
       </div>
@@ -278,27 +517,67 @@ tr:hover td{background:var(--bg)}
     </div>
   </div>
 
+  <!-- Budget Modal -->
+  <div class="modal-overlay" id="budgetModal" style="display:none" onclick="if(event.target===this)closeBudgetModal()">
+    <div class="modal">
+      <h3>💰 廣告預算設定</h3>
+      <p>設定各品牌廣告帳戶的花費上限，系統會自動計算已花費比例與剩餘額度。</p>
+      <p style="font-size:12px;color:var(--text3);margin:-12px 0 16px;background:var(--surface2);padding:10px 12px;border-radius:8px">
+        💡 起始日 = 上次儲值的日期。系統會自動抓「起始日→今天」的花費計算剩餘，與報表日期範圍無關。
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="modal-field">
+          <label>HIPPORIZZ · Meta 上限（NT$）</label>
+          <input type="number" id="budget_hipporizz_meta" placeholder="例：700000" min="0">
+        </div>
+        <div class="modal-field">
+          <label>HIPPORIZZ · Meta 起始日</label>
+          <input type="date" id="start_hipporizz_meta">
+        </div>
+        <div class="modal-field">
+          <label>HIPPORIZZ · Google 上限（NT$）</label>
+          <input type="number" id="budget_hipporizz_google" placeholder="例：100000" min="0">
+        </div>
+        <div class="modal-field">
+          <label>HIPPORIZZ · Google 起始日</label>
+          <input type="date" id="start_hipporizz_google">
+        </div>
+        <div class="modal-field">
+          <label>MACLOVE · Meta 上限（NT$）</label>
+          <input type="number" id="budget_maclove_meta" placeholder="例：200000" min="0">
+        </div>
+        <div class="modal-field">
+          <label>MACLOVE · Meta 起始日</label>
+          <input type="date" id="start_maclove_meta">
+        </div>
+        <div class="modal-field">
+          <label>MACLOVE · Google 上限（NT$）</label>
+          <input type="number" id="budget_maclove_google" placeholder="例：50000" min="0">
+        </div>
+        <div class="modal-field">
+          <label>MACLOVE · Google 起始日</label>
+          <input type="date" id="start_maclove_google">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeBudgetModal()">取消</button>
+        <button class="btn-primary" onclick="saveBudget()">儲存</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script>
 // ═══════════════════════ CONFIG ═══════════════════════════════════
 const API_KEY = '991e3783ac050dde54f3b397f0f7b5ac4c6b';
 
-const META_FIELDS = [
-  'date','account_id','objective','ad_name','adset_name','campaign',
-  'spend','impressions','reach','clicks','ctr','cpm','cpc',
-  'actions_offsite_conversion_fb_pixel_purchase',
-  'action_values_offsite_conversion_fb_pixel_purchase',
-  'website_purchase_roas_offsite_conversion_fb_pixel_purchase',
-  'cost_per_action_type_offsite_conversion_fb_pixel_purchase'
-].join(',');
+const META_FIELDS   = 'date,account_id,objective,ad_name,adset_name,campaign,spend,impressions,reach,clicks,ctr,cpm,cpc,actions_offsite_conversion_fb_pixel_purchase,action_values_offsite_conversion_fb_pixel_purchase';
+const GOOGLE_FIELDS = 'date,account_id,campaign,campaign_type,ad_name,spend,impressions,clicks,ctr,cpc,conversions,conversion_value,cost_per_conversion';
+// GA4+Shopify 網站業績欄位（9個以內）
+const WEB_FIELDS    = 'date,account_name,datasource,order_gross_sales,order_count';
+// GA4 欄位：流量 + 轉換漏斗 + 頁面
+const GA_FIELDS = 'date,account_name,datasource,sessions,users,bounce_rate,source,add_to_carts,checkouts,transactions,transactionrevenue';
 
-const GOOGLE_FIELDS = [
-  'date','account_id','campaign','campaign_type','ad_name',
-  'spend','impressions','clicks','ctr','cpc',
-  'conversions','conversion_value','cost_per_conversion'
-].join(',');
-
-// 廣告目標中文對照（自動對應 Windsor/Meta 回傳的 objective 值）
 const OBJ_LABEL = {
   OUTCOME_SALES:'銷售量',OUTCOME_ENGAGEMENT:'互動',OUTCOME_AWARENESS:'品牌認知',
   OUTCOME_TRAFFIC:'流量',OUTCOME_LEADS:'開發潛在顧客',OUTCOME_APP_PROMOTION:'應用程式推廣',
@@ -307,8 +586,6 @@ const OBJ_LABEL = {
   PRODUCT_CATALOG_SALES:'產品目錄銷售',BRAND_AWARENESS:'品牌知名度',
   MESSAGES:'傳送訊息',EVENT_RESPONSES:'活動回應',STORE_VISITS:'商店流量',
 };
-
-// Google 活動類型
 const CTYPE_LABEL = {
   SEARCH:'Search 搜尋',SHOPPING:'Shopping 購物',PERFORMANCE_MAX:'PMax 最大成效',
   DISPLAY:'Display 多媒體',VIDEO:'Video 影片',SMART:'Smart 智慧',DISCOVERY:'Discovery 探索',
@@ -318,10 +595,14 @@ const CTYPE_CLS = {
   DISPLAY:'ct-display',VIDEO:'ct-video',
 };
 
+// Windsor GA4 account_name 關鍵字對應
 const BRANDS = {
   maclove:{
     metaId:'2919454488223604',
-    googleId:'1639977647',       // 麥克愛愛合作投放
+    googleId:'1639977647',
+    // Windsor GA4 account name 含此字串即為 MACLOVE 網站
+    webAccountKey:'Maclove',
+    ga4AccountKey:'Maclove',
     name:'MACLOVE',
     hasSegments:false,
     spendC:'#c0392b',revC:'#e74c3c',barMeta:'bar-mac',
@@ -329,7 +610,10 @@ const BRANDS = {
   },
   hipporizz:{
     metaId:'2211975622597710',
-    googleId:'1634719552',       // HIPPORIZZ
+    googleId:'1634719552',
+    // Windsor GA4 account name 含此字串即為 HIPPORIZZ 網站
+    webAccountKey:'Hipporizz',
+    ga4AccountKey:'Hipporizz',
     name:'HIPPORIZZ',
     hasSegments:true,
     spendC:'#1a4fd6',revC:'#1a7a52',barMeta:'bar-hip-w',
@@ -344,10 +628,15 @@ const SEG={
 
 // ═══════════════════════ STATE ════════════════════════════════════
 let currentBrand='maclove', currentPlatform='meta', currentSegment='all';
+let ga4RawData=[], ga4FilteredData=[];
 let rawData=[],filteredData=[],sortKey='spend',sortAsc=false;
-let trendInst=null,roasInst=null,campInst=null;
+// 網站業績獨立快取（跨平台切換時保留）
+let webCache={maclove:null,hipporizz:null};
+// 廣告快取（用於網站業績對比）
+let adCache={maclove:{meta:null,google:null},hipporizz:{meta:null,google:null}};
+let trendInst=null,roasInst=null,campInst=null,webTrendInst=null,srcInst=null;
 
-// ═══════════════════════ LAYER SWITCHERS ══════════════════════════
+// ═══════════════════════ SWITCHERS ════════════════════════════════
 function setBrand(brand,btn){
   currentBrand=brand;
   document.querySelectorAll('.brand-tab').forEach(b=>b.classList.remove('active'));
@@ -360,7 +649,9 @@ function setPlatform(p,btn){
   document.querySelectorAll('.platform-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   currentSegment=BRANDS[currentBrand].hasSegments&&p==='meta'?'website':'all';
-  syncUI(); rawData=[]; filteredData=[]; fetchData();
+  syncUI(); rawData=[]; filteredData=[];
+  if(p==='ga4') fetchGA4Data();
+  else fetchData();
 }
 function setSegment(seg,btn){
   currentSegment=seg;
@@ -372,30 +663,50 @@ function setSegment(seg,btn){
 function syncUI(){
   const cfg=BRANDS[currentBrand];
   const isMeta=currentPlatform==='meta';
+  const isGoogle=currentPlatform==='google';
+  const isWeb=currentPlatform==='website';
   const isHip=currentBrand==='hipporizz';
 
-  // Header
-  document.getElementById('pageTitle').textContent=`${cfg.name} · ${isMeta?'Meta Ads':'Google Ads'}`;
-  const badge=document.getElementById('platformBadge');
-  badge.textContent=(isMeta?'Meta Ads':'Google Ads')+' · Windsor.ai';
-  badge.className='platform-badge '+(isMeta?(currentBrand==='maclove'?'badge-meta-mac':'badge-meta-hip'):'badge-google');
+  // Title
+  const isGA4=currentPlatform==='ga4';
+  const platName=isMeta?'Meta Ads':isGoogle?'Google Ads':isGA4?'GA 分析':'網站業績';
+  document.getElementById('pageTitle').textContent=`${cfg.name} · ${platName}`;
+  document.getElementById('subtitle').textContent=isWeb
+    ?(currentBrand==='hipporizz'?'Shopify · qmmzae-3y':'Shopline · 暫不支援')
+    :isGA4?(currentBrand==='hipporizz'?'GA4 · Hipporizz官網-shopify':'GA4 · Maclove麥克愛愛')
+    :'Windsor.ai';
+
+  // campaign filter (hide for website)
+  document.getElementById('campaignFilter').style.display=(isWeb||isGA4)?'none':'';
 
   // Segment tabs
   const st=document.getElementById('segTabs');
   if(isMeta&&isHip){
     st.style.display='flex';
     document.querySelectorAll('.seg-tab').forEach(b=>b.classList.remove('active'));
-    const cls=currentSegment==='fundraising'?'fundraising':currentSegment==='all'?'all':'website';
-    document.querySelector('.seg-tab.'+cls).classList.add('active');
-  } else { st.style.display='none'; }
+    document.querySelector('.seg-tab.'+(currentSegment==='fundraising'?'fundraising':currentSegment==='all'?'all':'website')).classList.add('active');
+  }else{st.style.display='none';}
+  if(isGA4||isWeb) st.style.display='none';
 
-  // Filter bar: objective (Meta) vs campaign type (Google)
+  // Filter bar
   document.getElementById('objLabel').style.display        = isMeta?'':'none';
   document.getElementById('objectiveFilter').style.display = isMeta?'':'none';
-  document.getElementById('ctypeLabel').style.display        = !isMeta?'':'none';
-  document.getElementById('campaignTypeFilter').style.display = !isMeta?'':'none';
+  document.getElementById('ctypeLabel').style.display        = isGoogle?'':'none';
+  document.getElementById('campaignTypeFilter').style.display = isGoogle?'':'none';
+  document.getElementById('srcLabel').style.display        = isWeb?'':'none';
+  document.getElementById('sourceFilter').style.display    = isWeb?'':'none';
+  // hide filter row entirely for GA4
+  document.getElementById('filterRow').style.display = isGA4?'none':'';
+
+  // Show/hide sections
+  document.getElementById('kpiGrid').style.display       = (!isWeb&&!isGA4)?'grid':'none';
+  document.getElementById('compareSection').style.display = isWeb?'block':'none';
+  document.getElementById('chartsRow').style.display     = (!isWeb&&!isGA4)?'grid':'none';
+  document.getElementById('webChartsRow').style.display  = isWeb?'grid':'none';
+  document.getElementById('ga4Section').style.display    = isGA4?'block':'none';
 
   renderTableHead();
+  setTimeout(updateBudgetBar, 0);
 }
 
 // ═══════════════════════ DATE ═════════════════════════════════════
@@ -414,15 +725,16 @@ function buildMonthPills(){
     btn.onclick=()=>{
       document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
       clearQ();btn.classList.add('active');
-      document.getElementById('dateFrom').value=from;document.getElementById('dateTo').value=to;fetchData();
-    };
-    cont.appendChild(btn);
+      document.getElementById('dateFrom').value=from;
+      document.getElementById('dateTo').value=to;fetchData();
+    };cont.appendChild(btn);
   }
 }
 function initDates(){
   const now=new Date(),y=now.getFullYear(),m=now.getMonth();
   document.getElementById('dateFrom').value=`${y}-${pad(m+1)}-01`;
-  document.getElementById('dateTo').value=ymd(now);document.getElementById('dateTo').max=ymd(now);
+  document.getElementById('dateTo').value=ymd(now);
+  document.getElementById('dateTo').max=ymd(now);
 }
 function clearQ(){document.querySelectorAll('.quick-btn').forEach(b=>b.classList.remove('active'))}
 function setQuickRange(t,btn){
@@ -447,36 +759,72 @@ async function fetchData(){
   const from=document.getElementById('dateFrom').value,to=document.getElementById('dateTo').value;
   if(!from||!to){showErr('請選擇日期');return}
 
+  const isWeb=currentPlatform==='website';
+
+  if(isWeb){
+    // 網站業績：用 /all endpoint，同時也要廣告資料做對比
+    await fetchWebData(from,to);
+  }else{
+    await fetchAdData(from,to);
+  }
+  btn.disabled=false;icon.classList.remove('spinning');
+}
+
+async function fetchAdData(from,to){
   const isMeta=currentPlatform==='meta';
   const cfg=BRANDS[currentBrand];
   const accountId=isMeta?cfg.metaId:cfg.googleId;
   const fields=isMeta?META_FIELDS:GOOGLE_FIELDS;
   const connector=isMeta?'facebook':'google_ads';
-
-  if(!accountId){
-    showErr(`尚未設定 ${cfg.name} 的 Google Ads 帳號 ID，請在程式碼 BRANDS 設定中填入 googleId`);
-    btn.disabled=false;icon.classList.remove('spinning');return;
-  }
   const url=`https://connectors.windsor.ai/${connector}?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${accountId}&fields=${fields}`;
   try{
     const resp=await fetch(url);
     if(!resp.ok){const t=await resp.text();throw new Error(`HTTP ${resp.status}: ${t.slice(0,200)}`)}
     const json=await resp.json();
     const all=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
-    if(!all.length&&!Array.isArray(json))throw new Error('無法解析資料：'+JSON.stringify(json).slice(0,150));
-    // 前端二次過濾
     const tid=String(accountId).replace(/\D/g,'');
     rawData=all.filter(d=>!d.account_id||String(d.account_id).replace(/\D/g,'')===tid);
+    // 快取廣告資料
+    if(isMeta) adCache[currentBrand].meta=rawData;
+    else adCache[currentBrand].google=rawData;
     populateFilters();applyFilters();
     const note=all.length!==rawData.length?` · 已過濾 ${all.length-rawData.length} 筆其他帳號`:'';
     document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · 共 ${rawData.length} 筆${note}`;
-  }catch(e){
-    let m=e.message;
-    if(m.includes('Failed to fetch')||m.includes('NetworkError'))m='網路連線失敗，請確認網路並關閉廣告攔截器後重試。';
-    showErr('資料載入失敗：'+m);
-  }finally{btn.disabled=false;icon.classList.remove('spinning')}
+  }catch(e){showErr('資料載入失敗：'+parseErr(e));}
 }
-function showErr(msg){document.getElementById('errorMsg').textContent=msg;document.getElementById('errorMsg').style.display='block';document.getElementById('statusBar').textContent='載入失敗'}
+
+async function fetchWebData(from,to){
+  const cfg=BRANDS[currentBrand];
+  const shopifyAccountId = currentBrand==='hipporizz' ? 'qmmzae-3y.myshopify.com' : '';
+  if(!shopifyAccountId){
+    showErr('MACLOVE 的 Shopify/Shopline 尚未串接，網站業績暫無法顯示');
+    return;
+  }
+  const url=`https://connectors.windsor.ai/shopify?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${shopifyAccountId}&fields=${WEB_FIELDS}`;
+  try{
+    const resp=await fetch(url);
+    if(!resp.ok){const t=await resp.text();throw new Error(`HTTP ${resp.status}: ${t.slice(0,200)}`)}
+    const json=await resp.json();
+    const all=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
+    rawData=all;
+    webCache[currentBrand]=rawData;
+    populateWebFilters();
+    applyFilters();
+    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · 網站資料 ${rawData.length} 筆`;
+  }catch(e){showErr('資料載入失敗：'+parseErr(e));}
+}
+
+function parseErr(e){
+  let m=e.message;
+  if(m.includes('Failed to fetch')||m.includes('NetworkError'))m='網路連線失敗，請確認網路並關閉廣告攔截器。';
+  return m;
+}
+function showErr(msg){
+  document.getElementById('errorMsg').textContent=msg;document.getElementById('errorMsg').style.display='block';
+  document.getElementById('statusBar').textContent='載入失敗';
+  document.getElementById('refreshBtn').disabled=false;
+  document.getElementById('refreshIcon').classList.remove('spinning');
+}
 
 // ═══════════════════════ FILTERS ═════════════════════════════════
 function isFR(d){return(d.campaign||'').includes('募資')}
@@ -486,42 +834,47 @@ function segFilter(data){
   if(currentSegment==='fundraising')return data.filter(d=>isFR(d));
   return data;
 }
+
 function populateFilters(){
-  // Campaign
   const cs=document.getElementById('campaignFilter'),cc=cs.value;
   const camps=[...new Set(segFilter(rawData).map(d=>d.campaign).filter(Boolean))].sort();
   cs.innerHTML='<option value="">所有活動</option>'+camps.map(c=>`<option value="${c}"${c===cc?' selected':''}>${c}</option>`).join('');
-  // Objective (Meta)
   const os=document.getElementById('objectiveFilter'),oc=os.value;
   const objs=[...new Set(rawData.map(d=>d.objective).filter(Boolean))].sort();
   os.innerHTML='<option value="">所有目標</option>'+objs.map(o=>`<option value="${o}"${o===oc?' selected':''}>${OBJ_LABEL[o]||o}</option>`).join('');
-  // Campaign type (Google)
   const ts=document.getElementById('campaignTypeFilter'),tc=ts.value;
   const types=[...new Set(rawData.map(d=>d.campaign_type).filter(Boolean))].sort();
   ts.innerHTML='<option value="">所有類型</option>'+types.map(t=>`<option value="${t}"${t===tc?' selected':''}>${CTYPE_LABEL[t]||t}</option>`).join('');
 }
+function populateWebFilters(){
+  const ss=document.getElementById('sourceFilter'),sc=ss.value;
+  const srcs=[...new Set(rawData.map(d=>d.source).filter(Boolean))].sort();
+  ss.innerHTML='<option value="">所有來源</option>'+srcs.map(s=>`<option value="${s}"${s===sc?' selected':''}>${s}</option>`).join('');
+}
+
 function applyFilters(){
-  populateFilters();
-  const camp=document.getElementById('campaignFilter').value;
-  const obj =document.getElementById('objectiveFilter').value;
-  const ct  =document.getElementById('campaignTypeFilter').value;
-  filteredData=segFilter(rawData)
-    .filter(d=>!camp||d.campaign===camp)
-    .filter(d=>!obj ||d.objective===obj)
-    .filter(d=>!ct  ||d.campaign_type===ct);
-
-  const isMeta=currentPlatform==='meta';
-  const cfg=BRANDS[currentBrand];
-  document.getElementById('tableTitle').textContent=
-    isMeta&&cfg.hasSegments?SEG[currentSegment].title:`${cfg.name} ${isMeta?'Meta':'Google'} 廣告明細`;
-
-  renderKPIs();renderTrend();renderRoasTrend();renderCampaignChart();renderTable();
-
-  const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
-  if(dates.length){
-    const dr=`${dates[0]} ~ ${dates[dates.length-1]}`;
-    document.getElementById('trendRange').textContent=dr;
-    document.getElementById('subtitle').textContent=`${isMeta?'Meta':'Google'} · ${dr}`;
+  const isWeb=currentPlatform==='website';
+  const isGA4=currentPlatform==='ga4';
+  if(isGA4){filteredData=[...rawData];renderTable();return;}
+  if(isWeb){
+    const src=document.getElementById('sourceFilter').value;
+    filteredData=rawData.filter(d=>!src||d.source===src);
+    document.getElementById('tableTitle').textContent=`${BRANDS[currentBrand].name} 網站業績明細`;
+    renderWebKPIs();renderWebCharts();renderTable();
+    const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
+    if(dates.length) document.getElementById('webTrendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
+  }else{
+    populateFilters();
+    const camp=document.getElementById('campaignFilter').value;
+    const obj =document.getElementById('objectiveFilter').value;
+    const ct  =document.getElementById('campaignTypeFilter').value;
+    filteredData=segFilter(rawData).filter(d=>!camp||d.campaign===camp).filter(d=>!obj||d.objective===obj).filter(d=>!ct||d.campaign_type===ct);
+    const cfg=BRANDS[currentBrand];
+    document.getElementById('tableTitle').textContent=currentPlatform==='meta'&&cfg.hasSegments?SEG[currentSegment].title:`${cfg.name} ${currentPlatform==='meta'?'Meta':'Google'} 廣告明細`;
+    renderKPIs();renderTrend();renderRoasTrend();renderCampaignChart();renderTable();
+  updateBudgetBar();
+    const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
+    if(dates.length) document.getElementById('trendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
   }
 }
 
@@ -532,43 +885,94 @@ function fmtK(n){if(n==null||isNaN(n))return'—';n=Number(n);return n>=10000?(n
 function pct(n){return n?(n*100).toFixed(2)+'%':'—'}
 function getColors(){
   if(currentPlatform==='google')return{sc:'#4285f4',rc:'#34a853',bar:'bar-goo'};
+  if(currentPlatform==='website')return{sc:'#0d9488',rc:'#10b981',bar:'bar-web'};
   const cfg=BRANDS[currentBrand];
   if(!cfg.hasSegments)return{sc:cfg.spendC,rc:cfg.revC,bar:cfg.barMeta};
   return{sc:SEG[currentSegment].sc,rc:SEG[currentSegment].rc,bar:SEG[currentSegment].bar};
 }
+function kpi(label,val,cls,bar,sub=''){
+  return`<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value ${cls}">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}<div class="kpi-bar ${bar}"></div></div>`;
+}
+function setEl(id,val,cls=''){const el=document.getElementById(id);if(el){el.textContent=val;if(cls)el.className='compare-row-val '+cls;}}
 
-// ═══════════════════════ KPIs ════════════════════════════════════
+// ═══════════════════════ KPIs (廣告) ═════════════════════════════
 function renderKPIs(){
   const d=filteredData,{bar}=getColors(),isMeta=currentPlatform==='meta';
   if(isMeta){
     const spend=d.reduce((s,r)=>s+v(r,'spend'),0);
-    const imp  =d.reduce((s,r)=>s+v(r,'impressions'),0);
+    const imp=d.reduce((s,r)=>s+v(r,'impressions'),0);
     const reach=d.reduce((s,r)=>s+v(r,'reach'),0);
-    const clks =d.reduce((s,r)=>s+v(r,'clicks'),0);
-    const buys =d.reduce((s,r)=>s+v(r,'actions_offsite_conversion_fb_pixel_purchase'),0);
-    const rev  =d.reduce((s,r)=>s+v(r,'action_values_offsite_conversion_fb_pixel_purchase'),0);
+    const clks=d.reduce((s,r)=>s+v(r,'clicks'),0);
+    const buys=d.reduce((s,r)=>s+v(r,'actions_offsite_conversion_fb_pixel_purchase'),0);
+    const rev=d.reduce((s,r)=>s+v(r,'action_values_offsite_conversion_fb_pixel_purchase'),0);
     const ctr=imp>0?clks/imp:0,roas=spend>0?rev/spend:0,cpa=buys>0?spend/buys:0,cpc=clks>0?spend/clks:0;
     const rc=roas>=3?'good':roas>=1?'neutral':'warn';
     document.getElementById('kpiGrid').className='kpi-grid cols-9';
     document.getElementById('kpiGrid').innerHTML=kpi('花費','NT$'+fmt(spend),'',bar)+kpi('曝光',fmtK(imp),'',bar)+kpi('觸及',fmtK(reach),'',bar)+kpi('點擊率 CTR',pct(ctr),'',bar)+kpi('購買次數',fmt(buys),'',bar)+kpi('購買業績','NT$'+fmt(rev),'',bar)+kpi('ROAS',roas.toFixed(2)+'x',rc,bar)+kpi('CPA',cpa>0?'NT$'+fmt(cpa):'—','',bar)+kpi('CPC',cpc>0?'NT$'+fmt(cpc,1):'—','',bar);
   }else{
     const spend=d.reduce((s,r)=>s+v(r,'spend'),0);
-    const imp  =d.reduce((s,r)=>s+v(r,'impressions'),0);
-    const clks =d.reduce((s,r)=>s+v(r,'clicks'),0);
-    const conv =d.reduce((s,r)=>s+v(r,'conversions'),0);
-    const rev  =d.reduce((s,r)=>s+v(r,'conversion_value'),0);
-    const ctr=imp>0?clks/imp:0,roas=spend>0?rev/spend:0,cpa=conv>0?spend/conv:0,cpc=clks>0?spend/clks:0,cpm=imp>0?(spend/imp)*1000:0;
+    const imp=d.reduce((s,r)=>s+v(r,'impressions'),0);
+    const clks=d.reduce((s,r)=>s+v(r,'clicks'),0);
+    const conv=d.reduce((s,r)=>s+v(r,'conversions'),0);
+    const rev=d.reduce((s,r)=>s+v(r,'conversion_value'),0);
+    const ctr=imp>0?clks/imp:0,roas=spend>0?rev/spend:0,cpa=conv>0?spend/conv:0,cpc=clks>0?spend/clks:0;
     const rc=roas>=3?'good':roas>=1?'neutral':'warn';
     document.getElementById('kpiGrid').className='kpi-grid cols-8';
-    document.getElementById('kpiGrid').innerHTML=kpi('花費','NT$'+fmt(spend),'',bar)+kpi('曝光',fmtK(imp),'',bar)+kpi('點擊',fmtK(clks),'',bar)+kpi('點擊率 CTR',pct(ctr),'',bar)+kpi('轉換次數',fmt(conv,1),'',bar)+kpi('轉換業績','NT$'+fmt(rev),'',bar)+kpi('ROAS',roas.toFixed(2)+'x',rc,bar)+kpi('CPA / CPC',`NT$${fmt(cpa)} <small style="color:var(--text3);font-size:11px">/ NT$${fmt(cpc,1)}</small>`,'',bar);
+    document.getElementById('kpiGrid').innerHTML=kpi('花費','NT$'+fmt(spend),'',bar)+kpi('曝光',fmtK(imp),'',bar)+kpi('點擊',fmtK(clks),'',bar)+kpi('點擊率 CTR',pct(ctr),'',bar)+kpi('轉換次數',fmt(conv,1),'',bar)+kpi('轉換業績','NT$'+fmt(rev),'',bar)+kpi('ROAS',roas.toFixed(2)+'x',rc,bar)+kpi('CPA / CPC',`NT$${fmt(cpa)} <small style="font-size:11px;color:var(--text3)">/ NT$${fmt(cpc,1)}</small>`,'',bar);
   }
 }
-function kpi(label,val,cls,bar){return`<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value ${cls}">${val}</div><div class="kpi-bar ${bar}"></div></div>`}
 
-// ═══════════════════════ CHARTS ══════════════════════════════════
-function getRevKey(){return currentPlatform==='meta'?'action_values_offsite_conversion_fb_pixel_purchase':'conversion_value'}
+// ═══════════════════════ 網站業績 KPIs & 對比 ════════════════════
+function renderWebKPIs(){
+  const d=filteredData;
+  const revenue=d.reduce((s,r)=>s+v(r,'order_gross_sales'),0);
+  const orders=d.reduce((s,r)=>s+v(r,'order_count'),0);
+  const aov=orders>0?revenue/orders:0;
+  const sessions=0; // not available in Shopify connector
+  const refund=0; // order_returned_items_value not supported by Shopify connector
+
+  setEl('ws-revenue','NT$'+fmt(revenue));
+  setEl('ws-orders',fmt(orders));
+  setEl('ws-aov',aov>0?'NT$'+fmt(aov):'—');
+  const refundRate=revenue>0?(refund/revenue*100):0;
+  setEl('ws-refund-rate',refundRate>0?refundRate.toFixed(1)+'%':'—');
+  setEl('ws-refund',refund>0?'-NT$'+fmt(refund):'—');
+
+  // 廣告對比（從快取抓）
+  const metaD=adCache[currentBrand].meta||[];
+  const gooD=adCache[currentBrand].google||[];
+  // HIPPORIZZ: exclude fundraising campaigns from website ad spend comparison
+  const metaForWeb = currentBrand==='hipporizz'
+    ? metaD.filter(d=>!(d.campaign||'').includes('募資'))
+    : metaD;
+  const metaSpend=metaForWeb.reduce((s,r)=>s+v(r,'spend'),0);
+  const gooSpend=gooD.reduce((s,r)=>s+v(r,'spend'),0);
+  const totalSpend=metaSpend+gooSpend;
+  const metaRev=metaForWeb.reduce((s,r)=>s+v(r,'action_values_offsite_conversion_fb_pixel_purchase'),0);
+  const gooRev=gooD.reduce((s,r)=>s+v(r,'conversion_value'),0);
+  const attrRev=metaRev+gooRev;
+  const adRoas=totalSpend>0?attrRev/totalSpend:0;
+  const realRoas=totalSpend>0?revenue/totalSpend:0;
+  const roasGap=realRoas-adRoas;
+  const revGap=revenue-attrRev;
+  const adPct=revenue>0?totalSpend/revenue*100:0;
+
+  setEl('ad-spend',totalSpend>0?'NT$'+fmt(totalSpend):'尚未載入廣告資料');
+  setEl('ad-meta-spend',metaSpend>0?'NT$'+fmt(metaSpend):'—');
+  setEl('ad-google-spend',gooSpend>0?'NT$'+fmt(gooSpend):'—');
+  setEl('ad-attributed',attrRev>0?'NT$'+fmt(attrRev):'—');
+  setEl('ad-roas',adRoas>0?adRoas.toFixed(2)+'x':'—');
+  setEl('real-roas',realRoas>0?realRoas.toFixed(2)+'x':'—', realRoas>=3?'good':realRoas>=1?'neutral':'warn');
+  setEl('attr-roas',adRoas>0?adRoas.toFixed(2)+'x':'—','neutral');
+  const gapCls=roasGap>0?'neg':'pos'; // 若實際比歸因高是好事 (pos green)
+  setEl('roas-gap',roasGap?((roasGap>0?'+':'')+roasGap.toFixed(2)+'x'):'—', roasGap>0?'warn':'good');
+  setEl('rev-gap',revGap?(revGap>0?'+NT$'+fmt(revGap):'-NT$'+fmt(Math.abs(revGap))):'—', revGap>0?'warn':'good');
+  setEl('ad-pct',adPct?adPct.toFixed(1)+'%':'—','neutral');
+}
+
+// ═══════════════════════ CHARTS (廣告) ════════════════════════════
 function renderTrend(){
-  const m={};const rk=getRevKey();
+  const m={};const rk=currentPlatform==='meta'?'action_values_offsite_conversion_fb_pixel_purchase':'conversion_value';
   for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={s:0,r:0};m[d.date].s+=v(d,'spend');m[d.date].r+=v(d,rk)}
   const dates=Object.keys(m).sort();const{sc,rc}=getColors();
   document.getElementById('legSpend').style.background=sc;document.getElementById('legRev').style.borderColor=rc;
@@ -578,122 +982,244 @@ function renderTrend(){
     {label:'業績',data:dates.map(d=>Math.round(m[d].r)),borderColor:rc,backgroundColor:rc+'18',tension:.3,pointRadius:2,fill:true,borderWidth:2,borderDash:[5,3]}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
     x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
-    y:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:v=>'NT$'+(v>=1000?(v/1000).toFixed(0)+'k':v)},grid:{color:'rgba(0,0,0,.05)'}}
+    y:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:n=>'NT$'+(n>=1000?(n/1000).toFixed(0)+'k':n)},grid:{color:'rgba(0,0,0,.05)'}}
   }}});
 }
 function renderRoasTrend(){
-  const m={};const rk=getRevKey();
+  const m={};const rk=currentPlatform==='meta'?'action_values_offsite_conversion_fb_pixel_purchase':'conversion_value';
   for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={s:0,r:0};m[d.date].s+=v(d,'spend');m[d.date].r+=v(d,rk)}
   const dates=Object.keys(m).sort();const{sc}=getColors();
   const ctx=document.getElementById('roasChart').getContext('2d');if(roasInst)roasInst.destroy();
-  roasInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[{
-    label:'ROAS',data:dates.map(d=>m[d].s>0?(m[d].r/m[d].s).toFixed(2):0),
-    borderColor:sc,backgroundColor:sc+'15',tension:.32,pointRadius:2,fill:true,borderWidth:2
-  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
-    x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
-    y:{beginAtZero:true,ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:v=>v+'x'},grid:{color:'rgba(0,0,0,.05)'}}
-  }}});
+  roasInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[{label:'ROAS',data:dates.map(d=>m[d].s>0?(m[d].r/m[d].s).toFixed(2):0),borderColor:sc,backgroundColor:sc+'15',tension:.32,pointRadius:2,fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:n=>n+'x'},grid:{color:'rgba(0,0,0,.05)'}}}}});
 }
 function renderCampaignChart(){
-  const m={};
-  for(const d of filteredData){const c=d.campaign||'未知';m[c]=(m[c]||0)+v(d,'spend')}
-  const entries=Object.entries(m).sort((a,b)=>b[1]-a[1]);
-  const top=entries.slice(0,6);const other=entries.slice(6).reduce((s,e)=>s+e[1],0);
-  if(other>0)top.push(['其他',other]);
+  const m={};for(const d of filteredData){const c=d.campaign||'未知';m[c]=(m[c]||0)+v(d,'spend')}
+  const entries=Object.entries(m).sort((a,b)=>b[1]-a[1]);const top=entries.slice(0,6);const other=entries.slice(6).reduce((s,e)=>s+e[1],0);if(other>0)top.push(['其他',other]);
   const colors=currentPlatform==='google'?['#4285f4','#34a853','#fbbc04','#ea4335','#1a73e8','#0d9488','#6b6b65']:BRANDS[currentBrand].donut;
   const ctx=document.getElementById('campaignChart').getContext('2d');if(campInst)campInst.destroy();
-  campInst=new Chart(ctx,{type:'doughnut',data:{labels:top.map(e=>e[0]),datasets:[{data:top.map(e=>Math.round(e[1])),backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:10}},
-    tooltip:{callbacks:{label:c=>' NT$'+Math.round(c.parsed).toLocaleString('zh-TW')}}}}});
+  campInst=new Chart(ctx,{type:'doughnut',data:{labels:top.map(e=>e[0]),datasets:[{data:top.map(e=>Math.round(e[1])),backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:10}},tooltip:{callbacks:{label:c=>' NT$'+Math.round(c.parsed).toLocaleString('zh-TW')}}}}});
+}
+
+// ═══════════════════════ CHARTS (網站業績) ════════════════════════
+function renderWebCharts(){
+  // 每日業績 vs 廣告花費
+  const m={};
+  for(const d of filteredData){
+    if(!d.date)continue;if(!m[d.date])m[d.date]={web:0};
+    m[d.date].web+=v(d,'order_gross_sales');
+  }
+  // merge 廣告資料
+  const metaD=adCache[currentBrand].meta||[];
+  const gooD=adCache[currentBrand].google||[];
+  for(const d of [...metaD,...gooD]){
+    if(!d.date)continue;if(!m[d.date])m[d.date]={web:0};
+    if(!m[d.date].spend)m[d.date].spend=0;if(!m[d.date].attr)m[d.date].attr=0;
+    m[d.date].spend+=v(d,'spend');
+    m[d.date].attr+=v(d,'action_values_offsite_conversion_fb_pixel_purchase')||v(d,'conversion_value');
+  }
+  const dates=Object.keys(m).sort();
+  const ctx=document.getElementById('webTrendChart').getContext('2d');if(webTrendInst)webTrendInst.destroy();
+  webTrendInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[
+    {label:'網站實際業績',data:dates.map(d=>Math.round(m[d].web||0)),borderColor:'#0d9488',backgroundColor:'#0d948818',tension:.3,pointRadius:2,fill:true,borderWidth:2},
+    {label:'廣告總花費',data:dates.map(d=>Math.round(m[d].spend||0)),borderColor:'#9a9a93',backgroundColor:'transparent',tension:.3,pointRadius:2,fill:false,borderWidth:2},
+    {label:'廣告歸因業績',data:dates.map(d=>Math.round(m[d].attr||0)),borderColor:'#c0392b',backgroundColor:'transparent',tension:.3,pointRadius:2,fill:false,borderWidth:2,borderDash:[5,3]},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+    y:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',callback:n=>'NT$'+(n>=1000?(n/1000).toFixed(0)+'k':n)},grid:{color:'rgba(0,0,0,.05)'}}
+  }}});
+  // 流量來源佔比
+  // Shopify source is always "shopify" - group by order_name prefix or show total only
+  // Use Shopify data as-is: one bar for total, show trend instead
+  const sm={};
+  for(const d of filteredData){
+    const date=d.date||'unknown';
+    if(!sm[date])sm[date]={rev:0,orders:0};
+    sm[date].rev+=v(d,'order_gross_sales');
+    sm[date].orders+=v(d,'order_count');
+  }
+  const sdates=Object.keys(sm).sort();
+  const sc2=document.getElementById('srcChart').getContext('2d');if(srcInst)srcInst.destroy();
+  srcInst=new Chart(sc2,{type:'bar',data:{
+    labels:sdates.map(d=>d.slice(5)),
+    datasets:[
+      {label:'每日業績',data:sdates.map(d=>Math.round(sm[d].rev)),backgroundColor:'#0d948840',borderColor:'#0d9488',borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+      {label:'每日訂單數',data:sdates.map(d=>sm[d].orders),backgroundColor:'transparent',borderColor:'#f59e0b',borderWidth:2,type:'line',pointRadius:3,pointBackgroundColor:'#f59e0b',yAxisID:'y2'},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{
+    legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:8}},
+    tooltip:{callbacks:{label:c=>c.dataset.label==='每日業績'?' NT$'+Math.round(c.parsed.y).toLocaleString('zh-TW'):' '+c.parsed.y+' 筆'}}
+  },scales:{
+    x:{ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:14},grid:{display:false}},
+    y:{position:'left',ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>'NT$'+(n>=1000?(n/1000).toFixed(0)+'k':n)},grid:{color:'rgba(0,0,0,.04)'}},
+    y2:{position:'right',ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>n+'筆'},grid:{display:false}},
+  }}});
 }
 
 // ═══════════════════════ TABLE ════════════════════════════════════
 function renderTableHead(){
+  const isWeb=currentPlatform==='website';
+  const isGA4=currentPlatform==='ga4';
   const isMeta=currentPlatform==='meta';
-  document.getElementById('tableHead').innerHTML=isMeta?`<tr>
-    <th onclick="sortTable('ad_name')" style="min-width:150px">廣告名稱 ↕</th>
-    <th onclick="sortTable('campaign')" style="min-width:130px">活動 ↕</th>
-    <th onclick="sortTable('objective')" style="min-width:90px">廣告目標 ↕</th>
-    <th onclick="sortTable('spend')">花費 ↕</th>
-    <th onclick="sortTable('impressions')">曝光 ↕</th>
-    <th onclick="sortTable('reach')">觸及 ↕</th>
-    <th onclick="sortTable('ctr')">CTR ↕</th>
-    <th onclick="sortTable('cpm')">CPM ↕</th>
-    <th onclick="sortTable('cpc')">CPC ↕</th>
-    <th onclick="sortTable('purchases')">購買 ↕</th>
-    <th onclick="sortTable('revenue')">業績 ↕</th>
-    <th onclick="sortTable('roas')">ROAS ↕</th>
-    <th onclick="sortTable('cpa')">CPA ↕</th>
-  </tr>`:`<tr>
-    <th onclick="sortTable('campaign')" style="min-width:150px">活動名稱 ↕</th>
-    <th onclick="sortTable('campaign_type')" style="min-width:110px">類型 ↕</th>
-    <th onclick="sortTable('ad_name')" style="min-width:150px">廣告素材 ↕</th>
-    <th onclick="sortTable('spend')">花費 ↕</th>
-    <th onclick="sortTable('impressions')">曝光 ↕</th>
-    <th onclick="sortTable('clicks')">點擊 ↕</th>
-    <th onclick="sortTable('ctr')">CTR ↕</th>
-    <th onclick="sortTable('cpc')">CPC ↕</th>
-    <th onclick="sortTable('cpm')">CPM ↕</th>
-    <th onclick="sortTable('conversions')">轉換 ↕</th>
-    <th onclick="sortTable('revenue')">轉換業績 ↕</th>
-    <th onclick="sortTable('roas')">ROAS ↕</th>
-    <th onclick="sortTable('cpa')">CPA ↕</th>
-  </tr>`;
+  if(isGA4){
+    document.getElementById('tableHead').innerHTML=`<tr>
+      <th onclick="sortTable('date')" style="min-width:100px">日期 ↕</th>
+      <th onclick="sortTable('source')" style="min-width:120px">來源 ↕</th>
+      <th onclick="sortTable('sessions')">Sessions ↕</th>
+      <th onclick="sortTable('users')">使用者 ↕</th>
+      <th onclick="sortTable('bounce_rate')">跳出率 ↕</th>
+      <th onclick="sortTable('add_to_carts')">加購 ↕</th>
+      <th onclick="sortTable('checkouts')">結帳 ↕</th>
+      <th onclick="sortTable('purchases')">購買 ↕</th>
+      <th onclick="sortTable('revenue')">業績 ↕</th>
+    </tr>`;
+    return;
+  }
+  if(isWeb){
+    document.getElementById('tableHead').innerHTML=`<tr>
+      <th onclick="sortTable('source')" style="min-width:140px">流量來源 ↕</th>
+      <th onclick="sortTable('orders')">訂單數 ↕</th>
+      <th onclick="sortTable('revenue')">業績 ↕</th>
+      <th onclick="sortTable('aov')">平均客單價 ↕</th>
+    </tr>`;
+  }else if(isMeta){
+    document.getElementById('tableHead').innerHTML=`<tr>
+      <th onclick="sortTable('ad_name')" style="min-width:150px">廣告名稱 ↕</th>
+      <th onclick="sortTable('campaign')" style="min-width:130px">活動 ↕</th>
+      <th onclick="sortTable('objective')" style="min-width:90px">廣告目標 ↕</th>
+      <th onclick="sortTable('spend')">花費 ↕</th>
+      <th onclick="sortTable('impressions')">曝光 ↕</th>
+      <th onclick="sortTable('reach')">觸及 ↕</th>
+      <th onclick="sortTable('ctr')">CTR ↕</th>
+      <th onclick="sortTable('cpm')">CPM ↕</th>
+      <th onclick="sortTable('cpc')">CPC ↕</th>
+      <th onclick="sortTable('purchases')">購買 ↕</th>
+      <th onclick="sortTable('revenue')">業績 ↕</th>
+      <th onclick="sortTable('roas')">ROAS ↕</th>
+      <th onclick="sortTable('cpa')">CPA ↕</th>
+    </tr>`;
+  }else{
+    document.getElementById('tableHead').innerHTML=`<tr>
+      <th onclick="sortTable('campaign')" style="min-width:150px">活動名稱 ↕</th>
+      <th onclick="sortTable('campaign_type')" style="min-width:110px">類型 ↕</th>
+      <th onclick="sortTable('ad_name')" style="min-width:150px">廣告素材 ↕</th>
+      <th onclick="sortTable('spend')">花費 ↕</th>
+      <th onclick="sortTable('impressions')">曝光 ↕</th>
+      <th onclick="sortTable('clicks')">點擊 ↕</th>
+      <th onclick="sortTable('ctr')">CTR ↕</th>
+      <th onclick="sortTable('cpc')">CPC ↕</th>
+      <th onclick="sortTable('cpm')">CPM ↕</th>
+      <th onclick="sortTable('conversions')">轉換 ↕</th>
+      <th onclick="sortTable('revenue')">轉換業績 ↕</th>
+      <th onclick="sortTable('roas')">ROAS ↕</th>
+      <th onclick="sortTable('cpa')">CPA ↕</th>
+    </tr>`;
+  }
 }
 
 function rollup(){
-  const isMeta=currentPlatform==='meta';const m={};
-  for(const d of filteredData){
-    const k=isMeta
-      ?(d.ad_name||'')+'|'+(d.campaign||'')+'|'+(d.objective||'')
-      :(d.campaign||'')+'|'+(d.campaign_type||'')+'|'+(d.ad_name||'');
-    if(!m[k]){
-      m[k]=isMeta
-        ?{ad_name:d.ad_name,campaign:d.campaign,objective:d.objective||'',spend:0,impressions:0,reach:0,clicks:0,purchases:0,revenue:0}
-        :{campaign:d.campaign,campaign_type:d.campaign_type||'',ad_name:d.ad_name,spend:0,impressions:0,clicks:0,conversions:0,revenue:0};
+  const isWeb=currentPlatform==='website';
+  const isGA4=currentPlatform==='ga4';
+  const isMeta=currentPlatform==='meta';
+  if(isGA4){
+    const m={};
+    for(const d of ga4FilteredData){
+      const k=(d.date||'')+'|'+(d.source||'')+'|'+(d.page_path||'');
+      if(!m[k])m[k]={date:d.date,source:d.source||'(other)',sessions:0,users:0,add_to_carts:0,checkouts:0,purchases:0,revenue:0,b_sum:0,b_cnt:0};
+      m[k].sessions+=v(d,'sessions');m[k].users+=v(d,'users');
+      m[k].add_to_carts+=v(d,'add_to_carts');m[k].checkouts+=v(d,'checkouts');
+      m[k].purchases+=v(d,'transactions');m[k].revenue+=v(d,'transactionrevenue');
+      const b=v(d,'bounce_rate');if(b>0){m[k].b_sum+=b;m[k].b_cnt++;}
     }
-    m[k].spend+=v(d,'spend');m[k].impressions+=v(d,'impressions');m[k].clicks+=v(d,'clicks');
-    if(isMeta){m[k].reach+=v(d,'reach');m[k].purchases+=v(d,'actions_offsite_conversion_fb_pixel_purchase');m[k].revenue+=v(d,'action_values_offsite_conversion_fb_pixel_purchase')}
-    else{m[k].conversions+=v(d,'conversions');m[k].revenue+=v(d,'conversion_value')}
+    return Object.values(m).map(r=>({...r,bounce_rate:r.b_cnt>0?r.b_sum/r.b_cnt:0}));
   }
-  return Object.values(m).map(r=>({...r,
-    ctr:r.impressions>0?r.clicks/r.impressions:0,
-    cpm:r.impressions>0?(r.spend/r.impressions)*1000:0,
-    cpc:r.clicks>0?r.spend/r.clicks:0,
-    roas:r.spend>0?r.revenue/r.spend:0,
-    cpa:isMeta?(r.purchases>0?r.spend/r.purchases:0):(r.conversions>0?r.spend/r.conversions:0),
-  }));
+  const m={};
+  for(const d of filteredData){
+    if(isWeb){
+      const k=d.source||'shopify';
+      if(!m[k])m[k]={source:k,revenue:0,orders:0};
+      m[k].revenue+=v(d,'order_gross_sales');
+      m[k].orders+=v(d,'order_count');
+      // refund not available in Shopify connector
+    }else if(isMeta){
+      const k=(d.ad_name||'')+'|'+(d.campaign||'')+'|'+(d.objective||'');
+      if(!m[k])m[k]={ad_name:d.ad_name,campaign:d.campaign,objective:d.objective||'',spend:0,impressions:0,reach:0,clicks:0,purchases:0,revenue:0};
+      m[k].spend+=v(d,'spend');m[k].impressions+=v(d,'impressions');m[k].reach+=v(d,'reach');m[k].clicks+=v(d,'clicks');
+      m[k].purchases+=v(d,'actions_offsite_conversion_fb_pixel_purchase');
+      m[k].revenue+=v(d,'action_values_offsite_conversion_fb_pixel_purchase');
+    }else{
+      const k=(d.campaign||'')+'|'+(d.campaign_type||'')+'|'+(d.ad_name||'');
+      if(!m[k])m[k]={campaign:d.campaign,campaign_type:d.campaign_type||'',ad_name:d.ad_name,spend:0,impressions:0,clicks:0,conversions:0,revenue:0};
+      m[k].spend+=v(d,'spend');m[k].impressions+=v(d,'impressions');m[k].clicks+=v(d,'clicks');
+      m[k].conversions+=v(d,'conversions');m[k].revenue+=v(d,'conversion_value');
+    }
+  }
+  return Object.values(m).map(r=>{
+    if(isWeb)return{...r,aov:r.orders>0?r.revenue/r.orders:0};
+    return{...r,
+      ctr:r.impressions>0?r.clicks/r.impressions:0,
+      cpm:r.impressions>0?(r.spend/r.impressions)*1000:0,
+      cpc:r.clicks>0?r.spend/r.clicks:0,
+      roas:r.spend>0?r.revenue/r.spend:0,
+      cpa:isMeta?(r.purchases>0?r.spend/r.purchases:0):(r.conversions>0?r.spend/r.conversions:0),
+    };
+  });
 }
 
 function sortTable(key){if(sortKey===key)sortAsc=!sortAsc;else{sortKey=key;sortAsc=false;}renderTable()}
 
 function renderTable(){
+  const isWeb=currentPlatform==='website';
+  const isGA4=currentPlatform==='ga4';
   const isMeta=currentPlatform==='meta';
-  const kw=(document.getElementById('tableSearch')?.value||'').trim().toLowerCase();
-  const ads=rollup().filter(r=>!kw||(r.ad_name||'').toLowerCase().includes(kw)||(r.campaign||'').toLowerCase().includes(kw));
-  ads.sort((a,b)=>{const av=a[sortKey]??-Infinity,bv=b[sortKey]??-Infinity;return sortAsc?av-bv:bv-av});
-  if(!ads.length){document.getElementById('adTableBody').innerHTML='<tr><td colspan="13" class="no-data">此條件下無資料</td></tr>';return}
   const isMac=currentBrand==='maclove';
-  document.getElementById('adTableBody').innerHTML=ads.map(r=>{
-    const rc=r.roas>=3?'roas-good':r.roas>=1?'roas-ok':r.roas>0?'roas-bad':'';
-    if(isMeta){
+  const kw=(document.getElementById('tableSearch')?.value||'').trim().toLowerCase();
+  const cols=isWeb?6:13;
+  const rows=rollup().filter(r=>!kw||(r.ad_name||'').toLowerCase().includes(kw)||(r.campaign||'').toLowerCase().includes(kw)||(r.source||'').toLowerCase().includes(kw));
+  rows.sort((a,b)=>{const av=a[sortKey]??-Infinity,bv=b[sortKey]??-Infinity;return sortAsc?av-bv:bv-av});
+  if(isGA4){
+    const cols=9;
+    if(!rows.length){document.getElementById('adTableBody').innerHTML=`<tr><td colspan="${cols}" class="no-data">此條件下無資料</td></tr>`;return}
+    document.getElementById('adTableBody').innerHTML=rows.map(r=>`<tr>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${r.date||'—'}</td>
+      <td><span class="src-badge">${r.source||'—'}</span></td>
+      <td>${fmtK(r.sessions)}</td>
+      <td>${fmtK(r.users)}</td>
+      <td>${r.bounce_rate>0?(r.bounce_rate*100).toFixed(1)+'%':'—'}</td>
+      <td>${r.add_to_carts>0?fmt(r.add_to_carts):'—'}</td>
+      <td>${r.checkouts>0?fmt(r.checkouts):'—'}</td>
+      <td>${r.purchases>0?fmt(r.purchases):'—'}</td>
+      <td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
+    </tr>`).join('');
+    return;
+  }
+  const cols2=isWeb?4:13;
+  if(!rows.length){document.getElementById('adTableBody').innerHTML=`<tr><td colspan="${cols2}" class="no-data">此條件下無資料</td></tr>`;return}
+  document.getElementById('adTableBody').innerHTML=rows.map(r=>{
+    if(isWeb){
+      return`<tr>
+        <td><span class="src-badge" style="font-size:12px;padding:3px 10px">${r.source||'—'}</span></td>
+        <td>${r.orders>0?fmt(r.orders):'—'}</td>
+        <td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
+        <td>${r.aov>0?'NT$'+fmt(r.aov):'—'}</td>
+        </tr>`;
+    }else if(isMeta){
+      const rc=r.roas>=3?'roas-good':r.roas>=1?'roas-ok':r.roas>0?'roas-bad':'';
       const tc=isMac?'tag-m':(isFR(r)?'tag-f':'tag-w');
-      const objL=OBJ_LABEL[r.objective]||r.objective||'—';
       return`<tr>
         <td title="${r.ad_name||''}">${r.ad_name||'—'}</td>
         <td><span class="tag ${tc}" title="${r.campaign||''}">${r.campaign||'—'}</span></td>
-        <td><span class="obj-pill">${objL}</span></td>
+        <td><span class="obj-pill">${OBJ_LABEL[r.objective]||r.objective||'—'}</span></td>
         <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.reach)}</td>
         <td>${pct(r.ctr)}</td><td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td>
         <td>${r.purchases>0?fmt(r.purchases):'—'}</td><td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
         <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
         <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
     }else{
+      const rc=r.roas>=3?'roas-good':r.roas>=1?'roas-ok':r.roas>0?'roas-bad':'';
       const tCls=CTYPE_CLS[r.campaign_type]||'ct-other';
-      const tLbl=CTYPE_LABEL[r.campaign_type]||r.campaign_type||'—';
       return`<tr>
         <td title="${r.campaign||''}">${r.campaign||'—'}</td>
-        <td><span class="ctype-badge ${tCls}">${tLbl}</span></td>
+        <td><span class="ctype-badge ${tCls}">${CTYPE_LABEL[r.campaign_type]||r.campaign_type||'—'}</span></td>
         <td title="${r.ad_name||''}">${r.ad_name||'—'}</td>
         <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.clicks)}</td>
         <td>${pct(r.ctr)}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td><td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td>
@@ -704,8 +1230,346 @@ function renderTable(){
   }).join('');
 }
 
+// ═══════════════════════ GA4 FETCH & RENDER ═════════════════════════
+let ga4TrendInst=null, ga4SrcInst=null, ga4PageInst=null;
+
+async function fetchGA4Data(){
+  const btn=document.getElementById('refreshBtn'),icon=document.getElementById('refreshIcon');
+  btn.disabled=true; icon.classList.add('spinning');
+  document.getElementById('errorMsg').style.display='none';
+  document.getElementById('statusBar').textContent='GA4 資料載入中...';
+  const from=document.getElementById('dateFrom').value, to=document.getElementById('dateTo').value;
+  if(!from||!to){showErr('請選擇日期');return}
+  const cfg=BRANDS[currentBrand];
+  const gaKey=cfg.ga4AccountKey.toLowerCase();
+  const url=`https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_FIELDS}`;
+  try{
+    const resp=await fetch(url);
+    if(!resp.ok){const t=await resp.text();throw new Error(`HTTP ${resp.status}: ${t.slice(0,200)}`)}
+    const json=await resp.json();
+    const all=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
+    // Filter to GA4 + current brand
+    ga4RawData=all.filter(d=>{
+      const an=(d.account_name||d.datasource||'').toLowerCase();
+      const ds=(d.datasource||'').toLowerCase();
+      return an.includes(gaKey) && (ds.includes('googleanalytics')||ds.includes('ga4'));
+    });
+    ga4FilteredData=[...ga4RawData];
+    renderGA4();
+    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · GA4 共 ${ga4RawData.length} 筆`;
+  }catch(e){showErr('GA4 載入失敗：'+parseErr(e));}
+  finally{btn.disabled=false;icon.classList.remove('spinning')}
+}
+
+function renderGA4(){
+  const d=ga4FilteredData;
+  renderGA4KPIs(d);
+  renderFunnel(d);
+  renderGA4Trend(d);
+  renderGA4SrcChart(d);
+  renderGA4PageChart(d);
+  renderTable();
+  const dates=d.map(r=>r.date).filter(Boolean).sort();
+  if(dates.length) document.getElementById('ga4TrendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
+}
+
+function renderGA4KPIs(d){
+  const sessions  =d.reduce((s,r)=>s+v(r,'sessions'),0);
+  const users     =d.reduce((s,r)=>s+v(r,'users'),0);
+  const bounceSum =d.filter(r=>v(r,'bounce_rate')>0);
+  const bounceRate=bounceSum.length>0?bounceSum.reduce((s,r)=>s+v(r,'bounce_rate'),0)/bounceSum.length:0;
+  const bar='bar-ga4';
+  // Purchase / revenue from GA4
+  const purchases=d.reduce((s,r)=>s+v(r,'transactions'),0);
+  const ga4Rev=d.reduce((s,r)=>s+v(r,'transactionrevenue'),0);
+  const convRate=sessions>0&&purchases>0?(purchases/sessions*100):0;
+  // Ad spend from cache
+  const metaD=adCache[currentBrand].meta||[];
+  const gooD=adCache[currentBrand].google||[];
+  const metaDFiltered=currentBrand==='hipporizz'?metaD.filter(d=>!(d.campaign||'').includes('募資')):metaD;
+  const adSpend=(metaDFiltered.reduce((s,r)=>s+v(r,'spend'),0))+(gooD.reduce((s,r)=>s+v(r,'spend'),0));
+  // Real ROAS: use Shopify revenue if available, else GA4
+  const shopifyRev=(webCache[currentBrand]||[]).reduce((s,r)=>s+v(r,'order_gross_sales'),0);
+  const realRev=shopifyRev>0?shopifyRev:ga4Rev;
+  const realRoas=adSpend>0&&realRev>0?realRev/adSpend:0;
+  const adPct=realRev>0&&adSpend>0?(adSpend/realRev*100):0;
+  const revenueDisplay=realRev>0?'NT$'+fmt(realRev):(ga4Rev>0?'NT$'+fmt(ga4Rev):'—');
+  document.getElementById('ga4KpiGrid').className='kpi-grid cols-7';
+  document.getElementById('ga4KpiGrid').innerHTML=
+    kpi('使用者',fmtK(users),'',bar)+
+    kpi('Sessions',fmtK(sessions),'',bar)+
+    kpi('跳出率',bounceRate>0?(bounceRate*100).toFixed(1)+'%':'—',bounceRate>0.7?'warn':bounceRate>0.5?'neutral':'good',bar)+
+    kpi('完成購買',purchases>0?fmt(purchases):'—','',bar)+
+    kpi('購買業績',revenueDisplay,'',bar)+
+    kpi('實際 ROAS',realRoas>0?realRoas.toFixed(2)+'x':(adSpend>0?'尚未載入':'—'),realRoas>=3?'good':realRoas>=1?'neutral':realRoas>0?'warn':'',bar)+
+    kpi('廣告佔業績',adPct>0?adPct.toFixed(1)+'%':(adSpend>0?'尚未載入':'—'),'neutral',bar);
+}
+
+function formatDur(sec){
+  const m=Math.floor(sec/60), s=Math.round(sec%60);
+  return m>0?`${m}m ${s}s`:`${s}s`;
+}
+
+function renderFunnel(d){
+  const sessions =d.reduce((s,r)=>s+v(r,'sessions'),0);
+  const carts    =d.reduce((s,r)=>s+v(r,'add_to_carts'),0);
+  const checkouts=d.reduce((s,r)=>s+v(r,'checkouts'),0);
+  const purchases=d.reduce((s,r)=>s+v(r,'transactions'),0);
+  const setF=(id,val,rateId,rate)=>{
+    const el=document.getElementById(id); if(el) el.textContent=fmtK(val)||'—';
+    const rel=document.getElementById(rateId); if(rel) rel.textContent=rate;
+  };
+  setF('fn-sessions',sessions,'fn-sessions-rate','100%');
+  setF('fn-cart',carts,'fn-cart-rate',sessions>0&&carts>0?(carts/sessions*100).toFixed(1)+'%':'—');
+  setF('fn-checkout',checkouts,'fn-checkout-rate',sessions>0&&checkouts>0?(checkouts/sessions*100).toFixed(1)+'%':'—');
+  setF('fn-purchase',purchases,'fn-purchase-rate',sessions>0&&purchases>0?(purchases/sessions*100).toFixed(1)+'%':'—');
+}
+
+function renderGA4Trend(d){
+  const m={};
+  for(const r of d){
+    if(!r.date)continue;
+    if(!m[r.date])m[r.date]={s:0,u:0};
+    m[r.date].s+=v(r,'sessions'); m[r.date].u+=v(r,'users');
+  }
+  const dates=Object.keys(m).sort();
+  const ctx=document.getElementById('ga4TrendChart').getContext('2d');
+  if(ga4TrendInst)ga4TrendInst.destroy();
+  ga4TrendInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[
+    {label:'Sessions',data:dates.map(d=>Math.round(m[d].s)),borderColor:'#e37400',backgroundColor:'#e3740018',tension:.3,pointRadius:2,fill:true,borderWidth:2},
+    {label:'使用者',data:dates.map(d=>Math.round(m[d].u)),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2,fill:false,borderWidth:2,borderDash:[4,3]}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+    x:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+    y:{ticks:{font:{size:11,family:'DM Mono'},color:'#9e9e96'},grid:{color:'rgba(0,0,0,.05)'}}
+  }}});
+}
+
+function renderGA4SrcChart(d){
+  const m={};
+  for(const r of d){
+    const s=r.source||'(other)';
+    if(!m[s])m[s]={sessions:0,purchases:0};
+    m[s].sessions+=v(r,'sessions');
+    m[s].purchases+=v(r,'transactions');
+  }
+  const entries=Object.entries(m).filter(e=>e[1].sessions>0).sort((a,b)=>b[1].sessions-a[1].sessions).slice(0,8);
+  const colors=['#e37400','#3b82f6','#10b981','#8b5cf6','#ef4444','#f59e0b','#6b7280','#c0392b'];
+  const ctx=document.getElementById('ga4SrcChart').getContext('2d');
+  if(ga4SrcInst)ga4SrcInst.destroy();
+  ga4SrcInst=new Chart(ctx,{type:'bar',data:{
+    labels:entries.map(e=>e[0]),
+    datasets:[
+      {label:'Sessions',data:entries.map(e=>e[1].sessions),backgroundColor:colors,borderRadius:5,yAxisID:'y'},
+      {label:'購買',data:entries.map(e=>e[1].purchases),backgroundColor:'transparent',borderColor:'#333',borderWidth:2,type:'line',pointRadius:4,pointBackgroundColor:'#333',yAxisID:'y2'},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{
+    legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:8}},
+    tooltip:{callbacks:{label:c=>c.dataset.label==='Sessions'?` ${c.parsed.y.toLocaleString()} sessions`:` ${c.parsed.y} 筆購買`}}
+  },scales:{
+    x:{ticks:{font:{size:10},color:'#9e9e96',maxRotation:30},grid:{display:false}},
+    y:{position:'left',ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96'},grid:{color:'rgba(0,0,0,.04)'}},
+    y2:{position:'right',ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>n+'筆'},grid:{display:false}},
+  }}});
+}
+
+function renderGA4PageChart(d){
+  // Daily conversion rate: purchases/sessions*100
+  const m={};
+  for(const r of d){
+    if(!r.date)continue;
+    if(!m[r.date])m[r.date]={s:0,p:0,cart:0,checkout:0};
+    m[r.date].s+=v(r,'sessions');
+    m[r.date].p+=v(r,'transactions');
+    m[r.date].cart+=v(r,'add_to_carts');
+    m[r.date].checkout+=v(r,'checkouts');
+  }
+  const dates=Object.keys(m).sort();
+  const ctx=document.getElementById('ga4PageChart').getContext('2d');
+  if(ga4PageInst)ga4PageInst.destroy();
+  ga4PageInst=new Chart(ctx,{type:'line',data:{
+    labels:dates.map(d=>d.slice(5)),
+    datasets:[
+      {label:'購買轉換率',data:dates.map(d=>m[d].s>0?+(m[d].p/m[d].s*100).toFixed(2):0),borderColor:'#e37400',backgroundColor:'#e3740015',tension:.3,pointRadius:2,fill:true,borderWidth:2,yAxisID:'y'},
+      {label:'加購率',data:dates.map(d=>m[d].s>0?+(m[d].cart/m[d].s*100).toFixed(2):0),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2,borderWidth:1.5,borderDash:[4,3],yAxisID:'y'},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{
+    legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:8}},
+    tooltip:{callbacks:{label:c=>` ${c.parsed.y.toFixed(2)}%`}}
+  },scales:{
+    x:{ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+    y:{ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>n+'%'},grid:{color:'rgba(0,0,0,.04)'}}
+  }}});
+}
+
+// ═══════════════════════ BUDGET ═════════════════════════════════════
+// Load saved budgets from localStorage
+function getBudgets(){
+  try{
+    const saved=localStorage.getItem('adBudgets');
+    return saved?JSON.parse(saved):{};
+  }catch(e){return {};}
+}
+function saveBudgetData(data){
+  try{localStorage.setItem('adBudgets',JSON.stringify(data));}catch(e){}
+}
+
+function openBudgetModal(){
+  const b=getBudgets();
+  document.getElementById('budget_hipporizz_meta').value   = b.hipporizz_meta||'';
+  document.getElementById('budget_hipporizz_google').value = b.hipporizz_google||'';
+  document.getElementById('budget_maclove_meta').value     = b.maclove_meta||'';
+  document.getElementById('budget_maclove_google').value   = b.maclove_google||'';
+  document.getElementById('start_hipporizz_meta').value    = b.start_hipporizz_meta||'';
+  document.getElementById('start_hipporizz_google').value  = b.start_hipporizz_google||'';
+  document.getElementById('start_maclove_meta').value      = b.start_maclove_meta||'';
+  document.getElementById('start_maclove_google').value    = b.start_maclove_google||'';
+  document.getElementById('budgetModal').style.display='flex';
+}
+function closeBudgetModal(){
+  document.getElementById('budgetModal').style.display='none';
+}
+function saveBudget(){
+  const b={
+    hipporizz_meta  : parseFloat(document.getElementById('budget_hipporizz_meta').value)||0,
+    hipporizz_google: parseFloat(document.getElementById('budget_hipporizz_google').value)||0,
+    maclove_meta    : parseFloat(document.getElementById('budget_maclove_meta').value)||0,
+    maclove_google  : parseFloat(document.getElementById('budget_maclove_google').value)||0,
+    start_hipporizz_meta  : document.getElementById('start_hipporizz_meta').value||'',
+    start_hipporizz_google: document.getElementById('start_hipporizz_google').value||'',
+    start_maclove_meta    : document.getElementById('start_maclove_meta').value||'',
+    start_maclove_google  : document.getElementById('start_maclove_google').value||'',
+  };
+  saveBudgetData(b);
+  closeBudgetModal();
+  updateBudgetBar();
+}
+
+async function updateBudgetBar(){
+  const isWeb=currentPlatform==='website';
+  const isGA4=currentPlatform==='ga4';
+  const display=document.getElementById('budgetDisplay');
+  if(isWeb||isGA4){display.style.display='none';return;}
+
+  const isMeta=currentPlatform==='meta';
+  const key=currentBrand+'_'+(isMeta?'meta':'google');
+  const b=getBudgets();
+  const cap=b[key]||0;
+  const startDate=b['start_'+key]||'';
+
+  if(!cap){display.style.display='none';return;}
+
+  let spent=0;
+  if(startDate){
+    // Fetch cumulative spend from start date to today (independent of report date range)
+    const today=ymd(new Date());
+    try{
+      const cfg=BRANDS[currentBrand];
+      const accountId=isMeta?cfg.metaId:cfg.googleId;
+      const connector=isMeta?'facebook':'google_ads';
+      const fields=isMeta?'date,spend':'date,spend';
+      const url=`https://connectors.windsor.ai/${connector}?api_key=${API_KEY}&date_from=${startDate}&date_to=${today}&account_id=${accountId}&fields=${fields}`;
+      const resp=await fetch(url);
+      if(resp.ok){
+        const json=await resp.json();
+        const rows=Array.isArray(json)?json:(json.data||[]);
+        const tid=String(accountId).replace(/\D/g,'');
+        const filtered=rows.filter(d=>!d.account_id||String(d.account_id).replace(/\D/g,'')===tid);
+        // HIPPORIZZ Meta: exclude fundraising campaigns from budget calculation
+        const forBudget = (currentBrand==='hipporizz'&&isMeta)
+          ? filtered.filter(d=>!(d.campaign||'').includes('募資'))
+          : filtered;
+        spent=forBudget.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+      }
+    }catch(e){
+      // fallback to rawData
+      spent=rawData.reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+    }
+  } else {
+    // No start date - use current rawData as fallback
+    const filterFR = d => !(currentBrand==='hipporizz' && isMeta && (d.campaign||'').includes('募資'));
+    spent=rawData.filter(filterFR).reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+    if(!spent){
+      const cached=isMeta?adCache[currentBrand].meta:adCache[currentBrand].google;
+      if(cached) spent=cached.filter(filterFR).reduce((s,r)=>s+(parseFloat(r.spend)||0),0);
+    }
+  }
+
+  const remaining=cap-spent;
+  const usedPct=Math.max(0,Math.min(100,spent/cap*100));
+  const pct=100-usedPct;
+  const cls=pct<10?'danger':pct<25?'warn':'ok';
+
+  display.style.display='block';
+  document.getElementById('budgetLabel').textContent=`剩 NT$${Math.round(remaining).toLocaleString('zh-TW')}`;
+  document.getElementById('budgetPct').textContent=usedPct.toFixed(0)+'% 已用'+(startDate?` (自 ${startDate})`:'');
+  const fill=document.getElementById('budgetBarFill');
+  fill.style.width=usedPct.toFixed(1)+'%';
+  fill.className='budget-bar-fill '+cls;
+}
+
+// ═══════════════════════ BALANCE ════════════════════════════════════
+async function fetchBalance(){
+  const badge = document.getElementById('balanceBadge');
+  // Only show for Meta platform
+  if(currentPlatform !== 'meta'){badge.style.display='none';return;}
+
+  const cfg = BRANDS[currentBrand];
+  const accountId = cfg.metaId;
+  // Try Windsor facebook connector with balance/amount_spent/spend_cap fields
+  const url = `https://connectors.windsor.ai/facebook?api_key=${API_KEY}&date_from=2020-01-01&date_to=2026-12-31&account_id=${accountId}&fields=account_name,balance,amount_spent,spend_cap`;
+  try{
+    const resp = await fetch(url);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    const json = await resp.json();
+    const rows = Array.isArray(json)?json:(json.data||[]);
+    if(!rows.length){badge.style.display='none';return;}
+
+    const row = rows[0];
+    const balance    = parseFloat(row.balance)||0;
+    const amtSpent   = parseFloat(row.amount_spent)||0;
+    const spendCap   = parseFloat(row.spend_cap)||0;
+
+    if(balance > 0){
+      // Prepaid balance found!
+      const pct = spendCap>0 ? balance/spendCap*100 : 100;
+      const cls = pct < 10 ? 'danger' : pct < 25 ? 'warn' : '';
+      badge.className = 'balance-badge' + (cls?' '+cls:'');
+      badge.textContent = `💳 餘額 NT$${Math.round(balance).toLocaleString('zh-TW')}`;
+      badge.title = spendCap>0 ? `花費上限 NT$${Math.round(spendCap).toLocaleString('zh-TW')} · 已花費 NT$${Math.round(amtSpent).toLocaleString('zh-TW')}` : '';
+      badge.style.display = 'inline-flex';
+    } else if(amtSpent > 0 && spendCap > 0){
+      // Has spend cap info even without balance
+      const remaining = spendCap - amtSpent;
+      const pct = remaining/spendCap*100;
+      const cls = pct < 10 ? 'danger' : pct < 25 ? 'warn' : '';
+      badge.className = 'balance-badge' + (cls?' '+cls:'');
+      badge.textContent = `💳 剩餘 NT$${Math.round(remaining).toLocaleString('zh-TW')}`;
+      badge.title = `花費上限 NT$${Math.round(spendCap).toLocaleString('zh-TW')} · 已花費 NT$${Math.round(amtSpent).toLocaleString('zh-TW')}`;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch(e){
+    // Windsor doesn't support this field - hide badge silently
+    badge.style.display = 'none';
+  }
+}
+
 // ═══════════════════════ INIT ═════════════════════════════════════
-buildMonthPills();initDates();syncUI();fetchData();
+buildMonthPills();
+initDates();
+syncUI();
+// Trigger fetch after DOM is ready
+window.addEventListener('DOMContentLoaded', ()=>{});
+(function startFetch(){
+  const f=document.getElementById('dateFrom').value;
+  const t=document.getElementById('dateTo').value;
+  if(f && t && f.length===10 && t.length===10){
+    fetchData();
+  } else {
+    setTimeout(startFetch, 50);
+  }
+})();
 </script>
 </body>
 </html>
