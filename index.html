@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>廣告績效報表</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a4fd6'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='system-ui,sans-serif' fill='white'>📊</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
@@ -20,16 +21,18 @@
   --radius:10px;--radius-lg:16px;
   --shadow:0 8px 24px rgba(0,0,0,.04);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px 24px 60px;font-size:14px;line-height:1.5}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:12px 24px 60px;font-size:14px;line-height:1.5}
 .dashboard{max-width:1320px;margin:0 auto}
 
 /* ── Top bar ── */
-.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;box-shadow:var(--shadow);position:relative;z-index:10}
+.topbar{margin-bottom:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;box-shadow:0 4px 20px rgba(0,0,0,.08);position:sticky;top:8px;z-index:100}
+.topbar-row1{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow:hidden}
 .topbar-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
-.topbar-divider{width:1px;height:22px;background:var(--border2);flex-shrink:0}
-.topbar-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.2px;white-space:nowrap}
-.topbar-sub{font-size:11px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace}
+.topbar-divider{width:1px;height:20px;background:var(--border2);flex-shrink:0}
+.topbar-title-wrap{display:flex;flex-direction:column;gap:1px;min-width:0}
+.topbar-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.2px;white-space:nowrap}
+.topbar-sub{font-size:10px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace}
 
 /* Brand pills */
 .brand-tabs{display:flex;gap:4px}
@@ -176,13 +179,10 @@ tr:hover td{background:var(--bg)}
 /* Budget settings */
 .budget-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:5px 12px;border-radius:999px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
 .budget-btn:hover{border-color:var(--accent);color:var(--accent)}
-.budget-bar-wrap{display:flex;flex-direction:column;gap:3px;min-width:140px}
-.budget-bar-label{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;display:flex;justify-content:space-between}
-.budget-bar-track{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden}
-.budget-bar-fill{height:100%;border-radius:3px;transition:width .4s}
-.budget-bar-fill.ok{background:linear-gradient(90deg,var(--green),#34d399)}
-.budget-bar-fill.warn{background:linear-gradient(90deg,var(--amber),#fbbf24)}
-.budget-bar-fill.danger{background:linear-gradient(90deg,var(--red),#f87171)}
+.budget-bar-wrap{display:flex;flex-direction:column;gap:3px;min-width:160px;max-width:220px}
+.budget-bar-label{font-size:12px;color:var(--text);font-weight:600;white-space:nowrap}
+.budget-bar-pct{font-size:10px;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace}
+.budget-bar-track{height:7px;border-radius:4px;background:#e5e7eb;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
 
 /* Budget modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
@@ -227,20 +227,16 @@ tr:hover td{background:var(--bg)}
 /* ── 手機版 RWD ── */
 @media(max-width:768px){
   body{padding:12px 12px 60px}
-  /* Topbar 手機版：兩行 */
-  .topbar{flex-direction:column;align-items:flex-start;gap:8px;padding:10px 12px}
-  .topbar-left{flex-wrap:wrap;gap:6px;width:100%}
-  .topbar-right{width:100%;justify-content:flex-end}
+  /* Topbar 手機版 */
+  .topbar{top:4px;padding:8px 12px}
+  .topbar-row1{flex-wrap:wrap;gap:6px}
   .topbar-divider{display:none}
-  .topbar-title{font-size:14px}
+  .topbar-title{font-size:13px}
   .topbar-sub{font-size:10px}
-  /* Brand pills 加大點擊區域 */
-  .brand-tab{padding:8px 16px;font-size:13px}
-  /* Platform tabs */
+  .brand-tab{padding:7px 14px;font-size:12px}
   .platform-tabs{flex:1}
-  .platform-tab{flex:1;justify-content:center;padding:7px 8px;font-size:11px}
-  /* Topbar right selects full width */
-  .topbar-right select{flex:1;min-width:0}
+  .platform-tab{flex:1;justify-content:center;padding:6px 6px;font-size:11px}
+  .budget-bar-wrap{min-width:130px;max-width:160px}
   /* Seg tabs */
   .seg-tab{padding:8px 10px;font-size:12px}
   /* Filter row */
@@ -283,7 +279,8 @@ tr:hover td{background:var(--bg)}
 
   <!-- ── Top Bar ── -->
   <div class="topbar">
-    <div class="topbar-left">
+    <!-- Row 1: brand + platform + title -->
+    <div class="topbar-row1">
       <div class="brand-tabs">
         <button class="brand-tab maclove active" onclick="setBrand('maclove',this)">MACLOVE</button>
         <button class="brand-tab hipporizz" onclick="setBrand('hipporizz',this)">HIPPORIZZ</button>
@@ -297,32 +294,31 @@ tr:hover td{background:var(--bg)}
           <span class="p-icon p-icon-google">G</span>Google
         </button>
         <button class="platform-tab website" onclick="setPlatform('website',this)">
-          <span class="p-icon p-icon-web">W</span>網站業績
+          <span class="p-icon p-icon-web">W</span>網站
         </button>
         <button class="platform-tab ga4" onclick="setPlatform('ga4',this)">
-          <span class="p-icon p-icon-ga4">GA</span>GA 分析
+          <span class="p-icon p-icon-ga4">GA</span>GA
         </button>
       </div>
       <div class="topbar-divider"></div>
-      <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
+      <div class="topbar-title-wrap">
         <span class="topbar-title" id="pageTitle">MACLOVE · Meta Ads</span>
         <span class="topbar-sub" id="subtitle">Windsor.ai</span>
       </div>
-    </div>
-    <div class="topbar-right">
-      <div id="platformBadge" style="display:none"></div>
+      <!-- spacer -->
+      <div style="flex:1"></div>
+      <!-- Budget bar -->
       <div id="budgetDisplay" style="display:none">
         <div class="budget-bar-wrap">
-          <div class="budget-bar-label">
-            <span id="budgetLabel">剩餘 —</span>
-            <span id="budgetPct">—</span>
-          </div>
+          <div class="budget-bar-label" id="budgetLabel">剩餘 —</div>
           <div class="budget-bar-track">
-            <div class="budget-bar-fill ok" id="budgetBarFill" style="width:0%"></div>
+            <div id="budgetBarFill" style="height:100%;border-radius:4px;width:0%;transition:width .5s ease;background:linear-gradient(90deg,#1f7a4d,#34d399)"></div>
           </div>
+          <div class="budget-bar-pct" id="budgetPct">—</div>
         </div>
       </div>
-      <button class="budget-btn" id="budgetSettingBtn" onclick="openBudgetModal()" title="設定廣告預算上限">⚙ 預算設定</button>
+      <div id="platformBadge" style="display:none"></div>
+      <button class="budget-btn" onclick="openBudgetModal()">⚙ 預算</button>
       <select id="campaignFilter" onchange="applyFilters()"><option value="">所有活動</option></select>
       <button class="btn" onclick="fetchData()" id="refreshBtn">
         <svg id="refreshIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -527,22 +523,6 @@ tr:hover td{background:var(--bg)}
       </p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div class="modal-field">
-          <label>HIPPORIZZ · Meta 上限（NT$）</label>
-          <input type="number" id="budget_hipporizz_meta" placeholder="例：700000" min="0">
-        </div>
-        <div class="modal-field">
-          <label>HIPPORIZZ · Meta 起始日</label>
-          <input type="date" id="start_hipporizz_meta">
-        </div>
-        <div class="modal-field">
-          <label>HIPPORIZZ · Google 上限（NT$）</label>
-          <input type="number" id="budget_hipporizz_google" placeholder="例：100000" min="0">
-        </div>
-        <div class="modal-field">
-          <label>HIPPORIZZ · Google 起始日</label>
-          <input type="date" id="start_hipporizz_google">
-        </div>
-        <div class="modal-field">
           <label>MACLOVE · Meta 上限（NT$）</label>
           <input type="number" id="budget_maclove_meta" placeholder="例：200000" min="0">
         </div>
@@ -557,6 +537,22 @@ tr:hover td{background:var(--bg)}
         <div class="modal-field">
           <label>MACLOVE · Google 起始日</label>
           <input type="date" id="start_maclove_google">
+        </div>
+        <div class="modal-field" style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
+          <label>HIPPORIZZ · Meta 上限（NT$）</label>
+          <input type="number" id="budget_hipporizz_meta" placeholder="例：700000" min="0">
+        </div>
+        <div class="modal-field" style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
+          <label>HIPPORIZZ · Meta 起始日</label>
+          <input type="date" id="start_hipporizz_meta">
+        </div>
+        <div class="modal-field">
+          <label>HIPPORIZZ · Google 上限（NT$）</label>
+          <input type="number" id="budget_hipporizz_google" placeholder="例：100000" min="0">
+        </div>
+        <div class="modal-field">
+          <label>HIPPORIZZ · Google 起始日</label>
+          <input type="date" id="start_hipporizz_google">
         </div>
       </div>
       <div class="modal-actions">
@@ -1444,6 +1440,27 @@ function saveBudget(){
   updateBudgetBar();
 }
 
+function renderBudgetDisplay(spent, cap, startDate){
+  const remaining = cap - spent;
+  const usedPct = Math.max(0, Math.min(100, spent / cap * 100));
+  const pct = 100 - usedPct;
+  const cls = pct < 10 ? 'danger' : pct < 25 ? 'warn' : '';
+  const display = document.getElementById('budgetDisplay');
+  display.style.display = 'block';
+  document.getElementById('budgetLabel').textContent =
+    `剩餘 NT$${Math.max(0,Math.round(remaining)).toLocaleString('zh-TW')}`;
+  document.getElementById('budgetPct').textContent =
+    `已用 NT$${Math.round(spent).toLocaleString('zh-TW')}（${usedPct.toFixed(1)}%）` +
+    (startDate ? ` 自 ${startDate}` : '');
+  const fill = document.getElementById('budgetBarFill');
+  fill.style.width = usedPct.toFixed(1) + '%';
+  const fillColor = cls==='danger' ? 'linear-gradient(90deg,#c0392b,#f87171)'
+    : cls==='warn' ? 'linear-gradient(90deg,#8a5c00,#fbbf24)'
+    : 'linear-gradient(90deg,#1f7a4d,#34d399)';
+  fill.style.background = fillColor;
+  fill.className = 'budget-bar-fill';
+}
+
 async function updateBudgetBar(){
   const isWeb=currentPlatform==='website';
   const isGA4=currentPlatform==='ga4';
@@ -1467,6 +1484,7 @@ async function updateBudgetBar(){
       const accountId=isMeta?cfg.metaId:cfg.googleId;
       const connector=isMeta?'facebook':'google_ads';
       const fields=isMeta?'date,spend':'date,spend';
+      // Start date = recharge date, count from that day 00:00
       const url=`https://connectors.windsor.ai/${connector}?api_key=${API_KEY}&date_from=${startDate}&date_to=${today}&account_id=${accountId}&fields=${fields}`;
       const resp=await fetch(url);
       if(resp.ok){
@@ -1490,17 +1508,7 @@ async function updateBudgetBar(){
     }
   }
 
-  const remaining=cap-spent;
-  const usedPct=Math.max(0,Math.min(100,spent/cap*100));
-  const pct=100-usedPct;
-  const cls=pct<10?'danger':pct<25?'warn':'ok';
-
-  display.style.display='block';
-  document.getElementById('budgetLabel').textContent=`剩 NT$${Math.round(remaining).toLocaleString('zh-TW')}`;
-  document.getElementById('budgetPct').textContent=usedPct.toFixed(0)+'% 已用'+(startDate?` (自 ${startDate})`:'');
-  const fill=document.getElementById('budgetBarFill');
-  fill.style.width=usedPct.toFixed(1)+'%';
-  fill.className='budget-bar-fill '+cls;
+  renderBudgetDisplay(spent, cap, startDate);
 }
 
 // ═══════════════════════ BALANCE ════════════════════════════════════
