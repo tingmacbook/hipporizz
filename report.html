@@ -234,6 +234,12 @@ tr:hover td{background:var(--bg)}
 .utm-tag.source-google{background:#dcfce7;color:#166534}
 .utm-tag.direct{background:var(--surface2);color:var(--text3)}
 
+/* Collapsible cards */
+.collapsible-body{overflow:hidden;transition:max-height .25s ease}
+.collapsible-body.collapsed{max-height:0!important}
+.collapse-icon{transition:transform .25s;display:inline-block}
+.collapse-icon.collapsed{transform:rotate(180deg)}
+
 /* ── 手機版 RWD ── */
 @media(max-width:768px){
   body{padding:12px 12px 60px}
@@ -495,25 +501,53 @@ tr:hover td{background:var(--bg)}
         <div style="position:relative;height:220px"><canvas id="ga4PageChart"></canvas></div>
       </div>
     </div>
+    <!-- GA4 商品銷售排行榜 -->
+    <div class="table-card" id="ga4ItemCard" style="margin-top:12px;display:none">
+      <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4ItemCard',this)">
+        <div class="card-title" style="font-size:13px;font-weight:600">商品銷售排行榜 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 電商資料</span></div>
+        <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th onclick="sortGa4Item('name')" style="min-width:220px">商品名稱 ↕</th>
+                <th onclick="sortGa4Item('category')" style="min-width:100px">分類 ↕</th>
+                <th onclick="sortGa4Item('qty')">銷售數量 ↕</th>
+                <th onclick="sortGa4Item('revenue')">業績 ↕</th>
+                <th onclick="sortGa4Item('aov')">平均售價 ↕</th>
+                <th onclick="sortGa4Item('pct')">業績佔比 ↕</th>
+              </tr>
+            </thead>
+            <tbody id="ga4ItemBody"><tr><td colspan="6" class="no-data">載入中...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Table -->
-  <div class="table-card">
-    <div class="table-header">
+  <div class="table-card" id="mainTableCard">
+    <div class="table-header" style="cursor:pointer" onclick="toggleCard('mainTableCard',this)">
       <div class="card-title" id="tableTitle">廣告明細</div>
-      <div class="tbl-tools">
-        <label class="search-box">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
-          <input id="tableSearch" type="text" placeholder="搜尋商品 / 活動" oninput="renderTable()">
-        </label>
-        <div class="table-hint">點擊欄位標題排序</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="tbl-tools" onclick="event.stopPropagation()">
+          <label class="search-box">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+            <input id="tableSearch" type="text" placeholder="搜尋商品 / 活動" oninput="renderTable()">
+          </label>
+        </div>
+        <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
       </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead id="tableHead"></thead>
-        <tbody id="adTableBody"><tr><td colspan="13" class="no-data">載入中...</td></tr></tbody>
-      </table>
+    <div class="collapsible-body">
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="adTableBody"><tr><td colspan="13" class="no-data">載入中...</td></tr></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -554,7 +588,7 @@ tr:hover td{background:var(--bg)}
           <input id="orderSearch" type="text" placeholder="搜尋訂單 / 來源 / 活動" oninput="renderOrderTable()">
         </label>
         <div style="display:flex;align-items:center;gap:8px">
-          <div class="table-hint" style="color:var(--text3);font-size:11px">每筆訂單的 UTM 來源</div>
+          
           <button class="btn" style="font-size:11px;padding:4px 10px" onclick="debugWebFields()">🔍 偵測欄位</button>
         </div>
       </div>
@@ -708,7 +742,8 @@ function guessAdType(src, med, camp){
   return src||med||'其他';
 }
 // GA4 欄位：流量 + 轉換漏斗 + 頁面
-const GA_FIELDS = 'date,account_name,datasource,sessions,users,new_users,bounce_rate,source,medium,add_to_carts,checkouts,transactions,transactionrevenue,purchase_revenue';
+const GA_FIELDS       = 'date,account_name,datasource,sessions,users,new_users,bounce_rate,source,medium,add_to_carts,checkouts,transactions,transactionrevenue,purchase_revenue';
+const GA_ITEM_FIELDS  = 'date,account_name,datasource,item_name,item_category,items_purchased,item_revenue';
 
 const OBJ_LABEL = {
   OUTCOME_SALES:'銷售量',OUTCOME_ENGAGEMENT:'互動',OUTCOME_AWARENESS:'品牌認知',
@@ -760,7 +795,7 @@ const SEG={
 
 // ═══════════════════════ STATE ════════════════════════════════════
 let currentBrand='maclove', currentPlatform='meta', currentSegment='all';
-let ga4RawData=[], ga4FilteredData=[];
+let ga4RawData=[], ga4FilteredData=[], ga4ItemData=[];
 let rawData=[],filteredData=[],sortKey='spend',sortAsc=false;
 // 網站業績獨立快取（跨平台切換時保留）
 let webCache={maclove:null,hipporizz:null};
@@ -839,6 +874,9 @@ function syncUI(){
   // 廣告來源彙整和訂單明細只在 website 模式顯示
   document.getElementById('utmSummaryCard').style.display  = isWeb?'block':'none';
   document.getElementById('orderDetailCard').style.display = isWeb?'block':'none';
+  // GA4 商品排行只在 GA4 模式顯示
+  if(document.getElementById('ga4ItemCard'))
+    document.getElementById('ga4ItemCard').style.display = isGA4?'':'none';
 
   renderTableHead();
   setTimeout(updateBudgetBar, 0);
@@ -1776,21 +1814,34 @@ async function fetchGA4Data(){
   if(!from||!to){showErr('請選擇日期');return}
   const cfg=BRANDS[currentBrand];
   const gaKey=cfg.ga4AccountKey.toLowerCase();
-  const url=`https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_FIELDS}`;
+  const url      = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_FIELDS}`;
+  const urlItems = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_ITEM_FIELDS}`;
   try{
-    const resp=await fetch(url);
+    const [resp, respItems] = await Promise.all([fetch(url), fetch(urlItems)]);
     if(!resp.ok){const t=await resp.text();throw new Error(`HTTP ${resp.status}: ${t.slice(0,200)}`)}
     const json=await resp.json();
     const all=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
-    // Filter to GA4 + current brand
-    ga4RawData=all.filter(d=>{
+    const filterFn = d=>{
       const an=(d.account_name||d.datasource||'').toLowerCase();
       const ds=(d.datasource||'').toLowerCase();
       return an.includes(gaKey) && (ds.includes('googleanalytics')||ds.includes('ga4'));
-    });
+    };
+    // Debug: log unique account names to help diagnose brand mixing
+    const allGA4 = all.filter(d=>{const ds=(d.datasource||'').toLowerCase();return ds.includes('googleanalytics')||ds.includes('ga4');});
+    const uniqueAccounts=[...new Set(allGA4.map(d=>d.account_name||d.datasource||''))];
+    console.log('[GA4] gaKey:', gaKey, '| unique accounts:', uniqueAccounts);
+    ga4RawData=all.filter(filterFn);
     ga4FilteredData=[...ga4RawData];
+    // 商品資料
+    ga4ItemData=[];
+    if(respItems.ok){
+      const ji=await respItems.json();
+      const allItems=Array.isArray(ji)?ji:(ji.data&&Array.isArray(ji.data)?ji.data:[]);
+      ga4ItemData=allItems.filter(filterFn);
+      console.log('[GA4 Items] total:', allItems.length, 'filtered:', ga4ItemData.length, 'sample:', ga4ItemData[0]);
+    }
     renderGA4();
-    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · GA4 共 ${ga4RawData.length} 筆`;
+    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · GA4 共 ${ga4RawData.length} 筆 · 商品 ${ga4ItemData.length} 筆`;
   }catch(e){showErr('GA4 載入失敗：'+parseErr(e));}
   finally{btn.disabled=false;icon.classList.remove('spinning')}
 }
@@ -1803,6 +1854,7 @@ function renderGA4(){
   renderGA4SrcChart(d);
   renderGA4PageChart(d);
   renderTable();
+  renderGA4Items();
   const dates=d.map(r=>r.date).filter(Boolean).sort();
   if(dates.length) document.getElementById('ga4TrendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
 }
@@ -1851,6 +1903,63 @@ function renderGA4KPIs(d){
 function formatDur(sec){
   const m=Math.floor(sec/60), s=Math.round(sec%60);
   return m>0?`${m}m ${s}s`:`${s}s`;
+}
+
+let ga4ItemSortKey='item_revenue', ga4ItemSortAsc=false;
+function sortGa4Item(k){if(ga4ItemSortKey===k)ga4ItemSortAsc=!ga4ItemSortAsc;else{ga4ItemSortKey=k;ga4ItemSortAsc=false;}renderGA4Items();}
+
+function renderGA4Items(){
+  const card = document.getElementById('ga4ItemCard');
+  const tbody= document.getElementById('ga4ItemBody');
+  if(!card||!tbody) return;
+  if(!ga4ItemData||!ga4ItemData.length){card.style.display='none';return;}
+  card.style.display='block';
+
+  // 彙整：按商品名稱加總
+  const m={};
+  for(const d of ga4ItemData){
+    const name = d.item_name||'(未知商品)';
+    // 移除品牌前綴
+    const cleanName = name.replace(/^(河馬引力|HIPPORIZZ|Hipporizz|MACLOVE|Maclove)[\s\-_·•]+/i,'').trim();
+    if(!m[cleanName]) m[cleanName]={
+      name:cleanName,
+      category: d.item_category||'—',
+      qty:0, revenue:0
+    };
+    m[cleanName].qty     += parseFloat(d.items_purchased)||0;
+    m[cleanName].revenue += parseFloat(d.item_revenue)||0;
+  }
+  const totalRev = Object.values(m).reduce((s,r)=>s+r.revenue,0);
+  let rows = Object.values(m)
+    .filter(r=>r.qty>0||r.revenue>0)
+    .map(r=>({...r, aov:r.qty>0?r.revenue/r.qty:0, pct:totalRev>0?r.revenue/totalRev*100:0}));
+
+  rows.sort((a,b)=>{
+    const av=a[ga4ItemSortKey]??-Infinity, bv=b[ga4ItemSortKey]??-Infinity;
+    if(typeof av==='string') return ga4ItemSortAsc?av.localeCompare(bv):bv.localeCompare(av);
+    return ga4ItemSortAsc?av-bv:bv-av;
+  });
+
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="6" class="no-data">此條件下無商品資料</td></tr>`;return;}
+
+  const totalQty = rows.reduce((s,r)=>s+r.qty,0);
+  const totalRow = `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
+    <td>合計</td><td></td>
+    <td style="font-family:'DM Mono',monospace">${fmt(totalQty)}</td>
+    <td style="color:var(--green)">NT$${fmt(totalRev)}</td>
+    <td>—</td><td>100%</td>
+  </tr>`;
+
+  tbody.innerHTML = rows.map((r,i)=>`<tr>
+    <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis" title="${r.name}">
+      <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-right:6px">${i+1}</span>${r.name}
+    </td>
+    <td><span style="font-size:11px;color:var(--text3);background:var(--surface2);padding:2px 7px;border-radius:4px">${r.category}</span></td>
+    <td style="font-family:'DM Mono',monospace;font-weight:600">${r.qty>0?fmt(r.qty):'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green)">${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
+    <td style="font-family:'DM Mono',monospace">${r.aov>0?'NT$'+fmt(r.aov):'—'}</td>
+    <td style="font-family:'DM Mono',monospace">${r.pct>0?r.pct.toFixed(1)+'%':'—'}</td>
+  </tr>`).join('') + totalRow;
 }
 
 function renderFunnel(d){
@@ -2110,6 +2219,30 @@ async function fetchBalance(){
     // Windsor doesn't support this field - hide badge silently
     badge.style.display = 'none';
   }
+}
+
+// ═══════════════════════ COLLAPSE ══════════════════════════════════
+function toggleCard(cardId, headerEl){
+  const card = document.getElementById(cardId);
+  if(!card) return;
+  const body = card.querySelector('.collapsible-body');
+  const icon = headerEl.querySelector('.collapse-icon');
+  if(!body) return;
+  if(body.classList.contains('collapsed')){
+    body.style.maxHeight = body.scrollHeight+'px';
+    body.classList.remove('collapsed');
+    if(icon) icon.textContent='折疊 ▾';
+  } else {
+    body.style.maxHeight = body.scrollHeight+'px';
+    requestAnimationFrame(()=>{ body.style.maxHeight='0'; body.classList.add('collapsed'); });
+    if(icon) icon.textContent='展開 ▸';
+  }
+}
+// 初始化：設定 collapsible-body 的初始高度
+function initCollapsible(){
+  document.querySelectorAll('.collapsible-body:not(.collapsed)').forEach(b=>{
+    b.style.maxHeight = 'none';
+  });
 }
 
 // ═══════════════════════ INIT ═════════════════════════════════════
