@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>廣告績效報表</title>
+<title>行銷成效總覽</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a4fd6'/><text y='72' x='50' text-anchor='middle' font-size='62' font-family='system-ui,sans-serif' fill='white'>📊</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
@@ -504,7 +504,7 @@ tr:hover td{background:var(--bg)}
       <div class="tbl-tools">
         <label class="search-box">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
-          <input id="tableSearch" type="text" placeholder="搜尋商品名稱 / 廣告" oninput="renderTable()">
+          <input id="tableSearch" type="text" placeholder="搜尋商品 / 活動" oninput="renderTable()">
         </label>
         <div class="table-hint">點擊欄位標題排序</div>
       </div>
@@ -519,10 +519,10 @@ tr:hover td{background:var(--bg)}
 
 
 
-  <!-- 廣告來源業績彙整（網站業績專用）-->
+  <!-- 來源業績彙整（網站業績專用）-->
   <div class="table-card" id="utmSummaryCard" style="display:none;margin-top:16px">
     <div class="table-header">
-      <div class="card-title">📊 廣告來源業績彙整</div>
+      <div class="card-title">📊 來源業績彙整</div>
       <div style="font-size:11px;color:var(--text3)">依 UTM 來源 + 媒介 統計訂單數與業績</div>
     </div>
     <div class="table-wrap">
@@ -547,11 +547,11 @@ tr:hover td{background:var(--bg)}
   <!-- 訂單明細 + 廣告來源（網站業績專用）-->
   <div class="table-card order-detail-table" id="orderDetailCard" style="display:none;margin-top:16px">
     <div class="table-header">
-      <div class="card-title" id="orderDetailTitle">📦 訂單明細 &amp; 廣告來源</div>
+      <div class="card-title" id="orderDetailTitle">📦 訂單明細 &amp; 來源</div>
       <div class="tbl-tools">
         <label class="search-box">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
-          <input id="orderSearch" type="text" placeholder="搜尋訂單編號 / 來源 / 活動" oninput="renderOrderTable()">
+          <input id="orderSearch" type="text" placeholder="搜尋訂單 / 來源 / 活動" oninput="renderOrderTable()">
         </label>
         <div style="display:flex;align-items:center;gap:8px">
           <div class="table-hint" style="color:var(--text3);font-size:11px">每筆訂單的 UTM 來源</div>
@@ -565,7 +565,8 @@ tr:hover td{background:var(--bg)}
           <tr>
             <th onclick="sortOrder('date')" style="min-width:95px">日期 ↕</th>
             <th onclick="sortOrder('order_name')" style="min-width:100px">訂單編號 ↕</th>
-            <th style="min-width:150px">商品 / 造訪頁面</th>
+            <th onclick="sortOrder('totalQty')" style="min-width:50px;text-align:center">數量 ↕</th>
+            <th style="min-width:150px">商品</th>
             <th onclick="sortOrder('order_gross_sales')">業績 ↕</th>
             <th style="min-width:90px">廣告類型</th>
             <th style="min-width:85px">來源</th>
@@ -574,7 +575,7 @@ tr:hover td{background:var(--bg)}
             <th style="min-width:80px">字詞</th>
           </tr>
         </thead>
-        <tbody id="orderDetailBody"><tr><td colspan="9" class="no-data">切換到「網站」分頁即可載入</td></tr></tbody>
+        <tbody id="orderDetailBody"><tr><td colspan="10" class="no-data">切換到「網站」分頁即可載入</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -700,7 +701,7 @@ function guessAdType(src, med, camp){
     if(m==='paid'||m==='ads') return 'Facebook 廣告';
     return 'Facebook';
   }
-  if(s==='(direct)'||s==='direct'||s==='') return '直接進站';
+  if(s==='(direct)'||s==='direct'||s==='') return '直接/無 UTM';
   if(m==='email'||s.includes('email')||s.includes('klaviyo')) return 'Email 行銷';
   if(m==='post') return `社群貼文`;
   if(m==='ppc'||m==='cpc') return `付費廣告(${s})`;
@@ -1041,7 +1042,7 @@ function applyFilters(){
     document.getElementById('tableTitle').textContent=`${BRANDS[currentBrand].name} 商品銷售排行榜`;
     document.getElementById('orderDetailCard').style.display='block';
     document.getElementById('utmSummaryCard').style.display='block';
-    document.getElementById('orderDetailTitle').textContent=`📦 ${BRANDS[currentBrand].name} 訂單明細 & 廣告來源`;
+    document.getElementById('orderDetailTitle').textContent=`📦 ${BRANDS[currentBrand].name} 訂單明細 & 來源`;
     renderWebKPIs();renderWebCharts();renderTable();renderOrderTable();renderUtmSummary();
     const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
     if(dates.length) document.getElementById('webTrendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
@@ -1116,7 +1117,7 @@ function renderWebKPIs(){
   const _kpiSeen={};
   for(const r of d){
     const k=r.order_name||('_'+Math.random());
-    if(!_kpiSeen[k] && (v(r,'order_gross_sales')>0 || v(r,'order_count')>0)) _kpiSeen[k]=r;
+    if(!_kpiSeen[k] && (r.order_name||r.date)) _kpiSeen[k]=r;
   }
   const uniqOrders=Object.values(_kpiSeen);
   const revenue=uniqOrders.reduce((s,r)=>s+v(r,'order_gross_sales'),0);
@@ -1350,7 +1351,7 @@ function renderOrderTable(){
   const seen=new Set();
   let rows=filteredData.filter(d=>{
     if(!d.order_name && !d.date) return false;
-    if(v(d,'order_gross_sales')<=0 && v(d,'order_count')<=0) return false; // 跳過退款
+    if(!d.order_name && !d.date) return false; // 只跳過完全空的列
     const key=d.order_name||d.date||'';
     if(seen.has(key)) return false;
     seen.add(key);
@@ -1361,8 +1362,14 @@ function renderOrderTable(){
            (r.utm_source||'').toLowerCase().includes(kw)||
            (r.utm_campaign||'').toLowerCase().includes(kw);
   });
+  // 先計算 totalQty（排序前需要）
+  rows.forEach(r=>{
+    const items = r.product_title ? r.product_title.split('、') : [];
+    r._totalQty = items.reduce((s,t)=>{const m=t.match(/[×x](\d+)$/i);return s+(m?parseInt(m[1]):1);},0);
+  });
   rows.sort((a,b)=>{
-    let av=a[orderSortKey], bv=b[orderSortKey];
+    let av = orderSortKey==='totalQty' ? (a._totalQty||0) : a[orderSortKey];
+    let bv = orderSortKey==='totalQty' ? (b._totalQty||0) : b[orderSortKey];
     if(orderSortKey==='date'||orderSortKey==='order_name'){
       av=av||''; bv=bv||'';
       return orderSortAsc?av.localeCompare(bv):bv.localeCompare(av);
@@ -1371,7 +1378,7 @@ function renderOrderTable(){
   });
 
   if(!rows.length){
-    tbody.innerHTML=`<tr><td colspan="9" class="no-data">此條件下無訂單資料</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="10" class="no-data">此條件下無訂單資料</td></tr>`;
     return;
   }
   tbody.innerHTML=rows.map(r=>{
@@ -1390,20 +1397,24 @@ function renderOrderTable(){
     const orderLink = orderHref
       ? `<a href="${orderHref}" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:700">${r.order_name||orderId}</a>`
       : `<span style="font-weight:700">${r.order_name||'—'}</span>`;
+    // 從 product_title 解析商品數量（格式：商品A ×2、商品B）
+    const productItems = r.product_title ? r.product_title.split('、') : [];
+    const totalQty = productItems.reduce((s,t)=>{
+      const m = t.match(/[×x](\d+)$/i); return s+(m?parseInt(m[1]):1);
+    }, 0);
+    r._totalQty = totalQty;  // 供排序用
+    const qtyCell = totalQty>0
+      ? `<td style="text-align:center;font-family:'DM Mono',monospace;font-size:12px;color:${totalQty>1?'var(--amber)':'var(--text3)'}">${totalQty}</td>`
+      : `<td style="text-align:center;color:var(--text3)">—</td>`;
     const productCell = r.product_title
       ? `<span style="font-size:11.5px;color:var(--text2)">${r.product_title}</span>`
       : `<span style="font-size:11px;color:var(--text3)">—</span>`;
     // 工作階段資訊：landing_page 來自 order_customer_last_visit_landing_page 解析
-    const sessionParts = [];
-    if(r.referrer_display) sessionParts.push(`📍 ${r.referrer_display}`);
-    if(r.landing_page)     sessionParts.push(`🔗 <span style="font-family:'DM Mono',monospace;font-size:9px">${r.landing_page}</span>`);
-    if(r.referral_code)    sessionParts.push(`🎫 ${r.referral_code}`);
-    const sessionInfo = sessionParts.length
-      ? `<div style="font-size:10px;color:var(--text3);margin-top:3px;line-height:1.5">${sessionParts.join(' · ')}</div>`
-      : '';
+    const sessionInfo = '';
     return `<tr>
     <td style="font-family:'DM Mono',monospace;font-size:11px">${r.date||'—'}</td>
     <td style="font-family:'DM Mono',monospace;font-size:12px">${orderLink}</td>
+    ${qtyCell}
     <td style="font-size:11.5px;max-width:200px" title="${r.product_title||''}">${productCell}${sessionInfo}</td>
     <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green)">${r.order_gross_sales>0?'NT$'+fmt(r.order_gross_sales):'—'}</td>
     <td><span class="utm-tag ${srcCls}" style="font-size:11px">${adType}</span></td>
@@ -1412,7 +1423,14 @@ function renderOrderTable(){
     <td style="font-size:11px;color:var(--text2);max-width:180px;overflow:hidden;text-overflow:ellipsis" title="${r.utm_campaign||''}">${r.utm_campaign||'—'}</td>
     <td style="font-size:10.5px;color:var(--text3);font-family:'DM Mono',monospace;max-width:100px;overflow:hidden;text-overflow:ellipsis" title="${r.utm_term||r.utm_content||''}">${r.utm_term||r.utm_content||'—'}</td>
   </tr>`;
-  }).join('');
+  }).join('') + (() => {
+    const orderTotal = rows.reduce((s,r)=>s+(r.order_gross_sales||0),0);
+    return `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
+      <td>合計</td><td>${rows.length} 筆</td><td></td><td></td>
+      <td style="color:var(--green)">NT$${fmt(orderTotal)}</td>
+      <td></td><td></td><td></td><td></td><td></td>
+    </tr>`;
+  })();
 }
 
 let utmSortKey='revenue', utmSortAsc=false;
@@ -1424,7 +1442,7 @@ function renderUtmSummary(){
   const m = {};
   const _utmSeen={};
   for(const d of filteredData){
-    if(v(d,'order_gross_sales')<=0 && v(d,'order_count')<=0) continue;
+    if(!d.order_name && !d.date) continue;
     const src  = d.utm_source  || '';
     const med  = d.utm_medium  || '';
     const camp = d.utm_campaign|| '';
@@ -1455,11 +1473,21 @@ function renderUtmSummary(){
     if(t.includes('Instagram')) return 'source-ig';
     if(t.includes('Facebook'))  return 'source-fb';
     if(t.includes('Google'))    return 'source-google';
-    if(t.includes('直接'))      return 'direct';
+    if(t.includes('直接')||t.includes('無 UTM')) return 'direct';
     if(t.includes('Email'))     return 'medium-post';
     return '';
   };
 
+  const utmTotalOrders = rows.reduce((s,r)=>s+r.orders,0);
+  const utmTotalRev    = rows.reduce((s,r)=>s+r.revenue,0);
+  const utmTotalAov    = utmTotalOrders>0?utmTotalRev/utmTotalOrders:0;
+  const utmTotalRow = `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
+    <td>合計</td><td></td><td></td>
+    <td style="font-family:'DM Mono',monospace">${utmTotalOrders>0?fmt(utmTotalOrders):'—'}</td>
+    <td style="font-family:'DM Mono',monospace;color:var(--green)">${utmTotalRev>0?'NT$'+fmt(utmTotalRev):'—'}</td>
+    <td style="font-family:'DM Mono',monospace">${utmTotalAov>0?'NT$'+fmt(utmTotalAov):'—'}</td>
+    <td>100%</td><td></td>
+  </tr>`;
   tbody.innerHTML = rows.map(r=>{
     const pctStr = r.pct>0 ? r.pct.toFixed(1)+'%' : '—';
     const topCamp = Object.entries(r.campMap).sort((a,b)=>b[1]-a[1])[0];
@@ -1474,7 +1502,7 @@ function renderUtmSummary(){
       <td style="font-family:'DM Mono',monospace">${pctStr}</td>
       <td style="font-size:11px;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${campStr}">${campStr}</td>
     </tr>`;
-  }).join('');
+  }).join('') + utmTotalRow;
 }
 
 function rollup(){
@@ -1507,7 +1535,7 @@ function rollup(){
   const m={};
   for(const d of filteredData){
     if(isWeb){
-      if(v(d,'order_gross_sales')<=0 && v(d,'order_count')<=0) continue; // 跳過退款列
+      if(!d.order_name && !d.date) continue; // 跳過空列
       const k=d.product_title||'(無商品資料—每筆訂單1列)';
       if(!m[k])m[k]={product:k,qty:0,revenue:0,srcMap:{}};
       m[k].qty += 1;  // 每列 = 一個商品
@@ -1566,6 +1594,27 @@ function renderTable(){
   if(isGA4){
     const cols=9;
     if(!rows.length){document.getElementById('adTableBody').innerHTML=`<tr><td colspan="9" class="no-data">此條件下無資料</td></tr>`;return}
+    const ga4TotalSessions = rows.reduce((s,r)=>s+r.sessions,0);
+    const ga4TotalPurchases = rows.reduce((s,r)=>s+r.purchases,0);
+    const ga4TotalRevenue = rows.reduce((s,r)=>s+r.revenue,0);
+    const ga4TotalCarts = rows.reduce((s,r)=>s+r.add_to_carts,0);
+    const ga4TotalCheckouts = rows.reduce((s,r)=>s+r.checkouts,0);
+    const ga4TotalAov = ga4TotalPurchases>0?ga4TotalRevenue/ga4TotalPurchases:0;
+    const totalRow = `<tr style="background:var(--surface2);font-weight:600;border-top:2px solid var(--border2)">
+      <td style="font-weight:700">合計</td>
+      <td>${fmtK(ga4TotalSessions)}</td>
+      <td>—</td>
+      <td>—</td>
+      <td>${ga4TotalCarts>0?fmt(ga4TotalCarts):'—'}</td>
+      <td>${ga4TotalCheckouts>0?fmt(ga4TotalCheckouts):'—'}</td>
+      <td>${ga4TotalPurchases>0?fmt(ga4TotalPurchases):'—'}</td>
+      <td style="color:var(--green)">${ga4TotalRevenue>0?'NT$'+fmt(ga4TotalRevenue):'—'}</td>
+      <td style="font-family:'DM Mono',monospace">${ga4TotalAov>0?'NT$'+fmt(ga4TotalAov):'—'}</td>
+      <td>—</td>
+    </tr>
+    <tr><td colspan="10" style="font-size:10.5px;color:var(--text3);padding:6px 14px">
+      ⚠️ GA4 依 session 歸因，各來源業績加總可能超過實際業績（同一訂單可跨多 session 被計入）
+    </td></tr>`;
     document.getElementById('adTableBody').innerHTML=rows.map(r=>`<tr>
       <td><span class="src-badge" style="${
         r.source.includes('facebook')||r.source.includes('fb') ? 'background:#dbeafe;color:#1e40af'
@@ -1583,7 +1632,7 @@ function renderTable(){
       <td style="font-weight:600;color:var(--green)">${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
       <td style="font-family:'DM Mono',monospace">${r.aov>0?'NT$'+fmt(r.aov):'—'}</td>
       <td style="font-family:'DM Mono',monospace">${r.conv_rate>0?r.conv_rate.toFixed(2)+'%':'—'}</td>
-    </tr>`).join('');
+    </tr>`).join('') + totalRow;
     return;
   }
   const cols2=isWeb?6:13;
@@ -1626,7 +1675,55 @@ function renderTable(){
         <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
         <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
     }
-  }).join('');
+  }).join('') + (() => {
+    // ── Total 列 ──
+    if(isWeb){
+      const totalQty = rows.reduce((s,r)=>s+r.qty,0);
+      const totalRev = rows.reduce((s,r)=>s+r.revenue,0);
+      const totalAov = totalQty>0?totalRev/totalQty:0;
+      return `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
+        <td>合計</td>
+        <td>${totalQty>0?fmt(totalQty):'—'}</td>
+        <td style="color:var(--green)">NT$${fmt(totalRev)}</td>
+        <td style="font-family:'DM Mono',monospace">${totalAov>0?'NT$'+fmt(totalAov):'—'}</td>
+        <td>100%</td><td></td></tr>`;
+    }
+    if(isMeta){
+      const tSpend=rows.reduce((s,r)=>s+r.spend,0);
+      const tImp=rows.reduce((s,r)=>s+r.impressions,0);
+      const tClk=rows.reduce((s,r)=>s+r.clicks,0);
+      const tBuy=rows.reduce((s,r)=>s+r.purchases,0);
+      const tRev=rows.reduce((s,r)=>s+r.revenue,0);
+      const tRoas=tSpend>0?tRev/tSpend:0;
+      const tCpa=tBuy>0?tSpend/tBuy:0;
+      const tCtr=tImp>0?tClk/tImp:0;
+      return `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
+        <td>合計</td><td></td><td></td>
+        <td>NT$${fmt(tSpend)}</td><td>${fmtK(tImp)}</td><td>—</td>
+        <td>${pct(tCtr)}</td><td>—</td><td>—</td>
+        <td>${tBuy>0?fmt(tBuy):'—'}</td>
+        <td style="color:var(--green)">${tRev>0?'NT$'+fmt(tRev):'—'}</td>
+        <td class="${tRoas>=3?'roas-good':tRoas>=1?'roas-ok':tRoas>0?'roas-bad':''}">${tRoas>0?tRoas.toFixed(2)+'x':'—'}</td>
+        <td>${tCpa>0?'NT$'+fmt(tCpa):'—'}</td></tr>`;
+    }
+    // Google
+    const tSpend=rows.reduce((s,r)=>s+r.spend,0);
+    const tImp=rows.reduce((s,r)=>s+r.impressions,0);
+    const tClk=rows.reduce((s,r)=>s+r.clicks,0);
+    const tConv=rows.reduce((s,r)=>s+r.conversions,0);
+    const tRev=rows.reduce((s,r)=>s+r.revenue,0);
+    const tRoas=tSpend>0?tRev/tSpend:0;
+    const tCpa=tConv>0?tSpend/tConv:0;
+    const tCtr=tImp>0?tClk/tImp:0;
+    return `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
+      <td>合計</td><td></td><td></td>
+      <td>NT$${fmt(tSpend)}</td><td>${fmtK(tImp)}</td><td>${fmtK(tClk)}</td>
+      <td>${pct(tCtr)}</td><td>—</td><td>—</td>
+      <td>${tConv>0?fmt(tConv,1):'—'}</td>
+      <td style="color:var(--green)">${tRev>0?'NT$'+fmt(tRev):'—'}</td>
+      <td class="${tRoas>=3?'roas-good':tRoas>=1?'roas-ok':tRoas>0?'roas-bad':''}">${tRoas>0?tRoas.toFixed(2)+'x':'—'}</td>
+      <td>${tCpa>0?'NT$'+fmt(tCpa):'—'}</td></tr>`;
+  })();
 }
 
 // ═══════════════════════ GA4 FETCH & RENDER ═════════════════════════
@@ -1640,8 +1737,10 @@ async function debugWebFields(){
   if(!shopifyAccountId){alert('此品牌尚未串接 Shopify');return;}
   // 用很少欄位先抓一筆，看實際 key 長什麼樣
   // 分兩次測：先測 UTM 欄位，再測商品欄位
-  const probeFields='date,order_name,order_gross_sales,order_count,order_id,order_customer_last_visit_landing_page,order_customer_last_visit_source,order_customer_last_visit_utm_source,order_customer_last_visit_utm_medium,order_customer_last_visit_utm_campaign,order_customer_last_visit_utm_content';
-  const url=`https://connectors.windsor.ai/shopify?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${shopifyAccountId}&fields=${probeFields}&_limit=3`;
+  const probeFields='date,order_name,order_gross_sales,order_net_sales,order_total_price,order_count,order_id';
+  // 同時測試當前日期範圍和3個月前，確認舊資料是否可用
+  const threeMonthsAgo = new Date(new Date(from)-90*24*60*60*1000).toISOString().slice(0,10);
+  const url=`https://connectors.windsor.ai/shopify?api_key=${API_KEY}&date_from=${threeMonthsAgo}&date_to=${from}&account_id=${shopifyAccountId}&fields=${probeFields}&_limit=5`;
   try{
     const resp=await fetch(url);
     const json=await resp.json();
@@ -1656,7 +1755,9 @@ async function debugWebFields(){
           Object.fromEntries(Object.entries(utmRows[0]).filter(([k])=>k.toLowerCase().includes('utm')||k==='order_name')),
           null, 2)
       : '\n\n⚠️ 所有列的 UTM 欄位都是空值';
-    const msg=`✅ API 回傳欄位 (${keys.length}個):\n${keys.join(', ')}${utmInfo}\n\n第一筆原始資料:\n${sample}`;
+    // Check revenue fields
+    const revInfo = rows.slice(0,3).map(r=>`${r.date||'?'} #${r.order_name||'?'}: gross=${r.order_gross_sales} net=${r.order_net_sales} total=${r.order_total_price} count=${r.order_count}`).join('\n');
+    const msg=`✅ API 回傳欄位 (${keys.length}個):\n${keys.join(', ')}\n\n最近3筆業績欄位值（3個月前至今）:\n${revInfo}\n\n第一筆原始資料:\n${sample}`;
     console.log('[Debug] Raw fields:', keys);
     console.log('[Debug] All rows with UTM:', utmRows);
     alert(msg);
