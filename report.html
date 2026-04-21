@@ -218,8 +218,9 @@ tr:hover td{background:var(--bg)}
 .funnel-step-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .funnel-step-val{font-size:22px;font-weight:600;letter-spacing:-.5px;color:var(--text)}
 .funnel-step-rate{font-size:12px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace}
+.funnel-step-sub{font-size:10px;color:var(--amber);font-family:'DM Mono',monospace;margin-top:2px}
 .funnel-step-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e37400,#f9ab00)}
-.funnel-arrow{display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:18px;padding-top:20px}
+.funnel-arrow{display:none}
 
 /* GA4 source table */
 .src-table{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -238,9 +239,64 @@ tr:hover td{background:var(--bg)}
 .collapsible-body{overflow:hidden;transition:max-height .25s ease}
 .collapsible-body.collapsed{max-height:0!important}
 .collapse-icon{transition:transform .25s;display:inline-block}
+
+/* ── Skeleton loading ── */
+.skeleton-overlay{position:absolute;inset:0;background:var(--surface);z-index:10;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.skeleton-overlay.active{opacity:1;pointer-events:all}
+.skeleton-pulse{display:flex;flex-direction:column;gap:10px;width:80%;align-items:center}
+.sk-bar{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--surface2) 25%,#e8e8e6 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
+.sk-bar.wide{width:100%}.sk-bar.mid{width:65%}.sk-bar.short{width:40%}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.kpi-grid-wrap{position:relative}
+
+/* ── Inline bar for product table ── */
+.inline-bar-wrap{display:flex;align-items:center;gap:6px}
+.inline-bar-track{flex:1;height:5px;border-radius:3px;background:var(--surface2);overflow:hidden;min-width:40px}
+.inline-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--web),#10b981);transition:width .4s ease}
+.inline-bar-pct{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);white-space:nowrap;min-width:34px;text-align:right}
+
+/* ── Gap hint badge ── */
+.gap-hint{display:inline-block;font-size:10.5px;font-weight:500;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+.gap-hint-warn{background:var(--red-bg);color:var(--red)}
+.gap-hint-ok{background:var(--green-bg);color:var(--green)}
+
+/* ── Sticky first column for Google table ── */
+.sticky-col{position:sticky;left:0;background:var(--surface);z-index:2;box-shadow:2px 0 4px rgba(0,0,0,.04)}
+tr:hover .sticky-col{background:var(--bg)}
+th.sticky-col{background:var(--surface2)}
+
+/* ── Web 漏斗轉換率 ── */
+.web-funnel-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:0;align-items:center;margin-bottom:16px}
+@media(max-width:900px){.web-funnel-row{grid-template-columns:1fr 1fr;gap:10px}}
+.web-funnel-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 12px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.web-funnel-step-label{font-size:10px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.web-funnel-step-val{font-size:20px;font-weight:600;letter-spacing:-.5px;color:var(--text)}
+.web-funnel-step-rate{font-size:11px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace}
+.web-funnel-step-sub{font-size:10px;color:var(--amber);font-family:'DM Mono',monospace;margin-top:1px}
+.web-funnel-step-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--web),#10b981)}
+.web-funnel-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);font-size:16px;padding:0 4px;min-width:28px}
+.web-funnel-arrow-rate{font-size:9.5px;font-family:'DM Mono',monospace;color:var(--amber);margin-top:2px;white-space:nowrap}
+
+/* UTM 活動欄 tooltip cursor */
+.tooltip-cell{cursor:help;border-bottom:1px dashed var(--border2)}
 .collapse-icon.collapsed{transform:rotate(180deg)}
 
-/* ── 手機版 RWD ── */
+/* ── 裝置卡片 ── */
+.device-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);text-align:center}
+.device-card-icon{font-size:28px;margin-bottom:6px}
+.device-card-name{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.device-card-pct{font-size:32px;font-weight:700;letter-spacing:-1px;margin-bottom:2px}
+.device-card-sessions{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:14px}
+.device-card-stats{display:flex;flex-direction:column;gap:6px;text-align:left;border-top:1px solid var(--border);padding-top:12px}
+.device-stat-row{display:flex;justify-content:space-between;font-size:12px}
+.device-stat-label{color:var(--text3)}
+.device-stat-val{font-weight:600;font-family:'DM Mono',monospace}
+@media(max-width:700px){#ga4DeviceGrid{grid-template-columns:1fr!important}}
+
+/* ── 趨勢箭頭 ── */
+.trend-up{color:var(--green);font-weight:600}
+.trend-down{color:var(--red);font-weight:600}
+.trend-flat{color:var(--text3)}
 @media(max-width:768px){
   body{padding:12px 12px 60px}
   /* Topbar 手機版 */
@@ -364,6 +420,8 @@ tr:hover td{background:var(--bg)}
     <div class="date-row-controls">
       <button class="quick-btn" onclick="setQuickRange('today',this)">今天</button>
       <button class="quick-btn" onclick="setQuickRange('yesterday',this)">昨天</button>
+      <button class="quick-btn" onclick="setQuickRange('last7',this)">最近 7 天</button>
+      <button class="quick-btn" onclick="setQuickRange('thismonth',this)">本月</button>
       <div class="divider"></div>
       <div class="date-range">
         <input type="date" id="dateFrom" onchange="onDateChange()"/>
@@ -377,8 +435,15 @@ tr:hover td{background:var(--bg)}
   <div id="errorMsg" class="error"></div>
 
   <!-- ── 廣告 KPI ── -->
-  <div class="kpi-grid cols-9" id="kpiGrid" style="display:grid">
-    <div class="kpi"><div class="kpi-label">花費</div><div class="kpi-value">—</div></div>
+  <div class="kpi-grid-wrap" style="position:relative">
+    <div class="skeleton-overlay" id="kpiSkeleton">
+      <div class="skeleton-pulse">
+        <div class="sk-bar wide"></div><div class="sk-bar mid"></div><div class="sk-bar short"></div>
+      </div>
+    </div>
+    <div class="kpi-grid cols-9" id="kpiGrid" style="display:grid">
+      <div class="kpi"><div class="kpi-label">花費</div><div class="kpi-value">—</div></div>
+    </div>
   </div>
 
   <!-- ── 網站業績：對比卡片 ── -->
@@ -406,8 +471,20 @@ tr:hover td{background:var(--bg)}
         <div class="compare-card-title">⚖️ 實際 vs 歸因落差</div>
         <div class="compare-row"><span class="compare-row-label">實際 ROAS</span><span class="compare-row-val good" id="real-roas">—</span></div>
         <div class="compare-row"><span class="compare-row-label">歸因 ROAS</span><span class="compare-row-val neutral" id="attr-roas">—</span></div>
-        <div class="compare-row"><span class="compare-row-label">ROAS 落差</span><span class="compare-row-val" id="roas-gap">—</span></div>
-        <div class="compare-row"><span class="compare-row-label">業績落差</span><span class="compare-row-val" id="rev-gap">—</span></div>
+        <div class="compare-row">
+          <span class="compare-row-label">ROAS 落差</span>
+          <span>
+            <span class="compare-row-val" id="roas-gap">—</span>
+            <span id="roas-gap-hint"></span>
+          </span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-row-label">業績落差</span>
+          <span>
+            <span class="compare-row-val" id="rev-gap">—</span>
+            <span id="rev-gap-hint"></span>
+          </span>
+        </div>
         <div class="compare-row"><span class="compare-row-label">廣告佔業績比</span><span class="compare-row-val" id="ad-pct">—</span></div>
       </div>
     </div>
@@ -470,18 +547,21 @@ tr:hover td{background:var(--bg)}
         <div class="funnel-step-label">加入購物車</div>
         <div class="funnel-step-val" id="fn-cart">—</div>
         <div class="funnel-step-rate" id="fn-cart-rate">—</div>
+        <div class="funnel-step-sub" id="fn-cart-step"></div>
         <div class="funnel-step-bar"></div>
       </div>
       <div class="funnel-step">
         <div class="funnel-step-label">進入結帳</div>
         <div class="funnel-step-val" id="fn-checkout">—</div>
         <div class="funnel-step-rate" id="fn-checkout-rate">—</div>
+        <div class="funnel-step-sub" id="fn-checkout-step"></div>
         <div class="funnel-step-bar"></div>
       </div>
       <div class="funnel-step">
         <div class="funnel-step-label">完成購買</div>
         <div class="funnel-step-val" id="fn-purchase">—</div>
         <div class="funnel-step-rate" id="fn-purchase-rate">—</div>
+        <div class="funnel-step-sub" id="fn-purchase-step"></div>
         <div class="funnel-step-bar"></div>
       </div>
     </div>
@@ -489,7 +569,6 @@ tr:hover td{background:var(--bg)}
     <div class="charts-row">
       <div class="card">
         <div class="card-title">每日 Sessions & 新訪客比例 <span id="ga4TrendRange"></span></div>
-
         <div style="position:relative;height:220px"><canvas id="ga4TrendChart"></canvas></div>
       </div>
       <div class="card">
@@ -501,10 +580,25 @@ tr:hover td{background:var(--bg)}
         <div style="position:relative;height:220px"><canvas id="ga4PageChart"></canvas></div>
       </div>
     </div>
-    <!-- GA4 商品銷售排行榜 -->
+
+    <!-- 裝置流量 -->
+    <!-- 裝置流量 -->
+    <div class="table-card" id="ga4DeviceCard" style="margin-top:12px;display:none">
+      <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4DeviceCard',this)">
+        <div class="card-title" style="font-size:13px;font-weight:600">📱 裝置流量</div>
+        <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+      </div>
+      <div class="collapsible-body">
+        <div id="ga4DeviceGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px">
+          <!-- JS 動態產生 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 銷售數量排行榜 -->
     <div class="table-card" id="ga4ItemCard" style="margin-top:12px;display:none">
       <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4ItemCard',this)">
-        <div class="card-title" style="font-size:13px;font-weight:600">商品銷售排行榜 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 電商資料</span></div>
+        <div class="card-title" style="font-size:13px;font-weight:600">銷售數量排行榜 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 電商資料</span></div>
         <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
       </div>
       <div class="collapsible-body">
@@ -513,14 +607,68 @@ tr:hover td{background:var(--bg)}
             <thead>
               <tr>
                 <th onclick="sortGa4Item('name')" style="min-width:220px">商品名稱 ↕</th>
-                <th onclick="sortGa4Item('category')" style="min-width:100px">分類 ↕</th>
                 <th onclick="sortGa4Item('qty')">銷售數量 ↕</th>
                 <th onclick="sortGa4Item('revenue')">業績 ↕</th>
                 <th onclick="sortGa4Item('aov')">平均售價 ↕</th>
                 <th onclick="sortGa4Item('pct')">業績佔比 ↕</th>
+                <th style="min-width:120px">業績比例</th>
               </tr>
             </thead>
             <tbody id="ga4ItemBody"><tr><td colspan="6" class="no-data">載入中...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 所有頁面排行 -->
+    <div class="table-card" id="ga4AllPageCard" style="margin-top:12px;display:none">
+      <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4AllPageCard',this)">
+        <div class="card-title" style="font-size:13px;font-weight:600">📄 所有頁面流量排行 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 頁面瀏覽</span></div>
+        <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="min-width:240px">頁面路徑</th>
+                <th>流量</th>
+                <th style="min-width:80px;cursor:help" title="比較所選日期區間的前半段 vs 後半段流量：↑ 上升 5% 以上 / ↓ 下降 5% 以上 / → 持平（±5% 以內）">近期趨勢 💡</th>
+                <th>佔比</th>
+                <th>使用者</th>
+                <th style="min-width:70px">參與時間</th>
+                <th>跳出率</th>
+                <th>加購(率)</th>
+              </tr>
+            </thead>
+            <tbody id="ga4AllPageBody"><tr><td colspan="8" class="no-data">載入中...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 商品頁排行榜 -->
+    <div class="table-card" id="ga4ProdPageCard" style="margin-top:12px;display:none">
+      <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4ProdPageCard',this)">
+        <div class="card-title" style="font-size:13px;font-weight:600">🛍 商品頁流量排行 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 商品頁瀏覽</span></div>
+        <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="min-width:240px">頁面路徑</th>
+                <th>流量</th>
+                <th style="min-width:80px;cursor:help" title="比較所選日期區間的前半段 vs 後半段流量：↑ 上升 5% 以上 / ↓ 下降 5% 以上 / → 持平（±5% 以內）">近期趨勢 💡</th>
+                <th>佔比</th>
+                <th>使用者</th>
+                <th style="min-width:70px">參與時間</th>
+                <th>跳出率</th>
+                <th>加購(率)</th>
+              </tr>
+            </thead>
+            <tbody id="ga4ProdPageBody"><tr><td colspan="8" class="no-data">載入中...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -570,7 +718,7 @@ tr:hover td{background:var(--bg)}
             <th onclick="sortUtm('revenue')">業績 ↕</th>
             <th onclick="sortUtm('aov')">客單價 ↕</th>
             <th onclick="sortUtm('pct')">業績佔比 ↕</th>
-            <th style="min-width:180px">活動（最常見）</th>
+            <th style="min-width:180px" title="該來源/媒介組合中，出現最多次的 UTM Campaign 名稱" class="tooltip-cell">活動（最常見）💡</th>
           </tr>
         </thead>
         <tbody id="utmSummaryBody"><tr><td colspan="8" class="no-data">載入中...</td></tr></tbody>
@@ -742,8 +890,11 @@ function guessAdType(src, med, camp){
   return src||med||'其他';
 }
 // GA4 欄位：流量 + 轉換漏斗 + 頁面
-const GA_FIELDS       = 'date,account_name,datasource,sessions,users,new_users,bounce_rate,source,medium,add_to_carts,checkouts,transactions,transactionrevenue,purchase_revenue';
-const GA_ITEM_FIELDS  = 'date,account_name,datasource,item_name,item_category,items_purchased,item_revenue';
+const GA_FIELDS        = 'date,account_name,datasource,sessions,users,new_users,bounce_rate,source,medium,add_to_carts,checkouts,transactions,transactionrevenue,purchase_revenue';
+const GA_ITEM_FIELDS   = 'date,account_name,datasource,item_id,item_name,item_category,items_purchased,item_revenue';
+const GA_DEVICE_FIELDS = 'date,account_name,devicecategory,sessions,engagedSessions,bounceRate';
+// 頁面：page_path + page_title 為 dimensions；screen_page_views/active_users/bounce_rate/average_session_duration 為 metrics
+const GA_PAGE_FIELDS   = 'date,account_name,datasource,page_path,screen_page_views,active_users,bounce_rate,average_session_duration,add_to_carts';
 
 const OBJ_LABEL = {
   OUTCOME_SALES:'銷售量',OUTCOME_ENGAGEMENT:'互動',OUTCOME_AWARENESS:'品牌認知',
@@ -767,9 +918,9 @@ const BRANDS = {
   maclove:{
     metaId:'2919454488223604',
     googleId:'1639977647',
-    // Windsor GA4 account name 含此字串即為 MACLOVE 網站
     webAccountKey:'Maclove',
     ga4AccountKey:'Maclove',
+    siteUrl:'https://www.maclove.co',
     name:'MACLOVE',
     hasSegments:false,
     spendC:'#c0392b',revC:'#e74c3c',barMeta:'bar-mac',
@@ -780,6 +931,7 @@ const BRANDS = {
     googleId:'1634719552',
     webAccountKey:'Hipporizz',
     ga4AccountKey:'Hipporizz',
+    siteUrl:'https://hipporizz.com.tw',
     name:'HIPPORIZZ',
     hasSegments:true,
     spendC:'#1a4fd6',revC:'#1a7a52',barMeta:'bar-hip-w',
@@ -809,6 +961,11 @@ function setBrand(brand,btn){
   document.querySelectorAll('.brand-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   currentSegment=BRANDS[brand].hasSegments&&currentPlatform==='meta'?'website':'all';
+  // clear old data visually
+  const kg=document.getElementById('kpiGrid');
+  if(kg) kg.innerHTML='<div class="kpi"><div class="kpi-label">載入中</div><div class="kpi-value" style="color:var(--text3)">—</div></div>';
+  const skEl=document.getElementById('kpiSkeleton');
+  if(skEl) skEl.classList.add('active');
   syncUI(); rawData=[]; filteredData=[]; fetchData();
 }
 function setPlatform(p,btn){
@@ -877,6 +1034,8 @@ function syncUI(){
   // GA4 商品排行只在 GA4 模式顯示
   if(document.getElementById('ga4ItemCard'))
     document.getElementById('ga4ItemCard').style.display = isGA4?'':'none';
+  if(document.getElementById('ga4DeviceCard'))
+    document.getElementById('ga4DeviceCard').style.display = isGA4?'':'none';
 
   renderTableHead();
   setTimeout(updateBudgetBar, 0);
@@ -913,7 +1072,10 @@ function initDates(){
 function clearQ(){document.querySelectorAll('.quick-btn').forEach(b=>b.classList.remove('active'))}
 function setQuickRange(t,btn){
   const now=new Date();let f,e;
-  if(t==='today'){f=e=ymd(now)}else{const d=new Date(now);d.setDate(d.getDate()-1);f=e=ymd(d)}
+  if(t==='today'){f=e=ymd(now)}
+  else if(t==='yesterday'){const d=new Date(now);d.setDate(d.getDate()-1);f=e=ymd(d)}
+  else if(t==='last7'){const d=new Date(now);d.setDate(d.getDate()-6);f=ymd(d);e=ymd(now)}
+  else if(t==='thismonth'){const y=now.getFullYear(),m=now.getMonth();f=`${y}-${pad(m+1)}-01`;e=ymd(now)}
   document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
   clearQ();if(btn)btn.classList.add('active');
   document.getElementById('dateFrom').value=f;document.getElementById('dateTo').value=e;
@@ -931,18 +1093,22 @@ async function fetchData(){
   btn.disabled=true;icon.classList.add('spinning');
   document.getElementById('errorMsg').style.display='none';
   document.getElementById('statusBar').textContent='資料更新中，請稍候...';
+  // skeleton
+  const skEl=document.getElementById('kpiSkeleton');
+  if(skEl) skEl.classList.add('active');
   const from=document.getElementById('dateFrom').value,to=document.getElementById('dateTo').value;
   if(!from||!to){showErr('請選擇日期');return}
 
   const isWeb=currentPlatform==='website';
 
   if(isWeb){
-    // 網站業績：用 /all endpoint，同時也要廣告資料做對比
     await fetchWebData(from,to);
   }else{
     await fetchAdData(from,to);
   }
   btn.disabled=false;icon.classList.remove('spinning');
+  const skEl2=document.getElementById('kpiSkeleton');
+  if(skEl2) skEl2.classList.remove('active');
 }
 
 async function fetchAdData(from,to){
@@ -1081,6 +1247,9 @@ function applyFilters(){
     document.getElementById('orderDetailCard').style.display='block';
     document.getElementById('utmSummaryCard').style.display='block';
     document.getElementById('orderDetailTitle').textContent=`📦 ${BRANDS[currentBrand].name} 訂單明細 & 來源`;
+    // 清除訂單明細佔位提示
+    const ob=document.getElementById('orderDetailBody');
+    if(ob){const ph=ob.querySelector('td');if(ph&&ph.textContent.includes('切換到'))ob.innerHTML='';}
     renderWebKPIs();renderWebCharts();renderTable();renderOrderTable();renderUtmSummary();
     const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
     if(dates.length) document.getElementById('webTrendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
@@ -1197,13 +1366,74 @@ function renderWebKPIs(){
   setEl('ad-roas',adRoas>0?adRoas.toFixed(2)+'x':'—');
   setEl('real-roas',realRoas>0?realRoas.toFixed(2)+'x':'—', realRoas>=3?'good':realRoas>=1?'neutral':'warn');
   setEl('attr-roas',adRoas>0?adRoas.toFixed(2)+'x':'—','neutral');
-  const gapCls=roasGap>0?'neg':'pos'; // 若實際比歸因高是好事 (pos green)
-  setEl('roas-gap',roasGap?((roasGap>0?'+':'')+roasGap.toFixed(2)+'x'):'—', roasGap>0?'warn':'good');
-  setEl('rev-gap',revGap?(revGap>0?'+NT$'+fmt(revGap):'-NT$'+fmt(Math.abs(revGap))):'—', revGap>0?'warn':'good');
+  // 落差：實際>歸因是好事(綠)，反之(紅)
+  setEl('roas-gap',roasGap?((roasGap>0?'+':'')+roasGap.toFixed(2)+'x'):'—', roasGap>=0?'good':'warn');
+  setEl('rev-gap',revGap?(revGap>0?'+NT$'+fmt(revGap):'-NT$'+fmt(Math.abs(revGap))):'—', revGap>=0?'good':'warn');
   setEl('ad-pct',adPct?adPct.toFixed(1)+'%':'—','neutral');
+  // AOV in gap card
+  const el=document.getElementById('ws-aov-gap');if(el) el.textContent=aov>0?'NT$'+fmt(aov):'—';
+  // gap hint badges
+  const roasHintEl=document.getElementById('roas-gap-hint');
+  if(roasHintEl){
+    if(roasGap!==0){
+      const absPct=adRoas>0?Math.abs(roasGap/adRoas*100):0;
+      roasHintEl.className='gap-hint '+(roasGap>=0?'gap-hint-ok':'gap-hint-warn');
+      roasHintEl.textContent=roasGap>=0?`歸因低估 ${absPct.toFixed(0)}%`:`歸因偏高 ${absPct.toFixed(0)}%，建議核對 Shopify`;
+    } else roasHintEl.textContent='';
+  }
+  const revHintEl=document.getElementById('rev-gap-hint');
+  if(revHintEl){
+    if(revenue>0&&attrRev>0){
+      const pctGap=Math.abs(revGap/revenue*100);
+      revHintEl.className='gap-hint '+(revGap>=0?'gap-hint-ok':'gap-hint-warn');
+      revHintEl.textContent=revGap>=0?`+${pctGap.toFixed(0)}%`:`落差 ${pctGap.toFixed(0)}%`;
+    } else revHintEl.textContent='';
+  }
 }
 
-// ═══════════════════════ CHARTS (廣告) ════════════════════════════
+// ═══════════════════════ 網站漏斗 ════════════════════════════════
+function renderWebFunnel(){
+  const d=filteredData;
+  const seen={};
+  const uniq=d.filter(r=>{if(!r.order_name&&!r.date)return false;const k=r.order_name||r.date;if(seen[k])return false;seen[k]=true;return true;});
+  const orders=uniq.reduce((s,r)=>s+v(r,'order_count'),0);
+  const revenue=uniq.reduce((s,r)=>s+v(r,'order_gross_sales'),0);
+  const aov=orders>0?revenue/orders:0;
+  // From GA4 cache if available
+  const ga4d=ga4RawData&&ga4RawData.length?ga4RawData:null;
+  const sessions=ga4d?ga4d.reduce((s,r)=>s+v(r,'sessions'),0):0;
+  const carts=ga4d?ga4d.reduce((s,r)=>s+v(r,'add_to_carts'),0):0;
+  const checkouts=ga4d?ga4d.reduce((s,r)=>s+v(r,'checkouts'),0):0;
+  const c2s=sessions>0&&carts>0?(carts/sessions*100).toFixed(1)+'%':'—';
+  const k2c=carts>0&&checkouts>0?(checkouts/carts*100).toFixed(1)+'%':'—';
+  const c2p=checkouts>0&&orders>0?(orders/checkouts*100).toFixed(1)+'%':'—';
+  const steps=[
+    {label:'Sessions',val:sessions>0?fmtK(sessions):'—',rate:'起點',sub:''},
+    {label:'加入購物車',val:carts>0?fmtK(carts):'—',rate:sessions>0&&carts>0?(carts/sessions*100).toFixed(1)+'%':'—',sub:c2s!=='—'?`↑ 對上步驟 ${c2s}`:'',arrow:c2s},
+    {label:'進入結帳',val:checkouts>0?fmtK(checkouts):'—',rate:sessions>0&&checkouts>0?(checkouts/sessions*100).toFixed(1)+'%':'—',sub:k2c!=='—'?`↑ 對上步驟 ${k2c}`:'',arrow:k2c},
+    {label:'完成購買',val:orders>0?fmt(orders):'—',rate:sessions>0&&orders>0?(orders/sessions*100).toFixed(1)+'%':'—',sub:c2p!=='—'?`↑ 對上步驟 ${c2p}`:'',arrow:c2p},
+  ];
+  const bar=document.getElementById('webFunnelRow');
+  if(!bar)return;
+  // interleave steps with arrows
+  let html='<div class="web-funnel-row">';
+  steps.forEach((s,i)=>{
+    html+=`<div class="web-funnel-step">
+      <div class="web-funnel-step-label">${s.label}</div>
+      <div class="web-funnel-step-val">${s.val}</div>
+      <div class="web-funnel-step-rate">${s.rate}</div>
+      ${s.sub?`<div class="web-funnel-step-sub">${s.sub}</div>`:''}
+      <div class="web-funnel-step-bar"></div>
+    </div>`;
+    if(i<steps.length-1){
+      html+=`<div class="web-funnel-arrow">›<div class="web-funnel-arrow-rate">${steps[i+1].arrow||''}</div></div>`;
+    }
+  });
+  html+='</div>';
+  // 平均客單
+  html+=`<div style="text-align:right;font-size:11px;color:var(--text3);margin-top:6px;font-family:'DM Mono',monospace">平均客單價 AOV：<strong style="color:var(--text)">${aov>0?'NT$'+fmt(aov):'—'}</strong></div>`;
+  bar.innerHTML=html;
+}
 function renderTrend(){
   const m={};const rk=currentPlatform==='meta'?'action_values_offsite_conversion_fb_pixel_purchase':'conversion_value';
   for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={s:0,r:0};m[d.date].s+=v(d,'spend');m[d.date].r+=v(d,rk)}
@@ -1227,10 +1457,22 @@ function renderRoasTrend(){
 }
 function renderCampaignChart(){
   const m={};for(const d of filteredData){const c=d.campaign||'未知';m[c]=(m[c]||0)+v(d,'spend')}
-  const entries=Object.entries(m).sort((a,b)=>b[1]-a[1]);const top=entries.slice(0,6);const other=entries.slice(6).reduce((s,e)=>s+e[1],0);if(other>0)top.push(['其他',other]);
-  const colors=currentPlatform==='google'?['#4285f4','#34a853','#fbbc04','#ea4335','#1a73e8','#0d9488','#6b6b65']:BRANDS[currentBrand].donut;
+  const entries=Object.entries(m).sort((a,b)=>b[1]-a[1]);const top=entries.slice(0,7);const other=entries.slice(7).reduce((s,e)=>s+e[1],0);if(other>0)top.push(['其他',other]);
+  const colors=currentPlatform==='google'?['#4285f4','#34a853','#fbbc04','#ea4335','#1a73e8','#0d9488','#6b6b65','#9aa0a6']:BRANDS[currentBrand].donut;
   const ctx=document.getElementById('campaignChart').getContext('2d');if(campInst)campInst.destroy();
-  campInst=new Chart(ctx,{type:'doughnut',data:{labels:top.map(e=>e[0]),datasets:[{data:top.map(e=>Math.round(e[1])),backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:10}},tooltip:{callbacks:{label:c=>' NT$'+Math.round(c.parsed).toLocaleString('zh-TW')}}}}});
+  // 改為橫向長條圖，顯示實際金額，易於比較
+  campInst=new Chart(ctx,{type:'bar',data:{
+    labels:top.map(e=>e[0].length>18?e[0].slice(0,17)+'…':e[0]),
+    datasets:[{data:top.map(e=>Math.round(e[1])),backgroundColor:colors.slice(0,top.length),borderRadius:4,borderSkipped:false}]
+  },options:{
+    indexAxis:'y',
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' NT$'+Math.round(c.parsed.x).toLocaleString('zh-TW')}}},
+    scales:{
+      x:{ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>'NT$'+(n>=1000?(n/1000).toFixed(0)+'k':n)},grid:{color:'rgba(0,0,0,.04)'}},
+      y:{ticks:{font:{size:11,family:'DM Sans'},color:'#5f5f5a'},grid:{display:false}}
+    }
+  }});
 }
 
 // ═══════════════════════ CHARTS (網站業績) ════════════════════════
@@ -1321,6 +1563,7 @@ function renderTableHead(){
       <th onclick="sortTable('revenue')">業績 ↕</th>
       <th onclick="sortTable('aov')">平均售價 ↕</th>
       <th onclick="sortTable('pct')">業績佔比 ↕</th>
+      <th style="min-width:140px">業績比例</th>
       <th style="min-width:120px">廣告來源（前3）</th>
     </tr>`;
   }else if(isMeta){
@@ -1341,7 +1584,7 @@ function renderTableHead(){
     </tr>`;
   }else{
     document.getElementById('tableHead').innerHTML=`<tr>
-      <th onclick="sortTable('campaign')" style="min-width:150px">活動名稱 ↕</th>
+      <th onclick="sortTable('campaign')" style="min-width:150px" class="sticky-col">活動名稱 ↕</th>
       <th onclick="sortTable('campaign_type')" style="min-width:110px">類型 ↕</th>
       <th onclick="sortTable('ad_name')" style="min-width:150px">廣告素材 ↕</th>
       <th onclick="sortTable('spend')">花費 ↕</th>
@@ -1686,6 +1929,12 @@ function renderTable(){
         <td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
         <td>${r.aov>0?'NT$'+fmt(r.aov):'—'}</td>
         <td style="font-family:'DM Mono',monospace">${pct>0?pct.toFixed(1)+'%':'—'}</td>
+        <td style="min-width:120px">
+          <div class="inline-bar-wrap">
+            <div class="inline-bar-track"><div class="inline-bar-fill" style="width:${Math.min(100,pct).toFixed(1)}%;background:linear-gradient(90deg,var(--accent),#3b82f6)"></div></div>
+            <span class="inline-bar-pct">${pct>0?pct.toFixed(1)+'%':'—'}</span>
+          </div>
+        </td>
         <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;color:var(--text2);font-size:11.5px">${r.topSrc||'—'}</td>
         </tr>`;
     }else if(isMeta){
@@ -1704,7 +1953,7 @@ function renderTable(){
       const rc=r.roas>=3?'roas-good':r.roas>=1?'roas-ok':r.roas>0?'roas-bad':'';
       const tCls=CTYPE_CLS[r.campaign_type]||'ct-other';
       return`<tr>
-        <td title="${r.campaign||''}">${r.campaign||'—'}</td>
+        <td class="sticky-col" title="${r.campaign||''}">${r.campaign||'—'}</td>
         <td><span class="ctype-badge ${tCls}">${CTYPE_LABEL[r.campaign_type]||r.campaign_type||'—'}</span></td>
         <td title="${r.ad_name||''}">${r.ad_name||'—'}</td>
         <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.clicks)}</td>
@@ -1814,10 +2063,12 @@ async function fetchGA4Data(){
   if(!from||!to){showErr('請選擇日期');return}
   const cfg=BRANDS[currentBrand];
   const gaKey=cfg.ga4AccountKey.toLowerCase();
-  const url      = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_FIELDS}`;
-  const urlItems = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_ITEM_FIELDS}`;
+  const url        = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_FIELDS}`;
+  const urlItems   = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_ITEM_FIELDS}`;
+  const urlPage    = `https://connectors.windsor.ai/all?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_PAGE_FIELDS}`;
+  const urlDevice  = `https://connectors.windsor.ai/googleanalytics4?api_key=${API_KEY}&date_from=${from}&date_to=${to}&fields=${GA_DEVICE_FIELDS}`;
   try{
-    const [resp, respItems] = await Promise.all([fetch(url), fetch(urlItems)]);
+    const [resp, respItems, respPage, respDevice] = await Promise.all([fetch(url), fetch(urlItems), fetch(urlPage), fetch(urlDevice)]);
     if(!resp.ok){const t=await resp.text();throw new Error(`HTTP ${resp.status}: ${t.slice(0,200)}`)}
     const json=await resp.json();
     const all=Array.isArray(json)?json:(json.data&&Array.isArray(json.data)?json.data:[]);
@@ -1826,7 +2077,6 @@ async function fetchGA4Data(){
       const ds=(d.datasource||'').toLowerCase();
       return an.includes(gaKey) && (ds.includes('googleanalytics')||ds.includes('ga4'));
     };
-    // Debug: log unique account names to help diagnose brand mixing
     const allGA4 = all.filter(d=>{const ds=(d.datasource||'').toLowerCase();return ds.includes('googleanalytics')||ds.includes('ga4');});
     const uniqueAccounts=[...new Set(allGA4.map(d=>d.account_name||d.datasource||''))];
     console.log('[GA4] gaKey:', gaKey, '| unique accounts:', uniqueAccounts);
@@ -1838,10 +2088,26 @@ async function fetchGA4Data(){
       const ji=await respItems.json();
       const allItems=Array.isArray(ji)?ji:(ji.data&&Array.isArray(ji.data)?ji.data:[]);
       ga4ItemData=allItems.filter(filterFn);
-      console.log('[GA4 Items] total:', allItems.length, 'filtered:', ga4ItemData.length, 'sample:', ga4ItemData[0]);
+    }
+    // 頁面資料
+    window.ga4PageData=[];
+    if(respPage.ok){
+      const jp=await respPage.json();
+      const allPg=Array.isArray(jp)?jp:(jp.data&&Array.isArray(jp.data)?jp.data:[]);
+      window.ga4PageData=allPg.filter(filterFn);
+    }
+    // 裝置資料（/googleanalytics4 endpoint，不需額外過濾，直接用全部）
+    window.ga4DeviceData=[];
+    if(respDevice.ok){
+      const jd=await respDevice.json();
+      const allDev=Array.isArray(jd)?jd:(jd.data&&Array.isArray(jd.data)?jd.data:[]);
+      // 用 account_name 含品牌關鍵字過濾，fallback 到全部
+      const filtered=allDev.filter(d=>(d.account_name||'').toLowerCase().includes(gaKey));
+      window.ga4DeviceData = filtered.length ? filtered : allDev;
+      console.log('[Device] total:', allDev.length, 'filtered:', window.ga4DeviceData.length, 'sample:', window.ga4DeviceData[0]);
     }
     renderGA4();
-    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · GA4 共 ${ga4RawData.length} 筆 · 商品 ${ga4ItemData.length} 筆`;
+    document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · GA4 共 ${ga4RawData.length} 筆 · 商品 ${ga4ItemData.length} 筆 · 頁面 ${window.ga4PageData.length} 筆 · 裝置 ${window.ga4DeviceData.length} 筆`;
   }catch(e){showErr('GA4 載入失敗：'+parseErr(e));}
   finally{btn.disabled=false;icon.classList.remove('spinning')}
 }
@@ -1855,6 +2121,8 @@ function renderGA4(){
   renderGA4PageChart(d);
   renderTable();
   renderGA4Items();
+  renderGA4Device();
+  renderGA4Pages();
   const dates=d.map(r=>r.date).filter(Boolean).sort();
   if(dates.length) document.getElementById('ga4TrendRange').textContent=`${dates[0]} ~ ${dates[dates.length-1]}`;
 }
@@ -1862,22 +2130,21 @@ function renderGA4(){
 function renderGA4KPIs(d){
   const sessions  =d.reduce((s,r)=>s+v(r,'sessions'),0);
   const users     =d.reduce((s,r)=>s+v(r,'users'),0);
-  const newUsers  =d.reduce((s,r)=>s+v(r,'new_users'),0);
-  const newUserPct= users>0 ? newUsers/users*100 : 0;
+  const addToCarts=d.reduce((s,r)=>s+v(r,'add_to_carts'),0);
+  const checkouts =d.reduce((s,r)=>s+v(r,'checkouts'),0);
   const bounceSum =d.filter(r=>v(r,'bounce_rate')>0);
   const bounceRate=bounceSum.length>0?bounceSum.reduce((s,r)=>s+v(r,'bounce_rate'),0)/bounceSum.length:0;
   const bar='bar-ga4';
-  // Purchase / revenue from GA4
   const purchases=d.reduce((s,r)=>s+v(r,'transactions'),0);
   const ga4Rev=d.reduce((s,r)=>s+v(r,'transactionrevenue'),0);
-  const convRate=sessions>0&&purchases>0?(purchases/sessions*100):0;
-  // Ad spend from cache
-  const metaD=adCache[currentBrand].meta||[];
-  const gooD=adCache[currentBrand].google||[];
-  const metaDFiltered=currentBrand==='hipporizz'?metaD.filter(d=>!(d.campaign||'').includes('募資')):metaD;
-  const adSpend=(metaDFiltered.reduce((s,r)=>s+v(r,'spend'),0))+(gooD.reduce((s,r)=>s+v(r,'spend'),0));
-  // Real ROAS: use Shopify revenue if available, else GA4
-  // distinct by order_name for shopify revenue
+  const cartRate = sessions>0&&addToCarts>0 ? addToCarts/sessions*100 : 0;
+  const checkoutRate = sessions>0&&checkouts>0 ? checkouts/sessions*100 : 0;
+  const adSpend=(
+    (currentBrand==='hipporizz'
+      ?(adCache.hipporizz.meta||[]).filter(d=>!(d.campaign||'').includes('募資'))
+      :(adCache.maclove.meta||[])
+    ).reduce((s,r)=>s+v(r,'spend'),0)
+  ) + ((adCache[currentBrand].google||[]).reduce((s,r)=>s+v(r,'spend'),0));
   const _shopSeen={};
   const shopifyRev=(webCache[currentBrand]||[]).reduce((s,r)=>{
     const k=r.order_name||'_';
@@ -1892,12 +2159,12 @@ function renderGA4KPIs(d){
   document.getElementById('ga4KpiGrid').className='kpi-grid cols-7';
   document.getElementById('ga4KpiGrid').innerHTML=
     kpi('Sessions',fmtK(sessions),'',bar)+
-    kpi('新訪客比例',newUserPct>0?newUserPct.toFixed(1)+'%':'—',newUserPct>60?'good':newUserPct>40?'neutral':'',bar)+
+    kpi('加購率',cartRate>0?cartRate.toFixed(1)+'%':'—',cartRate>5?'good':cartRate>2?'neutral':'',bar,'加購/Sessions')+
+    kpi('結帳率',checkoutRate>0?checkoutRate.toFixed(1)+'%':'—',checkoutRate>3?'good':checkoutRate>1?'neutral':'',bar,'結帳/Sessions')+
     kpi('跳出率',bounceRate>0?(bounceRate*100).toFixed(1)+'%':'—',bounceRate>0.7?'warn':bounceRate>0.5?'neutral':'good',bar)+
     kpi('完成購買',purchases>0?fmt(purchases):'—','',bar)+
     kpi('購買業績',revenueDisplay,'',bar)+
-    kpi('實際 ROAS',realRoas>0?realRoas.toFixed(2)+'x':(adSpend>0?'尚未載入':'—'),realRoas>=3?'good':realRoas>=1?'neutral':realRoas>0?'warn':'',bar)+
-    kpi('廣告佔業績',adPct>0?adPct.toFixed(1)+'%':(adSpend>0?'尚未載入':'—'),'neutral',bar);
+    kpi('實際 ROAS',realRoas>0?realRoas.toFixed(2)+'x':(adSpend>0?'尚未載入':'—'),realRoas>=3?'good':realRoas>=1?'neutral':realRoas>0?'warn':'',bar);
 }
 
 function formatDur(sec){
@@ -1923,6 +2190,7 @@ function renderGA4Items(){
     const cleanName = name.replace(/^(河馬引力|HIPPORIZZ|Hipporizz|MACLOVE|Maclove)[\s\-_·•]+/i,'').trim();
     if(!m[cleanName]) m[cleanName]={
       name:cleanName,
+      itemId: d.item_id||'',
       category: d.item_category||'—',
       qty:0, revenue:0
     };
@@ -1944,22 +2212,176 @@ function renderGA4Items(){
 
   const totalQty = rows.reduce((s,r)=>s+r.qty,0);
   const totalRow = `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
-    <td>合計</td><td></td>
+    <td>合計</td>
     <td style="font-family:'DM Mono',monospace">${fmt(totalQty)}</td>
     <td style="color:var(--green)">NT$${fmt(totalRev)}</td>
-    <td>—</td><td>100%</td>
+    <td>—</td><td>100%</td><td></td>
   </tr>`;
 
   tbody.innerHTML = rows.map((r,i)=>`<tr>
-    <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis" title="${r.name}">
-      <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-right:6px">${i+1}</span>${r.name}
+    <td style="min-width:220px;white-space:normal;word-break:break-word">
+      <span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-right:5px">${i+1}</span>${r.name}
     </td>
-    <td><span style="font-size:11px;color:var(--text3);background:var(--surface2);padding:2px 7px;border-radius:4px">${r.category}</span></td>
     <td style="font-family:'DM Mono',monospace;font-weight:600">${r.qty>0?fmt(r.qty):'—'}</td>
     <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green)">${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
     <td style="font-family:'DM Mono',monospace">${r.aov>0?'NT$'+fmt(r.aov):'—'}</td>
     <td style="font-family:'DM Mono',monospace">${r.pct>0?r.pct.toFixed(1)+'%':'—'}</td>
+    <td style="min-width:100px">
+      <div class="inline-bar-wrap">
+        <div class="inline-bar-track"><div class="inline-bar-fill" style="width:${Math.min(100,r.pct||0).toFixed(1)}%"></div></div>
+        <span class="inline-bar-pct">${r.pct>0?r.pct.toFixed(1)+'%':'—'}</span>
+      </div>
+    </td>
   </tr>`).join('') + totalRow;
+}
+
+// ── 裝置流量 ──────────────────────────────────────────────────────
+function renderGA4Device(){
+  const card=document.getElementById('ga4DeviceCard');
+  const grid=document.getElementById('ga4DeviceGrid');
+  if(!card||!grid) return;
+  const data=window.ga4DeviceData||[];
+  if(!data.length){card.style.display='none';return;}
+  card.style.display='block';
+
+  const DEVICE_META={
+    'mobile': {icon:'📱', label:'手機', color:'#f59e0b'},
+    'desktop':{icon:'🖥',  label:'桌電', color:'#3b82f6'},
+    'tablet': {icon:'📋', label:'平板', color:'#6b7280'},
+  };
+
+  const m={};
+  for(const r of data){
+    const dev=(r.devicecategory||r.device_category||'other').toLowerCase();
+    if(!m[dev])m[dev]={sessions:0,engaged:0,bounce:0,bounceCnt:0};
+    m[dev].sessions += parseFloat(r.sessions)||0;
+    m[dev].engaged  += parseFloat(r.engagedSessions||r.engaged_sessions||0);
+    const br=parseFloat(r.bounceRate||r.bounce_rate||0);
+    if(br>0){m[dev].bounce+=br; m[dev].bounceCnt++;}
+  }
+
+  const totalSessions=Object.values(m).reduce((s,r)=>s+r.sessions,0);
+  const sorted=Object.entries(m).filter(([,r])=>r.sessions>0).sort((a,b)=>b[1].sessions-a[1].sessions);
+
+  if(!sorted.length){grid.innerHTML='<div style="padding:20px;color:var(--text3);text-align:center">無裝置資料</div>';return;}
+
+  grid.innerHTML=sorted.map(([dev,r])=>{
+    const meta=DEVICE_META[dev]||{icon:'💻',label:dev,color:'#6b7280'};
+    const pct=totalSessions>0?(r.sessions/totalSessions*100):0;
+    const engRate=r.sessions>0?(r.engaged/r.sessions*100).toFixed(0)+'%':'—';
+    const avgBounce=r.bounceCnt>0?(r.bounce/r.bounceCnt*100).toFixed(0)+'%':'—';
+    return`<div class="device-card">
+      <div class="device-card-icon">${meta.icon}</div>
+      <div class="device-card-name">${meta.label}</div>
+      <div class="device-card-pct" style="color:${meta.color}">${pct.toFixed(1)}%</div>
+      <div class="device-card-sessions">${fmt(r.sessions)} Sessions</div>
+      <div class="device-card-stats">
+        <div class="device-stat-row"><span class="device-stat-label">參與率</span><span class="device-stat-val">${engRate}</span></div>
+        <div class="device-stat-row"><span class="device-stat-label">跳出率</span><span class="device-stat-val" style="color:${parseFloat(avgBounce)>70?'var(--red)':parseFloat(avgBounce)>50?'var(--amber)':'var(--text3)'}">${avgBounce}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── 頁面排行：所有頁面 + 商品頁 ─────────────────────────────────
+function renderGA4Pages(){
+  const allCard =document.getElementById('ga4AllPageCard');
+  const prodCard=document.getElementById('ga4ProdPageCard');
+  const data=window.ga4PageData||[];
+
+  if(!allCard||!prodCard) return;
+  if(!data.length){allCard.style.display='none';prodCard.style.display='none';return;}
+  allCard.style.display='block';
+  prodCard.style.display='block';
+
+  // 彙整：依 page_path 加總（相容不同欄位名稱）
+  const m={};
+  for(const r of data){
+    const path = r.page_path || r.pagePath || r.page_title || '(unknown)';
+    const title= r.page_title|| r.pageTitle|| path;
+    if(!m[path])m[path]={title, views:0, users:0, carts:0, dur:0, durCnt:0, bounce:0, bounceCnt:0, dateViews:{}};
+    const views=parseFloat(r.screen_page_views||r.screenPageViews||r.pageviews||0);
+    m[path].views  += views;
+    m[path].users  += parseFloat(r.active_users||r.activeUsers||r.users||0);
+    m[path].carts  += parseFloat(r.add_to_carts||r.addToCarts||0);
+    const dur = parseFloat(r.average_session_duration||r.averageSessionDuration||0);
+    if(dur>0){m[path].dur+=dur; m[path].durCnt++;}
+    const br = parseFloat(r.bounce_rate||r.bounceRate||0);
+    if(br>0){m[path].bounce+=br; m[path].bounceCnt++;}
+    // 記錄每日瀏覽量（用來算趨勢）
+    const date=r.date||'';
+    if(date && views>0){
+      m[path].dateViews[date]=(m[path].dateViews[date]||0)+views;
+    }
+  }
+
+  const totalViews=Object.values(m).reduce((s,r)=>s+r.views,0);
+  const allDates=Object.values(m).flatMap(r=>Object.keys(r.dateViews)).filter(Boolean);
+  const uniqueDates=[...new Set(allDates)].sort();
+  // 近期趨勢：比較後半段 vs 前半段
+  const half=Math.floor(uniqueDates.length/2);
+  const earlyDates=new Set(uniqueDates.slice(0,half));
+  const latesDates =new Set(uniqueDates.slice(half));
+
+  function getTrend(dateViews){
+    if(uniqueDates.length<4) return null;
+    const early=Object.entries(dateViews).filter(([d])=>earlyDates.has(d)).reduce((s,[,v])=>s+v,0);
+    const late =Object.entries(dateViews).filter(([d])=>latesDates.has(d)).reduce((s,[,v])=>s+v,0);
+    if(early===0&&late===0) return null;
+    const pctChange=early>0?((late-early)/early*100):100;
+    return pctChange;
+  }
+
+  function formatDuration(sec){
+    if(!sec||sec<=0) return '—';
+    const m=Math.floor(sec/60), s=Math.round(sec%60);
+    return m>0?`${m}m ${s}s`:`${s}s`;
+  }
+
+  // slug → 可讀標題：把連字符換空格，每個字首大寫
+  function slugToTitle(path){
+    // 取最後一段 slug，例如 /products/anello-air-mag → anello-air-mag
+    const seg = path.replace(/\/$/, '').split('/').pop() || '';
+    if(!seg) return '';
+    return seg.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function renderPageTable(tbodyId, rows, totalViews){
+    const tbody=document.getElementById(tbodyId);
+    if(!tbody) return;
+    if(!rows.length){tbody.innerHTML=`<tr><td colspan="9" class="no-data">無頁面資料</td></tr>`;return;}
+    tbody.innerHTML=rows.map(([path,r])=>{
+      const pct=totalViews>0?(r.views/totalViews*100):0;
+      const barW=Math.min(100,pct).toFixed(1);
+      const avgDur=r.durCnt>0?r.dur/r.durCnt:0;
+      const avgBounce=r.bounceCnt>0?r.bounce/r.bounceCnt:0;
+      const trend=getTrend(r.dateViews);
+      let trendHtml='<span class="trend-flat">—</span>';
+      if(trend!==null){
+        if(trend>=5) trendHtml=`<span class="trend-up">↑ ${Math.abs(trend).toFixed(0)}%</span>`;
+        else if(trend<=-5) trendHtml=`<span class="trend-down">↓ ${Math.abs(trend).toFixed(0)}%</span>`;
+        else trendHtml=`<span class="trend-flat">→ 持平</span>`;
+      }
+      return`<tr>
+        <td style="font-family:'DM Mono',monospace;font-size:11px;min-width:240px;white-space:normal;word-break:break-all">
+          <a href="${BRANDS[currentBrand].siteUrl||''}${path}" target="_blank" style="color:var(--text2);text-decoration:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">${path}</a>
+        </td>
+        <td style="font-family:'DM Mono',monospace;font-weight:600">${fmt(r.views)}</td>
+        <td style="font-size:11.5px">${trendHtml}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--text3)">${pct.toFixed(1)}%</td>
+        <td style="font-family:'DM Mono',monospace">${r.users>0?fmt(r.users):'—'}</td>
+        <td style="font-family:'DM Mono',monospace;font-size:11.5px">${formatDuration(avgDur)}</td>
+        <td style="font-family:'DM Mono',monospace;color:${avgBounce>0.7?'var(--red)':avgBounce>0.5?'var(--amber)':'var(--text3)'}">${avgBounce>0?(avgBounce*100).toFixed(0)+'%':'—'}</td>
+        <td style="font-family:'DM Mono',monospace">${r.carts>0?`${fmt(r.carts)}<span style="color:var(--text3);font-size:10px;margin-left:3px">(${r.views>0?(r.carts/r.views*100).toFixed(1)+'%':'—'})</span>`:'—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const allPages=Object.entries(m).sort((a,b)=>b[1].views-a[1].views);
+  renderPageTable('ga4AllPageBody', allPages.slice(0,30), totalViews);
+
+  const prodPages=allPages.filter(([p])=>p.includes('/products/'));
+  renderPageTable('ga4ProdPageBody', prodPages.slice(0,30), totalViews);
 }
 
 function renderFunnel(d){
@@ -1975,6 +2397,15 @@ function renderFunnel(d){
   setF('fn-cart',carts,'fn-cart-rate',sessions>0&&carts>0?(carts/sessions*100).toFixed(1)+'%':'—');
   setF('fn-checkout',checkouts,'fn-checkout-rate',sessions>0&&checkouts>0?(checkouts/sessions*100).toFixed(1)+'%':'—');
   setF('fn-purchase',purchases,'fn-purchase-rate',sessions>0&&purchases>0?(purchases/sessions*100).toFixed(1)+'%':'—');
+  // 步驟間轉換率
+  const setSub=(id,txt)=>{const el=document.getElementById(id);if(el)el.textContent=txt;};
+  setSub('fn-cart-step',    sessions>0&&carts>0?(carts/sessions*100).toFixed(1)+'%':'');
+  setSub('fn-checkout-step',carts>0&&checkouts>0?(checkouts/carts*100).toFixed(1)+'%':'');
+  setSub('fn-purchase-step',checkouts>0&&purchases>0?(purchases/checkouts*100).toFixed(1)+'%':'');
+  // 箭頭轉換率
+  setSub('fn-arrow-cart',    sessions>0&&carts>0?(carts/sessions*100).toFixed(1)+'%':'');
+  setSub('fn-arrow-checkout',carts>0&&checkouts>0?(checkouts/carts*100).toFixed(1)+'%':'');
+  setSub('fn-arrow-purchase',checkouts>0&&purchases>0?(purchases/checkouts*100).toFixed(1)+'%':'');
 }
 
 function renderGA4Trend(d){
@@ -2017,7 +2448,7 @@ function renderGA4SrcChart(d){
     labels:entries.map(e=>e[0]),
     datasets:[
       {label:'Sessions',data:entries.map(e=>e[1].sessions),backgroundColor:colors,borderRadius:5,yAxisID:'y'},
-      {label:'購買',data:entries.map(e=>e[1].purchases),backgroundColor:'transparent',borderColor:'#333',borderWidth:2,type:'line',pointRadius:4,pointBackgroundColor:'#333',yAxisID:'y2'},
+      {label:'購買',data:entries.map(e=>e[1].purchases),backgroundColor:'transparent',borderColor:'#1f7a4d',borderWidth:2,type:'line',pointRadius:4,pointBackgroundColor:'#1f7a4d',yAxisID:'y2'},
     ]
   },options:{responsive:true,maintainAspectRatio:false,plugins:{
     legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:8}},
@@ -2030,15 +2461,13 @@ function renderGA4SrcChart(d){
 }
 
 function renderGA4PageChart(d){
-  // Daily conversion rate: purchases/sessions*100
   const m={};
   for(const r of d){
     if(!r.date)continue;
-    if(!m[r.date])m[r.date]={s:0,p:0,cart:0,checkout:0};
+    if(!m[r.date])m[r.date]={s:0,p:0,cart:0};
     m[r.date].s+=v(r,'sessions');
     m[r.date].p+=v(r,'transactions');
     m[r.date].cart+=v(r,'add_to_carts');
-    m[r.date].checkout+=v(r,'checkouts');
   }
   const dates=Object.keys(m).sort();
   const ctx=document.getElementById('ga4PageChart').getContext('2d');
@@ -2047,14 +2476,15 @@ function renderGA4PageChart(d){
     labels:dates.map(d=>d.slice(5)),
     datasets:[
       {label:'購買轉換率',data:dates.map(d=>m[d].s>0?+(m[d].p/m[d].s*100).toFixed(2):0),borderColor:'#e37400',backgroundColor:'#e3740015',tension:.3,pointRadius:2,fill:true,borderWidth:2,yAxisID:'y'},
-      {label:'加購率',data:dates.map(d=>m[d].s>0?+(m[d].cart/m[d].s*100).toFixed(2):0),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2,borderWidth:1.5,borderDash:[4,3],yAxisID:'y'},
+      {label:'加購率',data:dates.map(d=>m[d].s>0?+(m[d].cart/m[d].s*100).toFixed(2):0),borderColor:'#3b82f6',backgroundColor:'transparent',tension:.3,pointRadius:2,borderWidth:1.5,borderDash:[4,3],yAxisID:'y2'},
     ]
   },options:{responsive:true,maintainAspectRatio:false,plugins:{
     legend:{display:true,position:'bottom',labels:{font:{size:11,family:'DM Sans'},boxWidth:10,color:'#6b6b65',padding:8}},
     tooltip:{callbacks:{label:c=>` ${c.parsed.y.toFixed(2)}%`}}
   },scales:{
     x:{ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
-    y:{ticks:{font:{size:10,family:'DM Mono'},color:'#9e9e96',callback:n=>n+'%'},grid:{color:'rgba(0,0,0,.04)'}}
+    y:{position:'left',beginAtZero:true,ticks:{font:{size:10,family:'DM Mono'},color:'#e37400',callback:n=>n+'%'},grid:{color:'rgba(0,0,0,.04)'},title:{display:true,text:'購買轉換率',color:'#e37400',font:{size:9}}},
+    y2:{position:'right',beginAtZero:true,ticks:{font:{size:10,family:'DM Mono'},color:'#3b82f6',callback:n=>n+'%'},grid:{display:false},title:{display:true,text:'加購率',color:'#3b82f6',font:{size:9}}}
   }}});
 }
 
