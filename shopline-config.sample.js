@@ -1,0 +1,1 @@
+window.SHOPLINE_PROXY_URL = 'https://YOUR-WORKER.workers.dev';

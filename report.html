@@ -964,9 +964,11 @@ th.sticky-col{background:var(--surface3)}
 </div>
 
 </div>
+<script src="shopline-config.js"></script>
 <script>
 // ═══════════════════════ CONFIG ═══════════════════════════════════
 const API_KEY = '991e3783ac050dde54f3b397f0f7b5ac4c6b';
+const SHOPLINE_PROXY_URL = (window.SHOPLINE_PROXY_URL || '').replace(/\/$/, '');
 
 const META_FIELDS = 'date,account_id,objective,ad_name,adset_name,campaign,spend,impressions,reach,clicks,ctr,cpm,cpc,actions_offsite_conversion_fb_pixel_purchase,action_values_offsite_conversion_fb_pixel_purchase';
 const GOOGLE_FIELDS = 'date,account_id,campaign,campaign_type,ad_name,spend,impressions,clicks,ctr,cpc,conversions,conversion_value,cost_per_conversion';
@@ -1011,6 +1013,7 @@ function normWebRow(r){
  utm_content: r.order_customer_last_visit_utm_content || '',
  utm_term: r.order_customer_last_visit_utm_term || '',
  referral_code: r.order_customer_last_visit_referral_code|| '',
+ source: r.source || utmSrc || '(direct)',
  referrer_url: refUrl,
  referrer_display: refDisplay,
  landing_page: lp.page || (r.order_customer_last_visit_landing_page||'').split('?')[0].replace(/https?:\/\/[^/]+/,'') || '',
@@ -1148,8 +1151,8 @@ function syncUI(){
  const platName=isMeta?'Meta Ads':isGoogle?'Google Ads':isGA4?'GA 分析':'網站業績';
  document.getElementById('pageTitle').textContent=`${cfg.name} · ${platName}`;
  document.getElementById('subtitle').textContent=isWeb
- ?(currentBrand==='hipporizz'?'Shopify · qmmzae-3y':'Shopline · 暫不支援')
- :isGA4?(currentBrand==='hipporizz'?'GA4 · Hipporizz官網-shopify':'GA4 · Maclove麥克愛愛')
+ ?(currentBrand==='hipporizz'?(SHOPLINE_PROXY_URL?'Shopline':'Shopify · qmmzae-3y'):'Shopline · 暫不支援')
+ :isGA4?(currentBrand==='hipporizz'?'GA4 · Hipporizz官網':'GA4 · Maclove麥克愛愛')
  :'Windsor.ai';
 
  // campaign filter (hide for website)
@@ -1295,6 +1298,11 @@ async function fetchAdData(from,to){
 }
 
 async function fetchWebData(from,to){
+ if(currentBrand==='hipporizz' && SHOPLINE_PROXY_URL){
+ const ok = await fetchShoplineProxyData(from,to);
+ if(ok) return;
+ }
+
  const shopifyAccountId = currentBrand==='hipporizz' ? 'qmmzae-3y.myshopify.com' : '';
  if(!shopifyAccountId){
  showErr('MACLOVE 的 Shopify/Shopline 尚未串接，網站業績暫無法顯示');
@@ -1360,6 +1368,35 @@ async function fetchWebData(from,to){
  // 自動背景抓廣告資料（不需手動切換到 Meta/Google）
  autoFetchAdForWeb(from, to);
  }catch(e){showErr('資料載入失敗：'+parseErr(e));}
+}
+
+async function fetchShoplineProxyData(from,to){
+ try{
+ const _prw=getPrevRange(from,to);
+ const [resp,prevResp]=await Promise.all([
+ fetch(`${SHOPLINE_PROXY_URL}/orders?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`, {cache:'no-store'}),
+ fetch(`${SHOPLINE_PROXY_URL}/orders?from=${encodeURIComponent(_prw.from)}&to=${encodeURIComponent(_prw.to)}`, {cache:'no-store'}),
+ ]);
+ if(!resp.ok){const t=await resp.text();throw new Error(`Shopline proxy HTTP ${resp.status}: ${t.slice(0,200)}`)}
+ const json=await resp.json();
+ rawData=(Array.isArray(json.orders)?json.orders:[]).map(normWebRow);
+ webCache[currentBrand]=rawData;
+
+ window.prevWebData=[];
+ if(prevResp&&prevResp.ok){
+ const prevJson=await prevResp.json();
+ window.prevWebData=(Array.isArray(prevJson.orders)?prevJson.orders:[]).map(normWebRow);
+ }
+
+ populateWebFilters();
+ applyFilters();
+ document.getElementById('statusBar').textContent=`最後更新：${new Date().toLocaleString('zh-TW')} · Shopline 訂單 ${rawData.length} 筆`;
+ autoFetchAdForWeb(from, to);
+ return true;
+ }catch(e){
+ console.warn('[Shopline] proxy failed, fallback to Shopify/Windsor:', e);
+ return false;
+ }
 }
 
 async function autoFetchAdForWeb(from, to){
