@@ -1151,7 +1151,7 @@ function syncUI(){
  const platName=isMeta?'Meta Ads':isGoogle?'Google Ads':isGA4?'GA 分析':'網站業績';
  document.getElementById('pageTitle').textContent=`${cfg.name} · ${platName}`;
  document.getElementById('subtitle').textContent=isWeb
- ?(currentBrand==='hipporizz'?(SHOPLINE_PROXY_URL?'Shopline':'Shopify · qmmzae-3y'):'Shopline · 暫不支援')
+ ?(currentBrand==='maclove'?(SHOPLINE_PROXY_URL?'Shopline':'Shopline · 尚未設定'):'Shopify · qmmzae-3y')
  :isGA4?(currentBrand==='hipporizz'?'GA4 · Hipporizz官網':'GA4 · Maclove麥克愛愛')
  :'Windsor.ai';
 
@@ -1298,14 +1298,14 @@ async function fetchAdData(from,to){
 }
 
 async function fetchWebData(from,to){
- if(currentBrand==='hipporizz' && SHOPLINE_PROXY_URL){
+ if(currentBrand==='maclove' && SHOPLINE_PROXY_URL){
  const ok = await fetchShoplineProxyData(from,to);
  if(ok) return;
  }
 
  const shopifyAccountId = currentBrand==='hipporizz' ? 'qmmzae-3y.myshopify.com' : '';
  if(!shopifyAccountId){
- showErr('MACLOVE 的 Shopify/Shopline 尚未串接，網站業績暫無法顯示');
+ showErr('MACLOVE 的 Shopline 尚未設定，網站業績暫無法顯示');
  return;
  }
  const base = `https://connectors.windsor.ai/shopify?api_key=${API_KEY}&date_from=${from}&date_to=${to}&account_id=${shopifyAccountId}`;
