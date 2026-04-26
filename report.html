@@ -25,7 +25,7 @@
  --red:#ff5f6b;--red-dim:rgba(255,95,107,.12);
  --amber:#f5a623;--amber-dim:rgba(245,166,35,.12);
  --purple:#a78bfa;--purple-dim:rgba(167,139,250,.12);
- --maclove:#ff5f6b;--maclove-dim:rgba(255,95,107,.12);
+ --maclove:#f97316;--maclove-dim:rgba(249,115,22,.14);
  --google:#5b9ef4;--google-dim:rgba(91,158,244,.12);
  --web:#2dd4bf;--web-dim:rgba(45,212,191,.12);
  --radius:8px;--radius-lg:12px;--radius-xl:16px;
@@ -72,8 +72,10 @@ body{
  color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap;
 }
 .brand-tab:hover{color:var(--text)}
+.brand-tab.maclove:focus-visible{outline:2px solid var(--maclove);outline-offset:2px}
+.brand-tab.hipporizz:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .brand-tab,.platform-tab,.seg-tab,.quick-btn,.month-btn,.btn{position:relative;z-index:1}
-.brand-tab.maclove.active{background:var(--maclove);color:#fff;box-shadow:0 2px 8px rgba(192,57,43,.2)}
+.brand-tab.maclove.active{background:var(--maclove);color:#fff;box-shadow:0 2px 8px rgba(249,115,22,.22)}
 .brand-tab.hipporizz.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(26,79,214,.2)}
 
 /* ── Platform tabs ── */
@@ -244,7 +246,7 @@ input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.4}
 .kpi-value.warn{color:var(--red)}
 .kpi-value.neutral{color:var(--amber)}
 .kpi-bar{position:absolute;bottom:0;left:0;right:0;height:2px}
-.bar-mac{background:linear-gradient(90deg,var(--maclove),#e74c3c)}
+.bar-mac{background:linear-gradient(90deg,var(--maclove),#fb923c)}
 .bar-hip-w{background:linear-gradient(90deg,var(--accent),#3b82f6)}
 .bar-hip-f{background:linear-gradient(90deg,var(--purple),#9333ea)}
 .bar-hip-a{background:linear-gradient(90deg,#888,#bbb)}
@@ -317,6 +319,7 @@ tr:hover td{background:var(--surface2)}
 .no-data{text-align:center;padding:40px;color:var(--text3);font-size:12px}
 .roas-good{color:var(--green);font-weight:600}.roas-ok{color:var(--amber);font-weight:600}.roas-bad{color:var(--red);font-weight:600}
 .tbl-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.table-actions{display:flex;align-items:center;gap:12px}
 .search-box{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border2);border-radius:999px;padding:6px 12px;min-width:200px;transition:border-color .15s}
 .search-box:focus-within{border-color:var(--accent)}
 .search-box input{border:none;outline:none;background:transparent;font:inherit;color:var(--text);width:100%;font-size:12px}
@@ -386,8 +389,23 @@ tr:hover td{background:var(--surface2)}
 /* ── Collapsible ── */
 .collapsible-body{overflow:hidden;transition:max-height .25s ease}
 .collapsible-body.collapsed{max-height:0!important}
-.collapse-icon{transition:transform .25s;display:inline-block}
-.collapse-icon.collapsed{transform:rotate(180deg)}
+.collapse-icon{
+ transition:all .15s;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ width:32px;
+ height:32px;
+ flex:0 0 32px;
+ border:1px solid var(--border2);
+ border-radius:9px;
+ background:var(--surface2);
+ font-size:0!important;
+ color:var(--text2)!important;
+}
+.collapse-icon:hover{border-color:var(--accent);color:var(--text)!important}
+.collapse-icon::before{content:'⌄';font-size:17px;line-height:1}
+.collapse-icon.collapsed::before{content:'›';font-size:20px}
 
 /* ── Skeleton ── */
 .skeleton-overlay{position:absolute;inset:0;background:var(--surface);z-index:10;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -537,10 +555,41 @@ th.sticky-col{background:var(--surface3)}
  .compare-grid{grid-template-columns:1fr!important}
  .charts-row{grid-template-columns:1fr!important}
  .charts-row-2{grid-template-columns:1fr!important}
+ .status{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:10px;
+  margin-bottom:8px;
+ }
  td,th{padding:7px 9px;font-size:11px}
- .search-box{min-width:0;flex:1}
- .tbl-tools{width:100%}
- .table-header{flex-direction:column;align-items:flex-start}
+ .table-header{
+  flex-direction:row;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:8px;
+  padding:10px 12px;
+ }
+ .table-header .card-title{
+  flex:0 1 auto;
+  min-width:0;
+  max-width:42%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:13px;
+ }
+ .table-actions{
+  margin-left:auto;
+  flex:1 1 auto;
+  min-width:0;
+  justify-content:flex-end;
+  gap:6px;
+ }
+ .tbl-tools{width:auto;min-width:0;flex:1 1 auto;justify-content:flex-end}
+ .search-box{min-width:0;width:min(150px,100%);padding:6px 9px;gap:5px}
+ .search-box input{font-size:11px}
+ .search-box svg{width:12px;height:12px}
 }
 @media(max-width:480px){
  .brand-tab{padding:5px 9px;font-size:11px}
@@ -755,7 +804,7 @@ th.sticky-col{background:var(--surface3)}
  <!-- ── GA4 分析專用區塊 ── -->
  <div id="ga4Section" style="display:none">
  <!-- GA4 KPI -->
- <div class="kpi-grid cols-7" id="ga4KpiGrid" style="margin-bottom:16px">
+ <div class="kpi-grid cols-6" id="ga4KpiGrid" style="margin-bottom:16px">
  <div class="kpi"><div class="kpi-label">使用者</div><div class="kpi-value">—</div></div>
 </div>
  <!-- 轉換漏斗 -->
@@ -802,6 +851,10 @@ th.sticky-col{background:var(--surface3)}
  <div class="card-title">每日購買轉換率 & 加購率</div>
  <div style="position:relative;height:220px"><canvas id="ga4PageChart"></canvas></div>
 </div>
+ <div class="card">
+ <div class="card-title">每日購買數 & 加購數</div>
+ <div style="position:relative;height:220px"><canvas id="ga4PurchaseCartChart"></canvas></div>
+</div>
 </div>
 
  <!-- 裝置流量 -->
@@ -809,7 +862,7 @@ th.sticky-col{background:var(--surface3)}
  <div class="table-card" id="ga4DeviceCard" style="margin-top:12px;display:none">
  <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4DeviceCard',this)">
  <div class="card-title" style="font-size:13px;font-weight:600"> 裝置流量</div>
- <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+ <span class="collapse-icon" aria-label="折疊"></span>
 </div>
  <div class="collapsible-body">
  <div id="ga4DeviceGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px">
@@ -822,7 +875,7 @@ th.sticky-col{background:var(--surface3)}
  <div class="table-card" id="ga4ItemCard" style="margin-top:12px;display:none">
  <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4ItemCard',this)">
  <div class="card-title" style="font-size:13px;font-weight:600">銷售數量排行榜 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 電商資料</span></div>
- <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+ <span class="collapse-icon" aria-label="折疊"></span>
 </div>
  <div class="collapsible-body">
  <div class="table-wrap">
@@ -847,7 +900,7 @@ th.sticky-col{background:var(--surface3)}
  <div class="table-card" id="ga4AllPageCard" style="margin-top:12px;display:none">
  <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4AllPageCard',this)">
  <div class="card-title" style="font-size:13px;font-weight:600"> 所有頁面流量排行 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 頁面瀏覽</span></div>
- <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+ <span class="collapse-icon" aria-label="折疊"></span>
 </div>
  <div class="collapsible-body">
  <div class="table-wrap">
@@ -874,7 +927,7 @@ th.sticky-col{background:var(--surface3)}
  <div class="table-card" id="ga4ProdPageCard" style="margin-top:12px;display:none">
  <div class="table-header" style="cursor:pointer" onclick="toggleCard('ga4ProdPageCard',this)">
  <div class="card-title" style="font-size:13px;font-weight:600"> 商品頁流量排行 <span style="font-size:11px;font-weight:400;color:var(--text3)">GA4 商品頁瀏覽</span></div>
- <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+ <span class="collapse-icon" aria-label="折疊"></span>
 </div>
  <div class="collapsible-body">
  <div class="table-wrap">
@@ -902,14 +955,14 @@ th.sticky-col{background:var(--surface3)}
  <div class="table-card" id="mainTableCard">
  <div class="table-header" style="cursor:pointer" onclick="toggleCard('mainTableCard',this)">
  <div class="card-title" id="tableTitle">廣告明細</div>
- <div style="display:flex;align-items:center;gap:12px">
+ <div class="table-actions">
  <div class="tbl-tools" onclick="event.stopPropagation()">
  <label class="search-box">
  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
- <input id="tableSearch" type="text" placeholder="搜尋商品 / 活動" oninput="renderTable()">
+ <input id="tableSearch" type="text" placeholder="搜尋" oninput="renderTable()">
 </label>
 </div>
- <span class="collapse-icon" style="font-size:12px;color:var(--text3)">折疊 ▾</span>
+ <span class="collapse-icon" aria-label="折疊"></span>
 </div>
 </div>
  <div class="collapsible-body">
@@ -989,9 +1042,9 @@ th.sticky-col{background:var(--surface3)}
  <div class="modal-overlay" id="budgetModal" style="display:none" onclick="if(event.target===this)closeBudgetModal()">
  <div class="modal">
  <h3> 廣告預算設定</h3>
- <p>設定各品牌廣告帳戶的花費上限，系統會自動計算已花費比例與剩餘額度。</p>
- <p style="font-size:12px;color:var(--text3);margin:-12px 0 16px;background:var(--surface2);padding:10px 12px;border-radius:8px">
- 起始日 = 上次儲值的日期。系統會自動抓「起始日→今天」的花費計算剩餘，與報表日期範圍無關。
+ <p>設定上限與起始日，自動算剩餘額度。</p>
+ <p style="font-size:12px;color:var(--text3);margin:-12px 0 16px;background:var(--surface2);padding:10px 12px;border-radius:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+ 起始日＝上次儲值日，計算起始日至今天花費。
 </p>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
  <div class="modal-field">
@@ -1542,7 +1595,7 @@ function applyFilters(){
  const isGA4=currentPlatform==='ga4';
  if(isGA4){
  filteredData=[...rawData];
- document.getElementById('tableTitle').textContent=`${BRANDS[currentBrand].name} 來源業績排行（GA4）`;
+ document.getElementById('tableTitle').textContent='來源業績排行';
  document.getElementById('orderDetailCard').style.display='none';
  document.getElementById('utmSummaryCard').style.display='none';
  renderTable();
@@ -1551,7 +1604,7 @@ function applyFilters(){
  if(isWeb){
  const src=document.getElementById('sourceFilter').value;
  filteredData=rawData.filter(d=>!src||d.source===src);
- document.getElementById('tableTitle').textContent=`${BRANDS[currentBrand].name} 商品銷售排行榜`;
+ document.getElementById('tableTitle').textContent='商品銷售排行榜';
  document.getElementById('orderDetailCard').style.display='block';
  document.getElementById('utmSummaryCard').style.display='block';
  document.getElementById('orderDetailTitle').textContent=` ${BRANDS[currentBrand].name} 訂單明細 & 來源`;
@@ -1573,7 +1626,7 @@ function applyFilters(){
  const isGA4now=currentPlatform==='ga4';
  document.getElementById('tableTitle').textContent=
  isGA4now?`${cfg.name} 來源業績排行（GA4）`:
- (currentPlatform==='meta'&&cfg.hasSegments?SEG[currentSegment].title:`${cfg.name} ${currentPlatform==='meta'?'Meta':'Google'} 廣告明細`);
+ (currentPlatform==='meta'&&cfg.hasSegments?SEG[currentSegment].title:`${currentPlatform==='meta'?'Meta':'Google'} 廣告明細`);
  renderKPIs();renderTrend();renderRoasTrend();renderCpaTrend();renderCampaignChart();renderTable();
  updateBudgetBar();
  const dates=filteredData.map(d=>d.date).filter(Boolean).sort();
@@ -1660,7 +1713,7 @@ function renderKPIs(){
      kpi('點擊率 CTR',pct(ctr),'',bar,'',fmtDelta(ctr,pCtr))+
      kpi('購買次數',fmt(buys),'',bar,'',fmtDelta(buys,pBuys))+
      kpi('購買業績',fmtMoney(rev),'',bar,'',fmtDelta(rev,pRev))+
-     kpi('ROAS',roas.toFixed(2)+'x',rc,bar,'',fmtDelta(roas,pRoas))+
+     kpi('ROAS',roas.toFixed(2),rc,bar,'',fmtDelta(roas,pRoas))+
      kpi('CPA',cpa>0?fmtMoney(cpa):'—','',bar,'',cpa&&pCpa?fmtDelta(cpa,pCpa,true):'')+
      kpi('CPC',cpc>0?fmtMoney(cpc,1):'—','',bar,'',cpc&&pCpc?fmtDelta(cpc,pCpc,true):'');
  }else{
@@ -1685,7 +1738,7 @@ function renderKPIs(){
      kpi('點擊率 CTR',pct(ctr),'',bar,'',fmtDelta(ctr,pCtr))+
      kpi('轉換次數',fmt(conv,1),'',bar,'',fmtDelta(conv,pConv))+
      kpi('轉換業績',fmtMoney(rev),'',bar,'',fmtDelta(rev,pRev))+
-     kpi('ROAS',roas.toFixed(2)+'x',rc,bar,'',fmtDelta(roas,pRoas))+
+     kpi('ROAS',roas.toFixed(2),rc,bar,'',fmtDelta(roas,pRoas))+
      kpi('CPA',cpa>0?fmtMoney(cpa):'—','',bar,'',cpa&&pCpa?fmtDelta(cpa,pCpa,true):'')+
      kpi('CPC',cpc>0?fmtMoney(cpc,1):'—','',bar,'',cpc&&pCpc?fmtDelta(cpc,pCpc,true):'');
  }
@@ -1757,11 +1810,11 @@ function renderWebKPIs(){
  setElD('ad-meta-spend',metaSpend>0?fmtMoney(metaSpend):'—','',metaSpend,_pMetaSpend,true);
  setElD('ad-google-spend',gooSpend>0?fmtMoney(gooSpend):'—','',gooSpend,_pGooSpend,true);
  setElD('ad-attributed',attrRev>0?fmtMoney(attrRev):'—','',attrRev,_pAttrRev);
- setElD('ad-roas',adRoas>0?adRoas.toFixed(2)+'x':'—','',adRoas,_pAdRoas);
- setElD('real-roas',realRoas>0?realRoas.toFixed(2)+'x':'—',realRoas>=3?'good':realRoas>=1?'neutral':'warn',realRoas,_pRealRoas);
- setElD('attr-roas',adRoas>0?adRoas.toFixed(2)+'x':'—','neutral',adRoas,_pAdRoas);
+ setElD('ad-roas',adRoas>0?adRoas.toFixed(2):'—','',adRoas,_pAdRoas);
+ setElD('real-roas',realRoas>0?realRoas.toFixed(2):'—',realRoas>=3?'good':realRoas>=1?'neutral':'warn',realRoas,_pRealRoas);
+ setElD('attr-roas',adRoas>0?adRoas.toFixed(2):'—','neutral',adRoas,_pAdRoas);
  // 落差：實際>歸因是好事(綠)，反之(紅)
- setEl('roas-gap',roasGap?((roasGap>0?'+':'')+roasGap.toFixed(2)+'x'):'—', roasGap>=0?'good':'warn');
+ setEl('roas-gap',roasGap?(roasGap>0?'+'+roasGap.toFixed(2):roasGap.toFixed(2)):'—', roasGap>=0?'good':'warn');
  setEl('rev-gap',revGap?(fmtSignedMoney(revGap)):'—', revGap>=0?'good':'warn');
  setEl('ad-pct',adPct?adPct.toFixed(1)+'%':'—','neutral');
 
@@ -1784,7 +1837,7 @@ function renderWebKPIs(){
  setWK('wk-orders',fmt(orders),'wk-orders-d',orders,pOrdW);
  setWK('wk-aov',aov>0?fmtMoney(aov):'—','wk-aov-d',aov,pAovW);
  const wkSpend=document.getElementById('wk-spend');if(wkSpend)wkSpend.textContent=totalSpend>0?fmtMoney(totalSpend):'—';
- setWK('wk-roas',realRoas>0?realRoas.toFixed(2)+'x':'—','wk-roas-d',realRoas,pRoasW);
+ setWK('wk-roas',realRoas>0?realRoas.toFixed(2):'—','wk-roas-d',realRoas,pRoasW);
  const wkAdpct=document.getElementById('wk-adpct');if(wkAdpct)wkAdpct.textContent=adPct?adPct.toFixed(1)+'%':'—';
  // apply color to ROAS kpi
  const wkRoasEl=document.getElementById('wk-roas');
@@ -1878,7 +1931,7 @@ function renderRoasTrend(){
  for(const d of filteredData){if(!d.date)continue;if(!m[d.date])m[d.date]={s:0,r:0};m[d.date].s+=v(d,'spend');m[d.date].r+=v(d,rk)}
  const dates=Object.keys(m).sort();const{sc}=getColors();
  const ctx=document.getElementById('roasChart').getContext('2d');if(roasInst)roasInst.destroy();
- roasInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[{label:'ROAS',data:dates.map(d=>m[d].s>0?(m[d].r/m[d].s).toFixed(2):0),borderColor:sc,backgroundColor:sc+'15',tension:.32,pointRadius:2,fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11,family:'IBM Plex Mono'},color:'#7a7a8a',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:11,family:'IBM Plex Mono'},color:'#7a7a8a',callback:n=>n+'x'},grid:{color:'rgba(255,255,255,.05)'}}}}});
+ roasInst=new Chart(ctx,{type:'line',data:{labels:dates.map(d=>d.slice(5)),datasets:[{label:'ROAS',data:dates.map(d=>m[d].s>0?(m[d].r/m[d].s).toFixed(2):0),borderColor:sc,backgroundColor:sc+'15',tension:.32,pointRadius:2,fill:true,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11,family:'IBM Plex Mono'},color:'#7a7a8a',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{beginAtZero:true,ticks:{font:{size:11,family:'IBM Plex Mono'},color:'#7a7a8a',callback:n=>n},grid:{color:'rgba(255,255,255,.05)'}}}}});
 }
 function renderCpaTrend(){
  const m={};
@@ -2397,7 +2450,7 @@ function renderTable(){
  <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.reach)}</td>
  <td>${pct(r.ctr)}</td><td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td>
  <td>${r.purchases>0?fmt(r.purchases):'—'}</td><td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
- <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
+ <td class="${rc}">${r.roas>0?r.roas.toFixed(2):'—'}</td>
  <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
  }else{
  const rc=r.roas>=3?'roas-good':r.roas>=1?'roas-ok':r.roas>0?'roas-bad':'';
@@ -2409,7 +2462,7 @@ function renderTable(){
  <td>NT$${fmt(r.spend)}</td><td>${fmtK(r.impressions)}</td><td>${fmtK(r.clicks)}</td>
  <td>${pct(r.ctr)}</td><td>${r.cpc?'NT$'+fmt(r.cpc,1):'—'}</td><td>${r.cpm?'NT$'+fmt(r.cpm,1):'—'}</td>
  <td>${r.conversions>0?fmt(r.conversions,1):'—'}</td><td>${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
- <td class="${rc}">${r.roas>0?r.roas.toFixed(2)+'x':'—'}</td>
+ <td class="${rc}">${r.roas>0?r.roas.toFixed(2):'—'}</td>
  <td>${r.cpa>0?'NT$'+fmt(r.cpa):'—'}</td></tr>`;
  }
  }).join('') + (() => {
@@ -2440,7 +2493,7 @@ function renderTable(){
  <td>${pct(tCtr)}</td><td>—</td><td>—</td>
  <td>${tBuy>0?fmt(tBuy):'—'}</td>
  <td style="color:var(--green)">${tRev>0?'NT$'+fmt(tRev):'—'}</td>
- <td class="${tRoas>=3?'roas-good':tRoas>=1?'roas-ok':tRoas>0?'roas-bad':''}">${tRoas>0?tRoas.toFixed(2)+'x':'—'}</td>
+ <td class="${tRoas>=3?'roas-good':tRoas>=1?'roas-ok':tRoas>0?'roas-bad':''}">${tRoas>0?tRoas.toFixed(2):'—'}</td>
  <td>${tCpa>0?'NT$'+fmt(tCpa):'—'}</td></tr>`;
  }
  // Google
@@ -2458,13 +2511,13 @@ function renderTable(){
  <td>${pct(tCtr)}</td><td>—</td><td>—</td>
  <td>${tConv>0?fmt(tConv,1):'—'}</td>
  <td style="color:var(--green)">${tRev>0?'NT$'+fmt(tRev):'—'}</td>
- <td class="${tRoas>=3?'roas-good':tRoas>=1?'roas-ok':tRoas>0?'roas-bad':''}">${tRoas>0?tRoas.toFixed(2)+'x':'—'}</td>
+ <td class="${tRoas>=3?'roas-good':tRoas>=1?'roas-ok':tRoas>0?'roas-bad':''}">${tRoas>0?tRoas.toFixed(2):'—'}</td>
  <td>${tCpa>0?'NT$'+fmt(tCpa):'—'}</td></tr>`;
  })();
 }
 
 // ═══════════════════════ GA4 FETCH & RENDER ═════════════════════════
-let ga4TrendInst=null, ga4SrcInst=null, ga4PageInst=null;
+let ga4TrendInst=null, ga4SrcInst=null, ga4PageInst=null, ga4PurchaseCartInst=null;
 
 // ─── 偵測欄位工具 ───────────────────────────────────────
 async function debugWebFields(){
@@ -2578,6 +2631,7 @@ function renderGA4(){
  renderGA4Trend(d);
  renderGA4SrcChart(d);
  renderGA4PageChart(d);
+ renderGA4PurchaseCartChart(d);
  renderTable();
  renderGA4Items();
  renderGA4Device();
@@ -2626,15 +2680,14 @@ function renderGA4KPIs(d){
  const pGa4Rev=pd.reduce((s,r)=>s+v(r,'transactionrevenue'),0);
  const pCartRate=pSessions>0&&pAddToCarts>0?pAddToCarts/pSessions*100:0;
  const pCheckoutRate=pSessions>0&&pCheckouts>0?pCheckouts/pSessions*100:0;
- document.getElementById('ga4KpiGrid').className='kpi-grid cols-7';
+ document.getElementById('ga4KpiGrid').className='kpi-grid cols-6';
  document.getElementById('ga4KpiGrid').innerHTML=
  kpi('Sessions',fmtK(sessions),'',bar,'',fmtDelta(sessions,pSessions))+
  kpi('加購率',cartRate>0?cartRate.toFixed(1)+'%':'—',cartRate>5?'good':cartRate>2?'neutral':'',bar,'加購/Sessions',fmtDelta(cartRate,pCartRate))+
  kpi('結帳率',checkoutRate>0?checkoutRate.toFixed(1)+'%':'—',checkoutRate>3?'good':checkoutRate>1?'neutral':'',bar,'結帳/Sessions',fmtDelta(checkoutRate,pCheckoutRate))+
  kpi('跳出率',bounceRate>0?(bounceRate*100).toFixed(1)+'%':'—',bounceRate>0.7?'warn':bounceRate>0.5?'neutral':'good',bar,'',fmtDelta(bounceRate,pBounceRate,true))+
- kpi('完成購買',purchases>0?fmt(purchases):'—','',bar,'',fmtDelta(purchases,pPurchases))+
  kpi('購買業績',revenueDisplay,'',bar,'',fmtDelta(realRev,pGa4Rev))+
- kpi('實際 ROAS',realRoas>0?realRoas.toFixed(2)+'x':(adSpend>0?'尚未載入':'—'),realRoas>=3?'good':realRoas>=1?'neutral':realRoas>0?'warn':'',bar);
+ kpi('實際 ROAS',realRoas>0?realRoas.toFixed(2):(adSpend>0?'尚未載入':'—'),realRoas>=3?'good':realRoas>=1?'neutral':realRoas>0?'warn':'',bar);
 }
 
 function formatDur(sec){
@@ -2963,6 +3016,33 @@ function renderGA4PageChart(d){
  }}});
 }
 
+function renderGA4PurchaseCartChart(d){
+ const m={};
+ for(const r of d){
+ if(!r.date)continue;
+ if(!m[r.date])m[r.date]={p:0,cart:0};
+ m[r.date].p+=v(r,'transactions');
+ m[r.date].cart+=v(r,'add_to_carts');
+ }
+ const dates=Object.keys(m).sort();
+ const ctx=document.getElementById('ga4PurchaseCartChart').getContext('2d');
+ if(ga4PurchaseCartInst)ga4PurchaseCartInst.destroy();
+ ga4PurchaseCartInst=new Chart(ctx,{type:'bar',data:{
+ labels:dates.map(d=>d.slice(5)),
+ datasets:[
+ {label:'購買數',data:dates.map(d=>Math.round(m[d].p)),backgroundColor:'#e37400',borderRadius:5,yAxisID:'y'},
+ {label:'加購數',data:dates.map(d=>Math.round(m[d].cart)),borderColor:'#3b82f6',backgroundColor:'#3b82f615',tension:.3,pointRadius:2,fill:true,borderWidth:2,type:'line',yAxisID:'y2'},
+ ]
+ },options:{responsive:true,maintainAspectRatio:false,plugins:{
+ legend:{display:true,position:'bottom',labels:{font:{size:11,family:'Inter'},boxWidth:10,color:'#7a7a8a',padding:8}},
+ tooltip:{callbacks:{label:c=>` ${c.dataset.label}：${Number(c.parsed.y||0).toLocaleString()} 筆`}}
+ },scales:{
+ x:{ticks:{font:{size:10,family:'IBM Plex Mono'},color:'#7a7a8a',maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+ y:{position:'left',beginAtZero:true,ticks:{font:{size:10,family:'IBM Plex Mono'},color:'#e37400',precision:0,callback:n=>n+'筆'},grid:{color:'rgba(255,255,255,.05)'},title:{display:true,text:'購買數',color:'#e37400',font:{size:9}}},
+ y2:{position:'right',beginAtZero:true,ticks:{font:{size:10,family:'IBM Plex Mono'},color:'#3b82f6',precision:0,callback:n=>n+'筆'},grid:{display:false},title:{display:true,text:'加購數',color:'#3b82f6',font:{size:9}}}
+ }}});
+}
+
 // ═══════════════════════ BUDGET ═════════════════════════════════════
 // Load saved budgets from localStorage
 function getBudgets(){
@@ -3136,11 +3216,11 @@ function toggleCard(cardId, headerEl){
  if(body.classList.contains('collapsed')){
  body.style.maxHeight = body.scrollHeight+'px';
  body.classList.remove('collapsed');
- if(icon) icon.textContent='折疊 ▾';
+ if(icon){icon.textContent='';icon.setAttribute('aria-label','折疊');icon.classList.remove('collapsed');}
  } else {
  body.style.maxHeight = body.scrollHeight+'px';
  requestAnimationFrame(()=>{ body.style.maxHeight='0'; body.classList.add('collapsed'); });
- if(icon) icon.textContent='展開 ▸';
+ if(icon){icon.textContent='';icon.setAttribute('aria-label','展開');icon.classList.add('collapsed');}
  }
 }
 // 初始化：設定 collapsible-body 的初始高度
