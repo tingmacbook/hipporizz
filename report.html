@@ -17,9 +17,9 @@
  --surface3:#2c2c34;
  --border:rgba(255,255,255,.07);
  --border2:rgba(255,255,255,.13);
- --text:#ededf0;
- --text2:#9898a8;
- --text3:#8a8a98;
+ --text:#ffffff;
+ --text2:#d0d0dc;
+ --text3:#b0b0c4;
  --accent:#4f7eff;--accent-dim:rgba(79,126,255,.12);
  --green:#32d878;--green-dim:rgba(50,216,120,.12);
  --red:#ff5f6b;--red-dim:rgba(255,95,107,.12);
@@ -32,6 +32,46 @@
  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);
  --shadow-lg:0 8px 40px rgba(0,0,0,.5);
 }
+
+/* ══════════════ LIGHT THEME ══════════════ */
+body.light{
+ --bg:#f0f2f5;
+ --surface:#ffffff;
+ --surface2:#f5f6f8;
+ --surface3:#eaedf1;
+ --border:rgba(0,0,0,.08);
+ --border2:rgba(0,0,0,.13);
+ --text:#111114;
+ --text2:#3a3a4a;
+ --text3:#5a5a6e;
+ --accent:#2563eb;--accent-dim:rgba(37,99,235,.10);
+ --green:#16a34a;--green-dim:rgba(22,163,74,.10);
+ --red:#dc2626;--red-dim:rgba(220,38,38,.10);
+ --amber:#d97706;--amber-dim:rgba(217,119,6,.10);
+ --purple:#7c3aed;--purple-dim:rgba(124,58,237,.10);
+ --maclove:#ea580c;--maclove-dim:rgba(234,88,12,.10);
+ --google:#1d6fcc;--google-dim:rgba(29,111,204,.10);
+ --web:#0d9488;--web-dim:rgba(13,148,136,.10);
+ --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+ --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+body.light .topbar{background:rgba(255,255,255,.92)}
+body.light select{background-color:var(--surface2);color:var(--text)}
+body.light input[type=date]{color-scheme:light}
+body.light .sticky-col{background:var(--surface2);box-shadow:2px 0 4px rgba(0,0,0,.06)}
+body.light tr:hover .sticky-col{background:var(--surface2)}
+body.light th.sticky-col{background:var(--surface3)}
+body.light .kpi:hover{box-shadow:0 4px 20px rgba(0,0,0,.12)}
+
+/* ── Theme toggle button ── */
+.theme-toggle{
+ display:inline-flex;align-items:center;justify-content:center;
+ width:30px;height:30px;border-radius:8px;
+ border:1px solid var(--border2);background:var(--surface2);
+ color:var(--text2);cursor:pointer;font-size:14px;
+ transition:all .15s;flex-shrink:0;
+}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ══════════════ BASE ══════════════ */
 body{
@@ -644,6 +684,7 @@ th.sticky-col{background:var(--surface3)}
  <select id="campaignFilter" onchange="applyFilters()"><option value="">所有活動</option></select>
  <!-- spacer pushes refresh to right -->
  <div style="flex:1;min-width:0"></div>
+ <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切換深色/淺色"></button>
  <button class="btn" onclick="currentPlatform==='ga4'?fetchGA4Data():fetchData()" id="refreshBtn">
  <svg id="refreshIcon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
  <path d="M13.5 8A5.5 5.5 0 1 1 8 2.5c1.8 0 3.4.87 4.4 2.2"/><polyline points="13.5,1 13.5,4.7 9.8,4.7"/>
@@ -884,13 +925,17 @@ th.sticky-col{background:var(--surface3)}
  <tr>
  <th onclick="sortGa4Item('name')" style="min-width:220px">商品名稱 ↕</th>
  <th onclick="sortGa4Item('qty')">銷售數量 ↕</th>
+ <th onclick="sortGa4Item('views')">已看過 ↕</th>
+ <th onclick="sortGa4Item('addToCart')">加入購物車 ↕</th>
  <th onclick="sortGa4Item('revenue')">業績 ↕</th>
  <th onclick="sortGa4Item('aov')">平均售價 ↕</th>
  <th onclick="sortGa4Item('pct')">業績佔比 ↕</th>
  <th style="min-width:120px">業績比例</th>
+ <th onclick="sortGa4Item('srcMed')" style="min-width:140px">來源/媒介 ↕</th>
+ <th onclick="sortGa4Item('campaign')" style="min-width:160px">廣告活動 ↕</th>
 </tr>
 </thead>
- <tbody id="ga4ItemBody"><tr><td colspan="6" class="no-data">載入中...</td></tr></tbody>
+ <tbody id="ga4ItemBody"><tr><td colspan="10" class="no-data">載入中...</td></tr></tbody>
 </table>
 </div>
 </div>
@@ -1170,7 +1215,7 @@ function guessAdType(src, med, camp){
 }
 // GA4 欄位：流量 + 轉換漏斗 + 頁面
 const GA_FIELDS = 'date,account_name,datasource,sessions,users,new_users,bounce_rate,source,medium,add_to_carts,checkouts,transactions,transactionrevenue,purchase_revenue';
-const GA_ITEM_FIELDS = 'date,account_name,datasource,item_id,item_name,item_category,items_purchased,item_revenue';
+const GA_ITEM_FIELDS = 'date,account_name,datasource,item_id,item_name,item_category,items_purchased,item_revenue,item_views,items_added_to_cart,first_user_source,first_user_medium,first_user_campaign_name';
 const GA_DEVICE_FIELDS = 'date,account_name,devicecategory,sessions,engagedSessions,bounceRate';
 // 頁面：page_path + page_title 為 dimensions；screen_page_views/active_users/bounce_rate/average_session_duration 為 metrics
 const GA_PAGE_FIELDS = 'date,account_name,datasource,page_path,screen_page_views,active_users,bounce_rate,average_session_duration,add_to_carts';
@@ -2715,10 +2760,31 @@ function renderGA4Items(){
  name:cleanName,
  itemId: d.item_id||'',
  category: d.item_category||'—',
- qty:0, revenue:0
+ qty:0, revenue:0, views:0, addToCart:0,
+ srcMedSet:{}, campaignSet:{}
  };
  m[cleanName].qty += parseFloat(d.items_purchased)||0;
  m[cleanName].revenue += parseFloat(d.item_revenue)||0;
+ m[cleanName].views += parseFloat(d.item_views)||0;
+ m[cleanName].addToCart += parseFloat(d.items_added_to_cart)||0;
+ // 來源/媒介 & 廣告活動 — 彙整為出現次數最多的值
+ const src = (d.first_user_source||'').trim();
+ const med = (d.first_user_medium||'').trim();
+ const cam = (d.first_user_campaign_name||'').trim();
+ if(src||med){
+  const key = `${src||'(direct)'}/${med||'(none)'}`;
+  m[cleanName].srcMedSet[key] = (m[cleanName].srcMedSet[key]||0) + (parseFloat(d.items_purchased)||1);
+ }
+ if(cam && cam!=='(not set)' && cam!=='not set'){
+  m[cleanName].campaignSet[cam] = (m[cleanName].campaignSet[cam]||0) + (parseFloat(d.items_purchased)||1);
+ }
+ }
+ // 取最多的來源/媒介和廣告活動
+ for(const k of Object.keys(m)){
+  const sm = m[k].srcMedSet;
+  m[k].srcMed = Object.keys(sm).length ? Object.keys(sm).sort((a,b)=>sm[b]-sm[a])[0] : '—';
+  const cs = m[k].campaignSet;
+  m[k].campaign = Object.keys(cs).length ? Object.keys(cs).sort((a,b)=>cs[b]-cs[a])[0] : '—';
  }
  const totalRev = Object.values(m).reduce((s,r)=>s+r.revenue,0);
  let rows = Object.values(m)
@@ -2731,21 +2797,46 @@ function renderGA4Items(){
  return ga4ItemSortAsc?av-bv:bv-av;
  });
 
- if(!rows.length){tbody.innerHTML=`<tr><td colspan="6" class="no-data">此條件下無商品資料</td></tr>`;return;}
+ if(!rows.length){tbody.innerHTML=`<tr><td colspan="10" class="no-data">此條件下無商品資料</td></tr>`;return;}
 
  const totalQty = rows.reduce((s,r)=>s+r.qty,0);
+ const totalViews = rows.reduce((s,r)=>s+r.views,0);
+ const totalCart = rows.reduce((s,r)=>s+r.addToCart,0);
  const totalRow = `<tr style="background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)">
  <td>合計</td>
  <td style="font-family:'IBM Plex Mono',monospace">${fmt(totalQty)}</td>
+ <td style="font-family:'IBM Plex Mono',monospace">${totalViews>0?fmt(totalViews):'—'}</td>
+ <td style="font-family:'IBM Plex Mono',monospace">${totalCart>0?fmt(totalCart):'—'}</td>
  <td style="color:var(--green)">NT$${fmt(totalRev)}</td>
- <td>—</td><td>100%</td><td></td>
+ <td>—</td><td>100%</td><td></td><td>—</td><td>—</td>
 </tr>`;
+
+ // 來源標籤樣式
+ function srcTag(srcMed){
+  if(!srcMed||srcMed==='—') return '<span style="color:var(--text3)">—</span>';
+  const s=srcMed.toLowerCase();
+  let cls='utm-tag';
+  if(s.includes('google')&&(s.includes('cpc')||s.includes('paid'))) cls+=' source-google';
+  else if(s.includes('facebook')||s.includes('fb')) cls+=' source-fb';
+  else if(s.includes('instagram')) cls+=' source-ig';
+  else if(s.includes('direct')||s.includes('none')) cls+=' direct';
+  else if(s.includes('cpc')||s.includes('paid')) cls+=' medium-paid';
+  else if(s.includes('post')||s.includes('organic')) cls+=' medium-post';
+  return `<span class="${cls}" title="${srcMed}">${srcMed}</span>`;
+ }
+ function camTag(cam){
+  if(!cam||cam==='—') return '<span style="color:var(--text3)">—</span>';
+  const short = cam.length>28?cam.slice(0,26)+'…':cam;
+  return `<span style="font-size:11px;color:var(--text2)" title="${cam}">${short}</span>`;
+ }
 
  tbody.innerHTML = rows.map((r,i)=>`<tr>
  <td style="min-width:220px;white-space:normal;word-break:break-word">
  <span style="color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:10px;margin-right:5px">${i+1}</span>${r.name}
 </td>
  <td style="font-family:'IBM Plex Mono',monospace;font-weight:600">${r.qty>0?fmt(r.qty):'—'}</td>
+ <td style="font-family:'IBM Plex Mono',monospace;color:var(--text2)">${r.views>0?fmt(r.views):'—'}</td>
+ <td style="font-family:'IBM Plex Mono',monospace;color:var(--text2)">${r.addToCart>0?fmt(r.addToCart):'—'}</td>
  <td style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--green)">${r.revenue>0?'NT$'+fmt(r.revenue):'—'}</td>
  <td style="font-family:'IBM Plex Mono',monospace">${r.aov>0?'NT$'+fmt(r.aov):'—'}</td>
  <td style="font-family:'IBM Plex Mono',monospace">${r.pct>0?r.pct.toFixed(1)+'%':'—'}</td>
@@ -2755,6 +2846,8 @@ function renderGA4Items(){
  <span class="inline-bar-pct">${r.pct>0?r.pct.toFixed(1)+'%':'—'}</span>
 </div>
 </td>
+ <td style="min-width:140px">${srcTag(r.srcMed)}</td>
+ <td style="min-width:160px;white-space:normal;word-break:break-word">${camTag(r.campaign)}</td>
 </tr>`).join('') + totalRow;
 }
 
@@ -3229,6 +3322,26 @@ function initCollapsible(){
  b.style.maxHeight = 'none';
  });
 }
+
+// ═══════════════════════ THEME TOGGLE ════════════════════════════
+function toggleTheme(){
+ const isLight = document.body.classList.toggle('light');
+ localStorage.setItem('theme', isLight?'light':'dark');
+ updateThemeBtn();
+}
+function updateThemeBtn(){
+ const btn = document.getElementById('themeToggle');
+ if(!btn) return;
+ const isLight = document.body.classList.contains('light');
+ btn.textContent = isLight ? '🌙' : '☀️';
+ btn.title = isLight ? '切換深色模式' : '切換淺色模式';
+}
+// 初始化主題
+(function initTheme(){
+ const saved = localStorage.getItem('theme');
+ if(saved==='light') document.body.classList.add('light');
+ updateThemeBtn();
+})();
 
 // ═══════════════════════ INIT ═════════════════════════════════════
 buildMonthPills();
