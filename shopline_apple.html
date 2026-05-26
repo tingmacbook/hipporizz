@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麥克愛愛｜庫存比對系統</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3348;
+    --text: #e8eaf0;
+    --text-dim: #7b82a0;
+    --accent: #4f8ef7;
+    --orange: #f97316;
+    --red: #ef4444;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+    --red-bg: rgba(239,68,68,0.12);
+    --orange-bg: rgba(249,115,22,0.12);
+    --green-bg: rgba(34,197,94,0.08);
+    --blue-bg: rgba(59,130,246,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+  .logo span { color: var(--accent); }
+  .inv-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    animation: pulse 2s infinite;
+  }
+  .dot.live { background: var(--green); }
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  /* ── Main ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── Upload Zone ── */
+  .upload-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .upload-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .upload-slot {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .upload-slot:hover { border-color: var(--accent); background: rgba(79,142,247,0.05); }
+  .upload-slot.filled { border-color: var(--green); border-style: solid; background: rgba(34,197,94,0.05); }
+  .upload-slot.filled .slot-icon { color: var(--green); }
+  .slot-icon { font-size: 20px; color: var(--text-dim); }
+  .slot-label { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .slot-name { font-size: 10px; color: var(--green); word-break: break-all; max-width: 100%; }
+  .upload-slot input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+
+  .run-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .run-btn:hover { background: #6ba3f9; transform: translateY(-1px); }
+  .run-btn:disabled { background: var(--surface2); color: var(--text-dim); cursor: not-allowed; transform: none; }
+
+  /* ── Status Bar ── */
+  .status-bar {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Summary Cards ── */
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-num { font-size: 36px; font-weight: 700; font-family: 'JetBrains Mono', monospace; line-height: 1; }
+  .card-label { font-size: 12px; color: var(--text-dim); margin-top: 6px; }
+  .card.warn { border-color: rgba(249,115,22,0.4); }
+  .card.warn .card-num { color: var(--orange); }
+  .card.info { border-color: rgba(59,130,246,0.3); }
+  .card.info .card-num { color: var(--blue); }
+  .card.ok { border-color: rgba(34,197,94,0.3); }
+  .card.ok .card-num { color: var(--green); }
+
+  /* ── Result Sections ── */
+  .result-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .result-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-header:hover { background: rgba(255,255,255,0.02); }
+  .result-header-left { display: flex; align-items: center; gap: 12px; }
+  .result-tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .tag-warn { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+  .tag-info { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .tag-ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .result-title { font-size: 14px; font-weight: 600; }
+  .result-count { font-size: 12px; color: var(--text-dim); }
+  .chevron { color: var(--text-dim); transition: transform 0.2s; font-size: 12px; }
+  .chevron.open { transform: rotate(180deg); }
+  .result-body { display: none; overflow-x: auto; }
+  .result-body.open { display: block; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead tr { background: var(--surface2); }
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(46,51,72,0.5);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .erp-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(79,142,247,0.08);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .badge-reduce {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--red);
+    font-size: 13px;
+  }
+  .badge-add {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--green);
+    font-size: 13px;
+  }
+  .suggest-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .suggest-reduce { color: var(--red); background: rgba(239,68,68,0.12); }
+  .suggest-add { color: var(--green); background: rgba(34,197,94,0.10); }
+  .pending-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(234,179,8,0.15);
+    color: var(--yellow);
+    border: 1px solid rgba(234,179,8,0.3);
+  }
+
+  /* ── Export ── */
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 12px;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .export-btn:hover { background: var(--surface); border-color: var(--accent); color: var(--accent); }
+
+  /* ── Empty / Error ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  .error-msg {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #fca5a5;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .ts {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .upload-grid { grid-template-columns: repeat(3, 1fr); }
+    .summary-cards { grid-template-columns: 1fr 1fr; }
+    .main { padding: 20px 12px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">麥克<span>愛愛</span> 庫存比對</div>
+  <div class="inv-status">
+    <div class="dot" id="invDot"></div>
+    <span id="invStatusText">讀取庫存中…</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Upload -->
+  <div class="upload-section">
+    <div class="section-title">上傳 Shopline 匯出檔（最多 5 個）</div>
+    <div class="upload-grid" id="uploadGrid">
+      <!-- slots generated by JS -->
+    </div>
+    <div id="errorMsg" class="error-msg"></div>
+    <button class="run-btn" id="runBtn" disabled onclick="runComparison()">
+      選擇檔案後開始比對
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="status-bar" id="statusBar" style="display:none">
+    <div class="spinner"></div>
+    <span id="statusText">處理中…</span>
+  </div>
+
+  <!-- Results -->
+  <div id="results" style="display:none">
+
+    <!-- Summary -->
+    <div class="summary-cards" id="summaryCards"></div>
+
+    <!-- Section: 需調整 -->
+    <div class="result-section" id="secWarn">
+      <div class="result-header" onclick="toggleSection('bodyWarn','chevWarn')">
+        <div class="result-header-left">
+          <span class="result-tag tag-warn">⚠️ 需調整</span>
+          <span class="result-title">數量有差異，需更新 Shopline</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="result-count" id="countWarn"></span>
+          <span class="chevron open" id="chevWarn">▼</span>
+        </div>
+      </div>
+      <div class="result-body open" id="bodyWarn">
+        <table id="tableWarn">
+          <thead><tr>
+            <th>ERP條碼（款式貨號）</th>
+            <th>商品名稱</th>
+            <th>款式</th>
+            <th style="text-align:center">Shopline<br>目前數量</th>
+            <th style="text-align:center">庫存<br>可賣台數</th>
+            <th style="text-align:center">差異</th>
+            <th style="text-align:center">建議填入<br>增減數量</th>
+          </tr></thead>
+          <tbody id="tbodyWarn"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section: 待上架 -->
+    <div class="result-section" id="secInfo">
+      <div class="result-header" onclick="toggleSection('bodyInfo','chevInfo')">
+        <div class="result-header-left">
+          <span class="result-tag tag-info">❓ 待上架</span>
+          <span class="result-title">庫存可賣，Shopline 尚未建立</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="result-count" id="countInfo"></span>
+          <span class="chevron open" id="chevInfo">▼</span>
+        </div>
+      </div>
+      <div class="result-body open" id="bodyInfo">
+        <table id="tableInfo">
+          <thead><tr>
+            <th>ERP條碼（款式貨號）</th>
+            <th>型號</th>
+            <th style="text-align:center">顏色</th>
+            <th style="text-align:center">可賣台數</th>
+            <th style="text-align:center">上架狀態</th>
+          </tr></thead>
+          <tbody id="tbodyInfo"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section: 正確 -->
+    <div class="result-section" id="secOk">
+      <div class="result-header" onclick="toggleSection('bodyOk','chevOk')">
+        <div class="result-header-left">
+          <span class="result-tag tag-ok">✅ 正確</span>
+          <span class="result-title">數量一致，不需調整</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="result-count" id="countOk"></span>
+          <span class="chevron" id="chevOk">▼</span>
+        </div>
+      </div>
+      <div class="result-body" id="bodyOk">
+        <table>
+          <thead><tr>
+            <th>ERP條碼（款式貨號）</th>
+            <th>商品名稱</th>
+            <th>款式</th>
+            <th style="text-align:center">數量</th>
+          </tr></thead>
+          <tbody id="tbodyOk"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end">
+      <button class="export-btn" onclick="exportCSV()">⬇ 匯出 CSV</button>
+    </div>
+    <div class="ts" style="text-align:right;margin-top:8px" id="reportTs"></div>
+  </div>
+
+</main>
+
+<script>
+// ──────────────────────────────────────────────
+// Config
+// ──────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/AKfycbwhP1KGhZ0WJXX0Au2ISzDQKGNXAa1EMai4US94heeBF1IUOnTRA8VwPfYeML8hIMqLXQ/exec';
+const MAX_FILES     = 5;
+
+// ──────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────
+let inventoryData = null;   // { erpDict, availableErp }
+let shoplineFiles = new Array(MAX_FILES).fill(null);
+let lastResult    = null;
+
+// ──────────────────────────────────────────────
+// Init slots
+// ──────────────────────────────────────────────
+function initSlots() {
+  const grid = document.getElementById('uploadGrid');
+  for (let i = 0; i < MAX_FILES; i++) {
+    grid.innerHTML += `
+      <label class="upload-slot" id="slot${i}">
+        <div class="slot-icon">📄</div>
+        <div class="slot-label">檔案 ${i + 1}</div>
+        <div class="slot-name" id="slotName${i}"></div>
+        <input type="file" accept=".xlsx,.xls" onchange="handleFile(event, ${i})">
+      </label>`;
+  }
+}
+
+function handleFile(e, idx) {
+  const file = e.target.files[0];
+  if (!file) return;
+  shoplineFiles[idx] = file;
+  document.getElementById(`slot${idx}`).classList.add('filled');
+  document.getElementById(`slotName${idx}`).textContent = file.name.length > 20 ? file.name.slice(0,18)+'…' : file.name;
+  checkReady();
+}
+
+function checkReady() {
+  const hasFiles = shoplineFiles.some(f => f !== null);
+  const btn = document.getElementById('runBtn');
+  if (hasFiles && inventoryData) {
+    btn.disabled = false;
+    btn.textContent = `開始比對`;
+  } else if (hasFiles && !inventoryData) {
+    btn.disabled = true;
+    btn.textContent = '等待庫存表載入…';
+  } else {
+    btn.disabled = true;
+    btn.textContent = '請上傳 Shopline 匯出檔';
+  }
+}
+
+// ──────────────────────────────────────────────
+// Load inventory from Google Drive
+// ──────────────────────────────────────────────
+async function loadInventory() {
+  const dot  = document.getElementById('invDot');
+  const text = document.getElementById('invStatusText');
+  try {
+    text.textContent = '正在讀取庫存…';
+    const resp = await fetch(API_URL);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    const rows = json.data || [];
+
+    // Build ERP summary
+    const erpMap = {};
+    let avail = 0;
+    for (const row of rows) {
+      const erp   = String(row['ERP條碼'] || '').trim();
+      const model = String(row['型號'] || '').trim();
+      const color = String(row['顏色\n(原廠顏色名)'] || row['顏色(原廠顏色名)'] || row['顏色'] || '').trim();
+      if (!erp) continue;
+      if (!erpMap[erp]) erpMap[erp] = { erp, model, color, count: 0 };
+      erpMap[erp].count++;
+      avail++;
+    }
+
+    inventoryData = { erpMap, totalAvail: avail };
+    dot.classList.add('live');
+    text.textContent = `庫存已載入｜可賣 ${avail} 台 / ${Object.keys(erpMap).length} 個規格`;
+    checkReady();
+  } catch(err) {
+    dot.style.background = 'var(--red)';
+    text.textContent = `庫存讀取失敗：${err.message}`;
+  }
+}
+
+// ──────────────────────────────────────────────
+// Parse Shopline files
+// ──────────────────────────────────────────────
+async function parseShopline(files) {
+  const rows = [];
+  for (const file of files) {
+    if (!file) continue;
+    const buf = await file.arrayBuffer();
+    const wb  = XLSX.read(buf, { type: 'array' });
+    const ws  = wb.Sheets[wb.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json(ws, { defval: '', header: 0 });
+
+    // Find header row (row with '款式貨號')
+    let headerIdx = -1;
+    let headers = [];
+    for (let i = 0; i < Math.min(data.length, 5); i++) {
+      const vals = Object.values(data[i]).map(v => String(v));
+      if (vals.some(v => v.includes('款式貨號') || v.includes('Variant'))) {
+        headerIdx = i; headers = vals; break;
+      }
+    }
+    if (headerIdx < 0) continue;
+
+    // Re-parse with correct header row
+    const raw = XLSX.utils.sheet_to_json(ws, { defval: '', range: headerIdx });
+    for (const row of raw) {
+      const vsku = String(row['款式貨號'] || row['Variant SKU'] || '').trim();
+      const qty  = parseFloat(row['款式數量 (參考用，請勿修改)'] || row['Quantity'] || 0) || 0;
+      const name = String(row['商品名稱 (繁體中文)'] || row['Product Name (Traditional Chinese)'] || '').trim();
+      const vnt  = String(row['款式 (繁體中文) (勿更改)'] || row['Variant (Traditional Chinese)'] || '').trim();
+      if (vsku) rows.push({ vsku, qty, name, variant: vnt });
+    }
+  }
+  return rows;
+}
+
+// ──────────────────────────────────────────────
+// Run comparison
+// ──────────────────────────────────────────────
+async function runComparison() {
+  showStatus('解析 Shopline 檔案…');
+  hideError();
+
+  try {
+    const slRows = await parseShopline(shoplineFiles);
+    showStatus('比對庫存資料…');
+
+    const { erpMap } = inventoryData;
+    const availableErp = new Set(Object.keys(erpMap));
+
+    // Deduplicate Shopline by vsku
+    const slMap = {};
+    for (const r of slRows) {
+      if (r.vsku && availableErp.has(r.vsku)) {
+        if (!slMap[r.vsku]) slMap[r.vsku] = r;
+      }
+    }
+
+    const needFix  = [];
+    const correct  = [];
+
+    for (const [erp, slRow] of Object.entries(slMap)) {
+      const invQ = erpMap[erp].count;
+      const slQ  = slRow.qty;
+      const diff = invQ - slQ;
+      const entry = {
+        erp,
+        model: erpMap[erp].model,
+        color: erpMap[erp].color,
+        name: slRow.name,
+        variant: slRow.variant,
+        slQ, invQ, diff
+      };
+      if (diff !== 0) needFix.push(entry);
+      else correct.push(entry);
+    }
+
+    // Not in Shopline at all
+    const matchedErp = new Set(Object.keys(slMap));
+    const notFound = Object.values(erpMap)
+      .filter(e => !matchedErp.has(e.erp))
+      .sort((a,b) => a.model.localeCompare(b.model));
+
+    needFix.sort((a,b) => a.diff - b.diff);
+
+    lastResult = { needFix, notFound, correct };
+    renderResults(needFix, notFound, correct);
+
+  } catch(err) {
+    showError(`比對失敗：${err.message}`);
+  } finally {
+    hideStatus();
+  }
+}
+
+// ──────────────────────────────────────────────
+// Render
+// ──────────────────────────────────────────────
+function renderResults(needFix, notFound, correct) {
+  document.getElementById('results').style.display = 'block';
+
+  // Summary cards
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="card warn">
+      <div class="card-num">${needFix.length}</div>
+      <div class="card-label">需調整數量</div>
+    </div>
+    <div class="card info">
+      <div class="card-num">${notFound.length}</div>
+      <div class="card-label">待上架規格</div>
+    </div>
+    <div class="card ok">
+      <div class="card-num">${correct.length}</div>
+      <div class="card-label">數量正確</div>
+    </div>`;
+
+  document.getElementById('countWarn').textContent = `${needFix.length} 筆`;
+  document.getElementById('countInfo').textContent = `${notFound.length} 個規格`;
+  document.getElementById('countOk').textContent   = `${correct.length} 筆`;
+
+  // 需調整
+  const tbW = document.getElementById('tbodyWarn');
+  tbW.innerHTML = needFix.length === 0
+    ? `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-dim)">✅ 無需調整項目</td></tr>`
+    : needFix.map(r => {
+        const dStr = r.diff > 0 ? `+${r.diff}` : String(r.diff);
+        const cls  = r.diff < 0 ? 'suggest-reduce' : 'suggest-add';
+        const dcls = r.diff < 0 ? 'badge-reduce' : 'badge-add';
+        return `<tr>
+          <td><span class="erp-code">${esc(r.erp)}</span></td>
+          <td style="max-width:200px;font-size:11px">${esc(r.name)}</td>
+          <td style="font-size:11px;color:var(--text-dim)">${esc(r.variant)}</td>
+          <td style="text-align:center">${r.slQ}</td>
+          <td style="text-align:center">${r.invQ}</td>
+          <td style="text-align:center"><span class="${dcls}">${dStr}</span></td>
+          <td style="text-align:center"><span class="suggest-cell ${cls}">${dStr}</span></td>
+        </tr>`;
+      }).join('');
+
+  // 待上架
+  const tbI = document.getElementById('tbodyInfo');
+  tbI.innerHTML = notFound.length === 0
+    ? `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-dim)">所有規格已上架</td></tr>`
+    : notFound.map(r => `<tr>
+        <td><span class="erp-code">${esc(r.erp)}</span></td>
+        <td style="font-size:11px">${esc(r.model)}</td>
+        <td style="text-align:center;font-size:11px">${esc(r.color)}</td>
+        <td style="text-align:center;font-weight:700">${r.count}</td>
+        <td style="text-align:center"><span class="pending-badge">待上架</span></td>
+      </tr>`).join('');
+
+  // 正確
+  const tbO = document.getElementById('tbodyOk');
+  tbO.innerHTML = correct.map((r,i) => `<tr>
+      <td><span class="erp-code">${esc(r.erp)}</span></td>
+      <td style="font-size:11px;max-width:200px">${esc(r.name)}</td>
+      <td style="font-size:11px;color:var(--text-dim)">${esc(r.variant)}</td>
+      <td style="text-align:center">${r.slQ}</td>
+    </tr>`).join('');
+
+  const now = new Date();
+  document.getElementById('reportTs').textContent =
+    `比對時間：${now.toLocaleDateString('zh-TW')} ${now.toLocaleTimeString('zh-TW')}`;
+
+  window.scrollTo({ top: document.getElementById('results').offsetTop - 20, behavior: 'smooth' });
+}
+
+// ──────────────────────────────────────────────
+// Helpers
+// ──────────────────────────────────────────────
+function toggleSection(bodyId, chevId) {
+  const body = document.getElementById(bodyId);
+  const chev = document.getElementById(chevId);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function showStatus(msg) {
+  const bar = document.getElementById('statusBar');
+  bar.style.display = 'flex';
+  document.getElementById('statusText').textContent = msg;
+  document.getElementById('runBtn').disabled = true;
+}
+function hideStatus() {
+  document.getElementById('statusBar').style.display = 'none';
+  document.getElementById('runBtn').disabled = false;
+}
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg; el.style.display = 'block';
+}
+function hideError() {
+  document.getElementById('errorMsg').style.display = 'none';
+}
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function exportCSV() {
+  if (!lastResult) return;
+  const { needFix, notFound } = lastResult;
+  let csv = '區塊,ERP條碼,型號/商品名稱,款式,Shopline數量,庫存可賣,差異,建議增減\n';
+  for (const r of needFix) {
+    const d = r.diff > 0 ? `+${r.diff}` : String(r.diff);
+    csv += `需調整,"${r.erp}","${r.name || r.model}","${r.variant}",${r.slQ},${r.invQ},${d},${d}\n`;
+  }
+  for (const r of notFound) {
+    csv += `待上架,"${r.erp}","${r.model}","${r.color}",,${r.count},,\n`;
+  }
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `麥克愛愛_比對_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ──────────────────────────────────────────────
+// Boot
+// ──────────────────────────────────────────────
+initSlots();
+loadInventory();
+</script>
+</body>
+</html>
