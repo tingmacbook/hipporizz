@@ -87,8 +87,18 @@
     </div>
     <div class="divider"></div>
     <div style="flex:1">
-      <div class="upload-label" style="margin-bottom:4px">Shopline 匯出（1–5 個）</div>
-      <div class="upload-slots" id="uploadSlots"></div>
+      <div class="upload-label" style="margin-bottom:4px">Shopline 匯出（可一次選多個）</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <label class="upload-slot" id="slotSL" style="min-width:180px;cursor:pointer">
+          <div class="slot-icon">📂</div>
+          <div class="slot-info">
+            <div class="slot-type">點擊選取檔案</div>
+            <div class="slot-name" id="slotSLName">尚未選取</div>
+          </div>
+          <input type="file" accept=".xlsx,.xls" multiple onchange="handleSLMulti(event)">
+        </label>
+        <div id="slFileList" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
     </div>
     <div class="divider"></div>
     <button class="run-btn" id="runBtn" disabled onclick="runComparison()">開始比對</button>
@@ -106,7 +116,7 @@
         <table><thead><tr>
           <th>ERP條碼（款式貨號）</th><th>商品名稱</th><th>款式</th>
           <th style="text-align:center">Shopline目前數量</th><th style="text-align:center">庫存可賣台數</th>
-          <th style="text-align:center">差異</th><th style="text-align:center">建議填入增減數量</th>
+          <th style="text-align:center">差異</th><th style="text-align:center">建議填入增減數量</th><th>差異原因</th>
         </tr></thead><tbody id="tbodyWarn"></tbody></table>
       </div>
     </div>
@@ -117,7 +127,7 @@
       </div>
       <div class="result-body open" id="bodyInfo">
         <table><thead><tr>
-          <th>ERP條碼（款式貨號）</th><th>型號</th><th style="text-align:center">顏色</th><th style="text-align:center">可賣台數</th><th style="text-align:center">上架狀態</th>
+          <th>ERP條碼（款式貨號）</th><th>型號</th><th style="text-align:center">顏色</th><th style="text-align:center">類別</th><th style="text-align:center">整體等級</th><th style="text-align:center">螢幕等級</th><th style="text-align:center">機身等級</th><th style="text-align:center">進階售價</th><th style="text-align:center">可賣台數</th><th style="text-align:center">上架狀態</th>
         </tr></thead><tbody id="tbodyInfo"></tbody></table>
       </div>
     </div>
@@ -137,23 +147,22 @@
   </div>
 </main>
 <script>
-let inventoryData=null, shoplineFiles=new Array(5).fill(null), lastResult=null;
-
-(function(){
-  const w=document.getElementById('uploadSlots');
-  for(let i=0;i<5;i++){
-    w.innerHTML+=`<label class="upload-slot" id="sl${i}"><div class="slot-icon">📄</div><div class="slot-info"><div class="slot-type">檔案 ${i+1}</div><div class="slot-name" id="slName${i}">點擊上傳</div></div><input type="file" accept=".xlsx,.xls" onchange="handleSL(event,${i})"></label>`;
-  }
-})();
+let inventoryData=null, shoplineFiles=[], lastResult=null;
 
 function handleInv(e){const f=e.target.files[0];if(f)parseInventory(f);}
-function handleSL(e,i){
-  const f=e.target.files[0];if(!f)return;
-  shoplineFiles[i]=f;
-  document.getElementById('sl'+i).classList.add('filled');
-  const n=document.getElementById('slName'+i);
-  n.textContent=f.name.length>15?f.name.slice(0,13)+'…':f.name;
-  n.classList.add('ready');checkReady();
+function handleSLMulti(e){
+  const files=Array.from(e.target.files);
+  if(!files.length)return;
+  shoplineFiles=files;
+  // 更新 UI
+  const slot=document.getElementById('slotSL');
+  slot.classList.add('filled');
+  document.getElementById('slotSLName').textContent=`已選 ${files.length} 個檔案`;
+  document.getElementById('slotSLName').classList.add('ready');
+  // 顯示檔名標籤
+  const list=document.getElementById('slFileList');
+  list.innerHTML=files.map(f=>`<span style="font-size:10px;padding:3px 8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;color:#16a34a;white-space:nowrap">${f.name.length>18?f.name.slice(0,16)+'…':f.name}</span>`).join('');
+  checkReady();
 }
 
 // ── 庫存表解析（完全模仿 Python pandas header=0 邏輯）
@@ -173,9 +182,9 @@ async function parseInventory(file){
     const KEY_STATUS = '販售狀態';
     const KEY_ERP    = 'ERP條碼';
     const KEY_MODEL  = '型號';
-    // 顏色欄位名稱可能含換行
     const sampleRow  = rows[0] || {};
     const KEY_COLOR  = Object.keys(sampleRow).find(k=>k.includes('顏色')) || '顏色';
+    const KEY_PRICE  = Object.keys(sampleRow).find(k=>k.includes('進階售價')) || '進階售價';
 
     const erpMap={};let avail=0;
     for(const row of rows){
@@ -183,10 +192,31 @@ async function parseInventory(file){
       if(!status.includes('現貨'))continue;
       const erp=String(row[KEY_ERP]||'').trim();
       if(!erp)continue;
-      if(!erpMap[erp])erpMap[erp]={erp, model:String(row[KEY_MODEL]||'').trim(), color:String(row[KEY_COLOR]||'').trim(), count:0};
+      if(!erpMap[erp])erpMap[erp]={
+        erp,
+        model:  String(row[KEY_MODEL]||'').trim(),
+        color:  String(row[KEY_COLOR]||'').trim(),
+        cat:    String(row['類別']||'').trim(),
+        gradeO: String(row['整體等級']||'').trim(),
+        gradeS: String(row['螢幕等級']||'').trim(),
+        gradeB: String(row['機身等級']||'').trim(),
+        price:  row[KEY_PRICE]||'',
+        count:0
+      };
       erpMap[erp].count++;avail++;
     }
-    inventoryData={erpMap,avail};
+    // 建立不可賣原因對照表（ERP碼 → 不可賣狀態統計）
+    const reasonMap={};
+    for(const row of rows){
+      const status=String(row[KEY_STATUS]||'');
+      if(status.includes('現貨'))continue; // 跳過可賣的
+      if(status==='已售出'||status==='')continue; // 不顯示已售出
+      const erp=String(row[KEY_ERP]||'').trim();
+      if(!erp)continue;
+      if(!reasonMap[erp])reasonMap[erp]={};
+      reasonMap[erp][status]=(reasonMap[erp][status]||0)+1;
+    }
+    inventoryData={erpMap,avail,reasonMap};
     document.getElementById('slotInv').classList.add('filled');
     const nm=document.getElementById('slotInvName');
     nm.textContent=file.name.length>16?file.name.slice(0,14)+'…':file.name; nm.classList.add('ready');
@@ -274,8 +304,11 @@ async function runComparison(){
     for(const[erp,sl]of Object.entries(slMap)){
       if(!availErp.has(erp))continue;
       const invQ=erpMap[erp].count, diff=invQ-sl.qty;
+      // 差異原因：列出不可賣的狀態分布
+      const reasons=inventoryData.reasonMap[erp]||{};
+      const reasonStr=Object.entries(reasons).map(([s,n])=>s+' x'+n).join('、');
       const entry={erp, name:sl.name, variant:sl.variant, slQ:sl.qty, invQ, diff,
-                   model:erpMap[erp].model, color:erpMap[erp].color};
+                   model:erpMap[erp].model, color:erpMap[erp].color, reason:reasonStr};
       diff!==0?needFix.push(entry):correct.push(entry);
     }
     needFix.sort((a,b)=>a.diff-b.diff);
@@ -306,12 +339,23 @@ function render(needFix,notFound,correct){
     :needFix.map(r=>{
       const d=r.diff>0?`+${r.diff}`:String(r.diff);
       const dc=r.diff<0?'diff-neg':'diff-pos', sc=r.diff<0?'suggest-neg':'suggest-pos';
-      return `<tr><td><span class="erp-code">${esc(r.erp)}</span></td><td style="max-width:180px">${esc(r.name)}</td><td style="color:var(--text-dim);max-width:160px">${esc(r.variant)}</td><td style="text-align:center">${r.slQ}</td><td style="text-align:center;font-weight:600">${r.invQ}</td><td style="text-align:center"><span class="${dc}">${d}</span></td><td style="text-align:center"><span class="suggest-cell ${sc}">${d}</span></td></tr>`;
+      return `<tr><td><span class="erp-code">${esc(r.erp)}</span></td><td style="max-width:180px">${esc(r.name)}</td><td style="color:var(--text-dim);max-width:160px">${esc(r.variant)}</td><td style="text-align:center">${r.slQ}</td><td style="text-align:center;font-weight:600">${r.invQ}</td><td style="text-align:center"><span class="${dc}">${d}</span></td><td style="text-align:center"><span class="suggest-cell ${sc}">${d}</span></td><td style="font-size:11px;color:var(--text-dim);max-width:160px">${esc(r.reason||'')}</td></tr>`;
     }).join('');
 
   document.getElementById('tbodyInfo').innerHTML=notFound.length===0
     ?`<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--text-dim)">所有規格已上架</td></tr>`
-    :notFound.map(r=>`<tr><td><span class="erp-code">${esc(r.erp)}</span></td><td>${esc(r.model)}</td><td style="text-align:center">${esc(r.color)}</td><td style="text-align:center;font-weight:700">${r.count}</td><td style="text-align:center"><span class="pending-badge">待上架</span></td></tr>`).join('');
+    :notFound.map(r=>`<tr>
+      <td><span class="erp-code">${esc(r.erp)}</span></td>
+      <td>${esc(r.model)}</td>
+      <td style="text-align:center">${esc(r.color)}</td>
+      <td style="text-align:center">${esc(r.cat)}</td>
+      <td style="text-align:center;font-weight:600">${esc(r.gradeO)}</td>
+      <td style="text-align:center">${esc(r.gradeS)}</td>
+      <td style="text-align:center">${esc(r.gradeB)}</td>
+      <td style="text-align:center">${r.price!==''?'$'+Number(r.price).toLocaleString():''}</td>
+      <td style="text-align:center;font-weight:700">${r.count}</td>
+      <td style="text-align:center"><span class="pending-badge">待上架</span></td>
+    </tr>`).join('');
 
   document.getElementById('tbodyOk').innerHTML=correct.length===0
     ?`<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--text-dim)">—</td></tr>`
