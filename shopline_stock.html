@@ -54,6 +54,11 @@
   .result-title{font-size:13px;font-weight:600}.result-count{font-size:11px;color:var(--text-dim)}
   .chevron{color:var(--text-dim);font-size:11px;transition:transform .2s}.chevron.open{transform:rotate(180deg)}
   .result-body{display:none;overflow-x:auto}.result-body.open{display:block}
+  .info-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--border2);color:#fff;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0}
+  .info-icon:hover{background:var(--accent)}
+  .rule-box{display:none;background:var(--surface2);border-bottom:1px solid var(--border);padding:9px 15px;font-size:12px;color:var(--text-dim);line-height:1.7}
+  .rule-box.open{display:block}
+  .rule-box ul{margin:4px 0 0 18px}
   table{width:100%;border-collapse:collapse}
   thead tr{background:#f8f9fb}
   th{padding:8px 13px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;border-bottom:1px solid var(--border)}
@@ -267,8 +272,16 @@
     </div>
     <div class="result-section">
       <div class="result-header" onclick="toggleAcc('body4','chev4')">
-        <div class="result-header-left"><span class="result-tag tag-purple">🚫 預購問題</span><span class="result-title">網店上架中，但商品不可叫貨卻開啟預購</span></div>
+        <div class="result-header-left"><span class="result-tag tag-purple">🚫 預購問題</span><span class="result-title">網店上架中，但商品不可叫貨卻開啟預購</span><span class="info-icon" onclick="event.stopPropagation();document.getElementById('ruleBox4').classList.toggle('open')">i</span></div>
         <div style="display:flex;align-items:center;gap:9px"><span class="result-count" id="count4"></span><span class="chevron open" id="chev4">▼</span></div>
+      </div>
+      <div class="rule-box" id="ruleBox4">
+        <strong>規則說明 — 符合以下任一條件即不會列在此表（視為可預購）：</strong>
+        <ul>
+          <li>「是否停產」＝可叫貨（不論公司狀態為何）</li>
+          <li>「是否停產」≠可叫貨，但「公司狀態」＝已叫貨／接客訂／空白／#N/A</li>
+        </ul>
+        其餘情況（是否停產≠可叫貨，且公司狀態為售完不補／不備貨／未備貨）才會列在此表，建議關閉預購。
       </div>
       <div class="result-body open" id="body4">
         <table><thead><tr><th>產品編號/條碼</th><th>商品名稱</th><th style="text-align:center">是否停產</th><th style="text-align:center">公司狀態</th><th style="text-align:center">建議動作</th><th style="text-align:center">Shopline 數量</th><th style="text-align:center">辦公室＋大安</th></tr></thead>
@@ -670,6 +683,7 @@ async function parseAccAcc(file){
       const skuI  =hdrs.findIndex(h=>h.includes('產品編號'));
       const platI =hdrs.findIndex(h=>h.includes('電商平台'));
       const nameI =hdrs.findIndex(h=>h.includes('商品名稱'));
+      const colorI=hdrs.findIndex(h=>h.includes('顏色'));
       const priceI=hdrs.findIndex(h=>h.includes('建議售價'));
       let stopI =hdrs.findIndex(h=>h.includes('是否停產'));
       if(stopI<0) stopI = hdrs.findIndex(h=>h.includes('廠商狀態')); // 部分分頁(UAG/LAUT/SKINARMA)用「廠商狀態」取代「是否停產」
@@ -698,7 +712,9 @@ async function parseAccAcc(file){
         const sku=String(row[skuI]||'').trim();
         if(!sku||sku==='nan'||sku==='產品編號 / 國際條碼')continue;
         const platform=String(row[platI]||'').trim();
-        const name=String(row[nameI]||'').trim();
+        const baseName=String(row[nameI]||'').trim();
+        const color=colorI>=0?String(row[colorI]||'').trim():'';
+        const name=(color&&color!=='nan')?`${baseName}｜${color}`:baseName;
         const price=parseFloat(row[priceI])||0;
         const stock=calcStock(row);
         const stop=String(row[stopI]||'').trim();
@@ -709,7 +725,7 @@ async function parseAccAcc(file){
         items[sku]={
           name,platform,price,stock,stop,co,sheet:sheetName,
           shouldShopline:platform.includes('Shopline線上'),
-          canPreorder:!isNoStock(stop)&&!isNoStock(co)
+          canPreorder:stop==='可叫貨'||(!isNoStock(stop)&&!isNoStock(co))
         };
       }
     }
