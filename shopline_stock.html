@@ -24,7 +24,7 @@
   .upload-slot{position:relative;border:1.5px dashed var(--border2);border-radius:7px;padding:5px 9px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;min-width:118px;background:var(--surface2)}
   .upload-slot:hover{border-color:var(--accent);background:var(--blue-bg)}
   .upload-slot.filled{border-color:var(--green);border-style:solid;background:var(--green-bg)}
-  .upload-slot.inv-slot{border-color:var(--accent);border-style:solid;background:var(--blue-bg);min-width:138px}
+  .upload-slot.inv-slot{border-color:var(--accent);border-style:solid;background:var(--blue-bg);width:180px}
   .upload-slot.inv-slot.filled{border-color:var(--green);background:var(--green-bg)}
   .slot-icon{font-size:13px;flex-shrink:0}.slot-info{min-width:0}
   .slot-type{font-size:9px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
@@ -111,10 +111,10 @@
   <main class="main">
   <div class="upload-panel">
     <div>
-      <div class="upload-label" style="margin-bottom:4px">庫存表</div>
+      <div class="upload-label" style="margin-bottom:4px">主機庫存表</div>
       <label class="upload-slot inv-slot" id="slotInvApple">
         <div class="slot-icon">🖥</div>
-        <div class="slot-info"><div class="slot-type">主機庫存</div><div class="slot-name" id="slotInvNameApple">點擊上傳</div></div>
+        <div class="slot-info"><div class="slot-type">主機庫存總表</div><div class="slot-name" id="slotInvNameApple">點擊上傳</div></div>
         <input type="file" accept=".xlsx,.xls" onchange="handleInvApple(event)">
       </label>
     </div>
@@ -210,7 +210,7 @@
     <div style="flex:1">
       <div class="upload-label" style="margin-bottom:4px">Shopline 匯出（可一次選多個）</div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <label class="upload-slot" id="slotSLAcc" style="min-width:160px;cursor:pointer">
+        <label class="upload-slot" id="slotSLAcc" style="min-width:180px;cursor:pointer">
           <div class="slot-icon">📂</div>
           <div class="slot-info"><div class="slot-type">點擊選取檔案</div><div class="slot-name" id="slotSLNameAcc">尚未選取</div></div>
           <input type="file" accept=".xlsx,.xls" multiple onchange="handleSLMultiAcc(event)">
@@ -671,7 +671,8 @@ async function parseAccAcc(file){
       const platI =hdrs.findIndex(h=>h.includes('電商平台'));
       const nameI =hdrs.findIndex(h=>h.includes('商品名稱'));
       const priceI=hdrs.findIndex(h=>h.includes('建議售價'));
-      const stopI =hdrs.findIndex(h=>h.includes('是否停產'));
+      let stopI =hdrs.findIndex(h=>h.includes('是否停產'));
+      if(stopI<0) stopI = hdrs.findIndex(h=>h.includes('廠商狀態')); // 部分分頁(UAG/LAUT/SKINARMA)用「廠商狀態」取代「是否停產」
       const coI   =hdrs.findIndex(h=>h.includes('公司狀態'));
       if(skuI<0)continue;
 
@@ -702,10 +703,13 @@ async function parseAccAcc(file){
         const stock=calcStock(row);
         const stop=String(row[stopI]||'').trim();
         const co=String(row[coI]||'').trim();
+        // 「不會再有貨」的狀態 → 視為不可預購；其餘(含可叫貨/已叫貨/接客訂/缺貨/暫缺/空白/#N/A等)視為可預購
+        const NO_STOCK_STATUS=new Set(['售完不補','不備貨','未備貨','停產','售完停產','不再備貨','不再叫貨','不再補貨']);
+        const isNoStock=v=>NO_STOCK_STATUS.has(v);
         items[sku]={
           name,platform,price,stock,stop,co,sheet:sheetName,
           shouldShopline:platform.includes('Shopline線上'),
-          canPreorder:stop==='可叫貨'&&co==='可叫貨'
+          canPreorder:!isNoStock(stop)&&!isNoStock(co)
         };
       }
     }
